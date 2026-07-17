@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sake Art Tokyo by Chill Labo. 温度にも、時間にも、正解はない 好きな時に、好きな人と 好きなようにお楽しみください！">
+  <title>Sake Art Tokyo | Parsons Studio Direction</title>
+  <script>
+    (function () {
+      document.documentElement.classList.add('js');
+      try {
+        if (localStorage.getItem('sat-age-confirmed') === 'yes') {
+          document.documentElement.classList.add('age-ok');
+        }
+      } catch (error) {}
+    })();
+  </script>
+  <style>
+    :root {
+      --tomato: #E64B2E;
+      --basil: #2F8F4E;
+      --martini: #D8C982;
+      --foam: #F7F0D4;
+      --ice: #F8F7ED;
+      --ink: #11150F;
+      --line: rgba(17, 21, 15, .15);
+      --muted: #5E6358;
+      --night: #10170F;
+      --paper: #F2EFE5;
+      --shadow: 0 0 0 var(--ink);
+      --display: "Arial Black", "Helvetica Neue", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+      --ui: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --wrap: min(1180px, calc(100vw - clamp(32px, 7vw, 104px)));
+      --section: clamp(72px, 11vw, 140px);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--ui);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .wrap { width: var(--wrap); margin-inline: auto; }
+
+    .top-strip {
+      background: var(--ink);
+      color: var(--ice);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+      padding: 8px 12px;
+    }
+    .top-strip a {
+      display: inline-block;
+      padding: 0 6px;
+      text-decoration: none;
+    }
+    .top-strip a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: color-mix(in srgb, var(--paper) 96%, white 4%);
+      border-bottom: 1px solid var(--ink);
+    }
+    .nav {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .logo {
+      font-family: var(--display);
+      font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+      line-height: .9;
+      text-transform: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .nav-links a,
+    .mobile-quicknav a,
+    .index-link {
+      transition: transform .16s ease, background .16s ease, color .16s ease, box-shadow .16s ease;
+    }
+    .nav-links a:hover,
+    .mobile-quicknav a:hover,
+    .index-link:hover {
+      background: var(--martini);
+      color: var(--ink);
+      transform: translate(3px, -3px);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+    .cart-pill {
+      padding: 9px 13px;
+      border: 1px solid var(--ink);
+      background: var(--ice);
+      color: var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+    .mobile-quicknav {
+      display: none;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 15px 13px;
+      border-bottom: 1.5px solid var(--ink);
+      background: color-mix(in srgb, var(--paper) 94%, white 6%);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      scrollbar-width: none;
+    }
+    .mobile-quicknav::-webkit-scrollbar { display: none; }
+    .mobile-quicknav a {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border: 1.5px solid var(--ink);
+      background: var(--ice);
+      box-shadow: 3px 3px 0 var(--ink);
+      white-space: nowrap;
+    }
+    .mobile-quicknav .shop-mini {
+      background: var(--ice);
+    }
+
+    .hero {
+      min-height: auto;
+      display: grid;
+      align-items: stretch;
+      padding: 0;
+      border-bottom: 1px solid var(--ink);
+    }
+    .hero-grid {
+      min-height: inherit;
+    }
+    .hero-copy {
+      padding: clamp(14px, 3vw, 44px) clamp(34px, 5vw, 72px) clamp(18px, 3vw, 42px);
+      display: grid;
+      grid-template-columns: minmax(0, .76fr) minmax(360px, .46fr);
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(28px, 5vw, 72px);
+      background:
+        linear-gradient(90deg, rgba(17,21,15,.055) 1px, transparent 1px),
+        linear-gradient(rgba(17,21,15,.055) 1px, transparent 1px),
+        var(--paper);
+      background-size: 4.5vw 4.5vw;
+    }
+    h1 {
+      margin: 0 0 18px;
+      font-family: var(--display);
+      font-size: clamp(4.4rem, 14.2vw, 15.5rem);
+      line-height: .76;
+      text-transform: uppercase;
+      max-width: 7.4ch;
+    }
+    .h1-line {
+      display: block;
+      width: fit-content;
+    }
+    .h1-line:nth-child(2) {
+      color: var(--tomato);
+      text-shadow: none;
+    }
+    .h1-line:nth-child(3) {
+      color: var(--basil);
+    }
+    .hero-brand {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .hero-brand strong {
+      font-family: var(--display);
+      font-size: clamp(1.4rem, 3vw, 3rem);
+      line-height: .9;
+    }
+    .hero-main {
+      align-self: end;
+    }
+    .hero-side {
+      align-self: stretch;
+      display: grid;
+      grid-template-rows: auto;
+      gap: 24px;
+      border-left: 1px solid var(--ink);
+      padding-left: clamp(18px, 3vw, 34px);
+    }
+    .hero-index {
+      display: grid;
+      align-content: start;
+      gap: 0;
+      border-top: 1px solid var(--ink);
+    }
+    .index-link {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .index-link em {
+      color: var(--muted);
+      font-style: normal;
+    }
+    .index-link span:last-child {
+      color: var(--tomato);
+    }
+    .lead {
+      max-width: 58ch;
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: clamp(1rem, 1.7vw, 1.18rem);
+    }
+    .lead span {
+      display: block;
+    }
+    .tagline {
+      width: fit-content;
+      margin: 22px 0 0;
+      padding: 10px 13px;
+      border: 1px solid var(--ink);
+      background: var(--ice);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: clamp(.78rem, 1.3vw, .95rem);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .btn {
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 18px;
+      border: 1px solid var(--ink);
+      background: var(--ice);
+      color: var(--ink);
+      font-weight: 900;
+    }
+    .btn.primary {
+      background: var(--tomato);
+      color: white;
+    }
+    .btn.basil {
+      background: var(--basil);
+      color: white;
+    }
+
+    .marquee {
+      overflow: hidden;
+      border-bottom: 1px solid var(--ink);
+      background: var(--tomato);
+      color: white;
+      font-family: var(--display);
+      font-size: clamp(1.7rem, 5vw, 4rem);
+      line-height: 1;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .marquee span {
+      display: inline-block;
+      padding: 18px 0;
+      animation: slide 20s linear infinite;
+    }
+    @keyframes slide {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    section {
+      padding: var(--section) 0;
+      border-bottom: 1px solid var(--ink);
+    }
+    .section-kicker {
+      margin: 0 0 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--tomato);
+      text-transform: uppercase;
+    }
+    .section-title {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2.7rem, 7vw, 7.2rem);
+      line-height: .88;
+      text-transform: uppercase;
+      max-width: 11ch;
+    }
+    .shop-title-link {
+      display: inline-block;
+      color: inherit;
+      transition: transform .16s ease;
+    }
+    .shop-title-link:hover {
+      transform: translate(4px, -4px);
+    }
+    .shop-title-link span {
+      display: block;
+    }
+    .shop-title-link span:nth-child(2) {
+      color: var(--tomato);
+      text-shadow: 4px 4px 0 var(--ink);
+    }
+    .shop-title-link span:nth-child(3) {
+      color: var(--basil);
+    }
+    .section-copy {
+      margin: 18px 0 0;
+      max-width: 62ch;
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, .72fr) minmax(0, 1fr);
+      gap: clamp(28px, 6vw, 84px);
+      align-items: start;
+    }
+
+    .collection-band {
+      background: var(--paper);
+    }
+    .label-wall {
+      margin-top: clamp(28px, 5vw, 56px);
+    }
+    .label-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+    .label-frame {
+      min-height: clamp(300px, 36vw, 520px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--ink);
+      background: var(--paper);
+      color: inherit;
+      padding: clamp(18px, 3vw, 30px);
+      box-shadow: none;
+      overflow: hidden;
+      text-decoration: none;
+      transition: background .18s ease, transform .18s ease;
+    }
+    .label-frame:hover {
+      background: var(--tomato);
+      color: var(--paper);
+      transform: translateY(-8px);
+    }
+    .label-frame.has-image {
+      min-height: auto;
+      padding: 0;
+      background: var(--ink);
+    }
+    .label-frame.has-image:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .label-frame.has-image:hover .label-image {
+      transform: scale(1.025);
+    }
+    .label-image {
+      width: 100%;
+      height: 100%;
+      min-height: clamp(360px, 48vw, 680px);
+      display: block;
+      object-fit: cover;
+      background: var(--ice);
+      transition: transform .28s ease;
+    }
+    .label-image[hidden] {
+      display: none;
+    }
+    .label-fallback {
+      min-height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .has-image .label-fallback {
+      display: none;
+    }
+    .label-frame.featured {
+      transform: none;
+    }
+    .label-frame:nth-child(2) {
+      margin-top: clamp(26px, 5vw, 70px);
+      background: var(--martini);
+      transform: none;
+    }
+    .label-frame b {
+      font-family: var(--display);
+      font-size: clamp(3rem, 8vw, 7.2rem);
+      line-height: .84;
+      text-transform: uppercase;
+    }
+    .label-frame span {
+      display: block;
+      margin-top: 18px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .store-band {
+      background: var(--ink);
+      color: var(--ice);
+    }
+    .store-band .section-kicker { color: var(--martini); }
+    .store-band .section-copy { color: color-mix(in srgb, var(--ice) 78%, transparent); }
+    .store-map {
+      min-height: 430px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--ice);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
+        var(--night);
+      background-size: 42px 42px;
+      box-shadow: none;
+      text-align: center;
+      padding: 24px;
+    }
+    .store-map strong {
+      display: block;
+      font-family: var(--display);
+      font-size: clamp(2.4rem, 6vw, 6rem);
+      line-height: .9;
+      text-transform: uppercase;
+    }
+    .store-map span {
+      display: block;
+      margin-top: 14px;
+      font-family: var(--mono);
+      color: var(--martini);
+      font-weight: 900;
+    }
+    .store-map em {
+      display: block;
+      margin-top: 16px;
+      color: var(--ice);
+      font-family: var(--mono);
+      font-size: clamp(.95rem, 1.8vw, 1.35rem);
+      font-style: normal;
+      font-weight: 900;
+      text-transform: lowercase;
+    }
+
+    .style-comic {
+      display: block;
+      border: 1px solid var(--ink);
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .style-comic img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .closing {
+      background: var(--night);
+      color: var(--ice);
+    }
+    .closing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: end;
+    }
+    .closing h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(3.6rem, 11vw, 11rem);
+      line-height: .78;
+      text-transform: uppercase;
+      color: var(--martini);
+    }
+    .footer {
+      padding: 38px 0 96px;
+      background: var(--ink);
+      color: color-mix(in srgb, var(--paper) 78%, transparent);
+      font-size: 12px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+    }
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+    .legal-note {
+      max-width: 78ch;
+      margin: 8px 0 0;
+      color: color-mix(in srgb, var(--paper) 70%, transparent);
+    }
+    .legal-note a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .age-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: color-mix(in srgb, var(--night) 90%, transparent);
+      color: var(--paper);
+    }
+    html.age-ok .age-gate {
+      display: none;
+    }
+    .age-card {
+      width: min(560px, calc(100vw - 48px));
+      padding: clamp(26px, 6vw, 48px);
+      border: 1.5px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 12px 12px 0 var(--tomato);
+    }
+    .age-card h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2.2rem, 8vw, 4.8rem);
+      line-height: .84;
+      text-transform: uppercase;
+    }
+    .age-card p {
+      margin: 18px 0 26px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .age-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .js .reveal,
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 920px) {
+      .nav-links { display: none; }
+      .mobile-quicknav {
+        position: sticky;
+        top: 58px;
+        z-index: 35;
+        display: flex;
+      }
+      .hero-copy {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        background-size: 42px 42px;
+      }
+      .hero-side {
+        border-left: 0;
+        border-top: 1px solid var(--ink);
+        padding-left: 0;
+        padding-top: 18px;
+      }
+      .split,
+      .closing-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .label-grid {
+        grid-template-columns: 1fr;
+      }
+      .label-frame:nth-child(2) { margin-top: 0; }
+    }
+
+    @media (max-width: 520px) {
+      :root { --wrap: calc(100vw - 30px); }
+      .top-strip { font-size: 10px; }
+      .nav { min-height: 58px; }
+      .mobile-quicknav {
+        top: 58px;
+        padding-top: 8px;
+        padding-bottom: 9px;
+      }
+      .hero { min-height: auto; }
+      .hero-brand {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+      }
+      h1 {
+        margin-bottom: 12px;
+        max-width: 100%;
+        font-size: clamp(3.3rem, 17.2vw, 4.9rem);
+      }
+      .h1-line:nth-child(3) {
+        font-size: 1em;
+      }
+      .label-frame span {
+        font-size: 14px;
+        line-height: 1.25;
+      }
+      .hero-copy {
+        padding-inline: 15px;
+        padding-top: 6px;
+        padding-bottom: 10px;
+        gap: 18px;
+      }
+      .tagline { margin-top: 14px; }
+      .index-link {
+        grid-template-columns: 32px 1fr auto;
+        gap: 8px;
+        padding: 10px 0;
+      }
+      .marquee span { padding: 12px 0; }
+      section { padding: clamp(48px, 12vw, 68px) 0; }
+      .label-image {
+        min-height: 420px;
+      }
+      .lead,
+      .section-copy {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .cta-row {
+        align-items: stretch;
+        margin-top: 24px;
+      }
+      .btn { width: 100%; }
+      .lead { max-width: 30ch; }
+      .age-card {
+        width: min(100%, calc(100vw - 48px));
+        box-shadow: 8px 8px 0 var(--tomato);
+      }
+      .age-actions .btn {
+        width: 100%;
+      }
+      .footer { padding-bottom: 48px; }
+      .footer-links { flex-direction: column; gap: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="age-gate" role="dialog" aria-modal="true" aria-labelledby="age-title">
+    <div class="age-card">
+      <h2 id="age-title">20+<br>Only.</h2>
+      <p>このページは酒類を扱います。<br>20歳以上ですか？</p>
+      <div class="age-actions">
+        <button class="btn primary" type="button" data-age-confirm>はい、20歳以上です</button>
+        <a class="btn" href="about:blank">いいえ</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="top-strip">
+    <a href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener">ONLINE SHOP</a>
+    /
+    <a href="https://chilllabo.tokyo/" target="_blank" rel="noopener">CHILL LABO</a>
+    /
+    <a href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener">INSTAGRAM</a>
+  </div>
+
+  <header class="site-header">
+    <nav class="nav wrap" aria-label="Primary">
+      <a class="logo" href="#">Sake Art Tokyo</a>
+      <div class="nav-links">
+        <a href="#collection">Collection</a>
+        <a href="#store">Bar</a>
+        <a href="#menu">Style</a>
+        <a href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://chilllabo.tokyo/" target="_blank" rel="noopener">Chill Labo</a>
+        <a class="cart-pill" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener">Shop</a>
+      </div>
+    </nav>
+  </header>
+
+  <nav class="mobile-quicknav" aria-label="Mobile section navigation">
+    <a href="#collection">Collection</a>
+    <a href="#store">Bar</a>
+    <a href="#menu">Style</a>
+    <a class="shop-mini" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener">Shop</a>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy reveal">
+          <div class="hero-brand">
+            <strong>Sake Art Tokyo</strong>
+            <span>Brand LP / Chill Labo / Akasaka</span>
+          </div>
+          <div class="hero-main">
+            <h1>
+              <span class="h1-line">Drink</span>
+              <span class="h1-line">Bright</span>
+              <span class="h1-line">Sake.</span>
+            </h1>
+            <p class="lead">
+              <span>温度にも、時間にも、正解はない</span>
+              <span>好きな時に、好きな人と</span>
+              <span>好きなようにお楽しみください！</span>
+            </p>
+            <p class="tagline">Buy it. Drink it. Gift it. Share it.</p>
+          </div>
+          <div class="hero-side" aria-label="Page index">
+            <div class="hero-index">
+              <a class="index-link" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener"><em>01</em><span>Online Shop</span><span>Buy</span></a>
+              <a class="index-link" href="#collection"><em>02</em><span>Label Collection</span><span>View</span></a>
+              <a class="index-link" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener"><em>03</em><span>Chill Labo Map</span><span>Map</span></a>
+              <a class="index-link" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener"><em>04</em><span>Chill Labo Instagram</span><span>Instagram</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <span>ONLINE SHOP / CHILL LABO / INSTAGRAM / ONLINE SHOP / CHILL LABO / INSTAGRAM /&nbsp;</span>
+      <span>ONLINE SHOP / CHILL LABO / INSTAGRAM / ONLINE SHOP / CHILL LABO / INSTAGRAM /&nbsp;</span>
+    </div>
+
+    <section id="product">
+      <div class="wrap">
+        <div class="split">
+          <div>
+            <p class="section-kicker">shop</p>
+            <h2 class="section-title">
+              <a class="shop-title-link" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" aria-label="Chill Kakuショップを開く">
+                <span>Online</span>
+                <span>Shop.</span>
+              </a>
+            </h2>
+          </div>
+          <div>
+            <p class="section-copy">
+              オンラインではボトルを。<br>
+              赤坂では一杯を。<br>
+              入口はここから。
+            </p>
+            <div class="cta-row">
+              <a class="btn primary" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-slot="transaction-cta">オンラインショップはこちら</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="collection-band" id="collection">
+      <div class="wrap">
+        <div class="split">
+          <div>
+            <p class="section-kicker">collection</p>
+            <h2 class="section-title">Labels as art.</h2>
+          </div>
+          <p class="section-copy">ボトルだけじゃなく、ラベルも主役。飲み終えたあとも、作品として残る日本酒へ。</p>
+        </div>
+        <div class="label-wall">
+          <div class="label-grid" aria-label="Sake Art Tokyo label collection">
+            <a class="label-frame featured has-image" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-label-name="Melon Cotton Candy" aria-label="BASEでMelon Cotton Candyを見る">
+              <img class="label-image" src="assets/images/urazato-melon-cotton-candy.png" alt="Sake Art Tokyo Melon Cotton Candy visual mock">
+              <div class="label-fallback">
+                <b>SAKE</b>
+                <span>Melon Cotton Candy</span>
+              </div>
+            </a>
+            <a class="label-frame has-image" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-label-name="Chocolate Banana Muffin" aria-label="BASEでChocolate Banana Muffinを見る">
+              <img class="label-image" src="assets/images/tsuchida-chocolate-banana-muffin.png" alt="Sake Art Tokyo Chocolate Banana Muffin visual mock">
+              <div class="label-fallback">
+                <b>SAKE</b>
+                <span>Chocolate Banana Muffin</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="store-band" id="store">
+      <div class="wrap split">
+        <div>
+          <p class="section-kicker">store</p>
+          <h2 class="section-title">Drink at Chill Labo.</h2>
+          <p class="section-copy">赤坂のChill Laboで、グラスで試せます。最新の提供状況はInstagramで確認してください。</p>
+          <div class="cta-row">
+            <a class="btn primary" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener" data-slot="relationship-cta">チルラボに飲みに行く(Map)</a>
+            <a class="btn" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-slot="relationship-cta">Instagramを見てみる</a>
+          </div>
+        </div>
+        <a class="store-map reveal" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" aria-label="InstagramでChill Laboを見る">
+          <div>
+            <strong>Instagram</strong>
+            <em>@chilllabotokyo</em>
+            <span>日々の空気 / 最新情報</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="wrap">
+        <figure class="style-comic reveal">
+          <img src="assets/images/sake-style-comic.png" alt="いろんな温度と時間で日本酒を自由に楽しむ漫画">
+        </figure>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="wrap closing-grid">
+        <h2>Buy it.<br>Drink it.<br>Meet it.</h2>
+        <div class="cta-row">
+          <a class="btn primary" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-slot="transaction-cta">オンラインで買う</a>
+          <a class="btn basil" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener" data-slot="relationship-cta">チルラボに飲みに行く(Map)</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div>
+        <strong>Sake Art Tokyo</strong>
+        <p>20歳未満の飲酒は法律で禁止されています。</p>
+        <p class="legal-note">
+          特商法・酒類販売に関する表示は
+          <a href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener">オンラインショップ</a>
+          にてご確認ください。免許番号等の実データは確定情報のみ掲載します。
+        </p>
+      </div>
+      <div class="footer-links">
+        <a href="#product">Product</a>
+        <a href="#store">Store</a>
+        <a href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://x.com/chilllabotokyo" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const ageButton = document.querySelector('[data-age-confirm]');
+
+    function unlockAge() {
+      try { localStorage.setItem('sat-age-confirmed', 'yes'); } catch (error) {}
+      document.documentElement.classList.add('age-ok');
+    }
+
+    ageButton?.addEventListener('click', unlockAge);
+  </script>
+</body>
+</html>
