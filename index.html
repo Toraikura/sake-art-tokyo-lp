@@ -497,15 +497,13 @@
       margin-top: clamp(28px, 5vw, 56px);
     }
     .story-card,
-    .faq-card,
-    .drink-card {
+    .faq-card {
       border: 1px solid var(--ink);
       background: var(--ice);
       padding: clamp(18px, 3vw, 28px);
     }
     .story-card b,
-    .faq-card b,
-    .drink-card b {
+    .faq-card b {
       display: block;
       margin-bottom: 10px;
       font-family: var(--display);
@@ -514,17 +512,10 @@
       text-transform: uppercase;
     }
     .story-card p,
-    .faq-card p,
-    .drink-card p {
+    .faq-card p {
       margin: 0;
       color: var(--muted);
       font-weight: 800;
-    }
-    .drink-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
     }
 
     .collection-band {
@@ -788,7 +779,6 @@
       .product-grid,
       .product-card,
       .story-grid,
-      .drink-grid,
       .faq-grid,
       .closing-grid,
       .footer-grid {
@@ -1134,24 +1124,6 @@
         <figure class="style-comic reveal">
           <img src="assets/images/optimized/sake-style-comic.jpg" alt="いろんな温度と時間で日本酒を自由に楽しむ漫画" width="820" height="1457" loading="lazy">
         </figure>
-        <div class="drink-grid" aria-label="温度別の楽しみ方">
-          <article class="drink-card">
-            <b>Cold</b>
-            <p>冷やして軽く。香りを明るく、食事と一緒に。</p>
-          </article>
-          <article class="drink-card">
-            <b>Room Temp</b>
-            <p>常温でゆっくり。甘味と余韻をほどいて。</p>
-          </article>
-          <article class="drink-card">
-            <b>Warm</b>
-            <p>温めても正解。米の旨味を立ち上げて。</p>
-          </article>
-          <article class="drink-card">
-            <b>With Friends</b>
-            <p>好きな人と、好きなように。会話のそばに。</p>
-          </article>
-        </div>
       </div>
     </section>
 
