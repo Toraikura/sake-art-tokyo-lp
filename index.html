@@ -214,30 +214,28 @@
     .hero-main {
       align-self: start;
     }
-    .hero-product {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      align-self: end;
-    }
-    .hero-bottle {
+    .hero-visual {
       display: block;
+      align-self: start;
+      margin: 0;
       border: 1px solid var(--ink);
       background: var(--ice);
       overflow: hidden;
-      transition: transform .18s ease;
     }
-    .hero-bottle:hover {
-      transform: translate(4px, -4px);
+    .hero-visual picture {
+      display: block;
     }
-    .hero-bottle img {
+    .hero-visual img {
       width: 100%;
+      height: auto;
       aspect-ratio: 4 / 5;
       display: block;
       object-fit: cover;
     }
-    .hero-bottle span {
-      display: block;
+    .hero-visual figcaption {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
       padding: 10px 11px;
       border-top: 1px solid var(--ink);
       font-family: var(--mono);
@@ -546,6 +544,48 @@
     }
     .product-number {
       color: var(--tomato);
+    }
+    .table-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      border: 1px solid var(--ink);
+      background: var(--ice);
+    }
+    .table-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(28px, 6vw, 80px);
+    }
+    .table-copy h2 {
+      margin: 0 0 26px;
+      font-family: var(--display);
+      font-size: clamp(3.4rem, 8vw, 8.4rem);
+      line-height: .82;
+      text-transform: uppercase;
+    }
+    .table-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.45rem);
+      font-weight: 800;
+      line-height: 1.75;
+    }
+    .table-copy p span {
+      display: block;
+    }
+    .table-photo {
+      order: -1;
+      margin: 0;
+      border-right: 1px solid var(--ink);
+      overflow: hidden;
+    }
+    .table-photo img {
+      width: 100%;
+      height: 100%;
+      min-height: 620px;
+      display: block;
+      object-fit: cover;
     }
     .product-info h3 {
       margin: 0;
@@ -926,6 +966,7 @@
       .product-grid,
       .product-card,
       .series-pair,
+      .table-grid,
       .story-grid,
       .faq-grid,
       .closing-grid,
@@ -949,6 +990,15 @@
       .series-side + .series-side {
         border-left: 0;
         border-top: 1px solid var(--paper);
+      }
+      .table-photo {
+        order: 0;
+        border-top: 1px solid var(--ink);
+        border-right: 0;
+      }
+      .table-photo img {
+        min-height: 0;
+        aspect-ratio: 4 / 5;
       }
     }
 
@@ -986,8 +1036,9 @@
         gap: 18px;
       }
       .hero-actions { margin-top: 16px; }
-      .hero-product { gap: 10px; }
-      .hero-bottle span { font-size: 10px; }
+      .hero-visual figcaption {
+        font-size: 10px;
+      }
       .catalog-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
@@ -1114,16 +1165,13 @@
             </div>
           </div>
           <div class="hero-side" aria-label="Sake Art Tokyo product visuals">
-            <div class="hero-product" aria-label="Sake Art Tokyo products">
-              <a class="hero-bottle" href="#sat-001" data-track="select_item" data-location="hero_visual" data-product="sat-001">
-                <img src="assets/images/optimized/urazato-melon-cotton-candy.jpg" alt="Sake Art Tokyo Melon Cotton Candyのボトルビジュアル" width="900" height="1124">
-                <span>SAT 001 / Melon Cotton Candy</span>
-              </a>
-              <a class="hero-bottle" href="#sat-002" data-track="select_item" data-location="hero_visual" data-product="sat-002">
-                <img src="assets/images/optimized/tsuchida-chocolate-banana-muffin.jpg" alt="Sake Art Tokyo Chocolate Banana Muffinのボトルビジュアル" width="900" height="1124">
-                <span>SAT 002 / Chocolate Banana Muffin</span>
-              </a>
-            </div>
+            <figure class="hero-visual">
+              <picture>
+                <source media="(max-width: 520px)" srcset="assets/images/optimized/hero-current-collection-mobile.jpg">
+                <img src="assets/images/optimized/hero-current-collection-desktop.jpg" alt="SAKE ART TOKYO SAT 001とSAT 002の現在のコレクション" width="1122" height="1402">
+              </picture>
+              <figcaption><span>SAT 001 / SAT 002</span><span>Current Collection</span></figcaption>
+            </figure>
           </div>
         </div>
       </div>
@@ -1255,6 +1303,24 @@
             </div>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section id="at-the-table">
+      <div class="wrap table-grid">
+        <div class="table-copy">
+          <h2>At the table.</h2>
+          <p>
+            <span>食事の途中でも、食後でも。</span>
+            <span>冷やして、少し温度を戻して、</span>
+            <span>時には温めて。</span>
+            <span>好きな時に、好きな人と。</span>
+            <span>好きなように。</span>
+          </p>
+        </div>
+        <figure class="table-photo">
+          <img src="assets/images/optimized/at-the-table.jpg" alt="食卓でSAT 001とSAT 002を楽しむシーン" width="1122" height="1402" loading="lazy">
+        </figure>
       </div>
     </section>
 
