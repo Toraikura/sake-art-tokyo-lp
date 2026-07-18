@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="赤坂の日本酒バーChill Laboが、浦里酒造・土田酒造とつくるオリジナル日本酒。フルーティーな香り、温度による味わいの変化、アートラベルをお楽しみください。">
+  <meta name="description" content="赤坂の日本酒バーChill Laboから生まれたSAKE ART TOKYO。蔵とつくる日本酒・クラフトSAKEを、温度や時間に縛られず楽しむコレクションです。">
   <link rel="canonical" href="https://toraikura.github.io/sake-art-tokyo-lp/">
-  <meta property="og:title" content="SAKE ART TOKYO｜浦里酒造・土田酒造とつくる東京発の日本酒">
+  <meta property="og:title" content="SAKE ART TOKYO｜赤坂発のSAKEコレクション">
   <meta property="og:description" content="赤坂の日本酒バーChill Laboが、蔵元とつくるオリジナル日本酒。好きな時に、好きな人と、好きなようにお楽しみください。">
   <meta property="og:image" content="https://toraikura.github.io/sake-art-tokyo-lp/assets/images/optimized/urazato-melon-cotton-candy.jpg">
   <meta property="og:url" content="https://toraikura.github.io/sake-art-tokyo-lp/">
@@ -15,7 +15,7 @@
   <meta name="twitter:description" content="Chill Laboから生まれた、温度と時間を自由に楽しむ日本酒。">
   <meta name="twitter:image" content="https://toraikura.github.io/sake-art-tokyo-lp/assets/images/optimized/urazato-melon-cotton-candy.jpg">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%2311150F"/><text x="8" y="38" font-size="18" font-family="Arial Black" fill="%23F2EFE5">SAT</text></svg>'>
-  <title>SAKE ART TOKYO｜浦里酒造・土田酒造とつくる東京発の日本酒</title>
+  <title>SAKE ART TOKYO｜赤坂発のSAKEコレクション</title>
   <script>
     (function () {
       document.documentElement.classList.add('js');
@@ -263,18 +263,6 @@
     .lead span {
       display: block;
     }
-    .tagline {
-      width: fit-content;
-      margin: 22px 0 0;
-      padding: 10px 13px;
-      border: 1px solid var(--ink);
-      background: var(--ice);
-      color: var(--ink);
-      font-family: var(--mono);
-      font-size: clamp(.78rem, 1.3vw, .95rem);
-      font-weight: 900;
-      text-transform: uppercase;
-    }
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
@@ -331,6 +319,7 @@
     section {
       padding: var(--section) 0;
       border-bottom: 1px solid var(--ink);
+      scroll-margin-top: 92px;
     }
     .section-kicker {
       margin: 0 0 14px;
@@ -360,6 +349,164 @@
       gap: clamp(28px, 6vw, 84px);
       align-items: start;
     }
+    .section-intro {
+      display: grid;
+      gap: 18px;
+      max-width: 860px;
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: clamp(32px, 6vw, 68px);
+    }
+    .catalog-card {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--ink);
+      background: var(--ice);
+      color: var(--ink);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .catalog-card:hover {
+      transform: translate(4px, -4px);
+      box-shadow: -4px 4px 0 var(--ink);
+    }
+    .catalog-visual {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-bottom: 1px solid var(--ink);
+      background: var(--martini);
+    }
+    .catalog-visual img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform .24s ease;
+    }
+    .catalog-card:hover .catalog-visual img {
+      transform: scale(1.025);
+    }
+    .catalog-card.teaser .catalog-visual {
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, transparent 0 47%, var(--ink) 47% 48%, transparent 48% 100%),
+        var(--tomato);
+      color: var(--paper);
+      font-family: var(--display);
+      font-size: clamp(2.4rem, 5vw, 5.2rem);
+      line-height: .8;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .catalog-card.teaser:nth-child(4) .catalog-visual {
+      background:
+        linear-gradient(45deg, transparent 0 47%, var(--paper) 47% 48%, transparent 48% 100%),
+        var(--basil);
+    }
+    .catalog-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+    }
+    .catalog-number,
+    .product-number {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .catalog-card h3 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(1.35rem, 2.7vw, 2.8rem);
+      line-height: .88;
+      text-transform: uppercase;
+    }
+    .catalog-meta {
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .catalog-link {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .series-band {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .series-band .section-copy {
+      color: color-mix(in srgb, var(--paper) 76%, transparent);
+    }
+    .series-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: clamp(30px, 5vw, 58px);
+      border: 1px solid var(--paper);
+    }
+    .series-side {
+      min-height: clamp(280px, 34vw, 480px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 36px;
+      padding: clamp(24px, 4vw, 50px);
+      background: var(--tomato);
+    }
+    .series-side + .series-side {
+      border-left: 1px solid var(--paper);
+      background: var(--basil);
+    }
+    .series-side strong {
+      font-family: var(--display);
+      font-size: clamp(3rem, 8vw, 8rem);
+      line-height: .8;
+      text-transform: uppercase;
+    }
+    .series-side span {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .details-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--ink);
+    }
+    .details-heading h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2.6rem, 7vw, 7rem);
+      line-height: .85;
+      text-transform: uppercase;
+    }
+    .details-heading p {
+      max-width: 34ch;
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+    }
     .product-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -373,6 +520,7 @@
       border: 1px solid var(--ink);
       background: var(--ice);
       overflow: hidden;
+      scroll-margin-top: 92px;
     }
     .product-card img {
       width: 100%;
@@ -395,6 +543,9 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+    }
+    .product-number {
+      color: var(--tomato);
     }
     .product-info h3 {
       margin: 0;
@@ -480,6 +631,25 @@
       color: var(--muted);
       font-weight: 800;
     }
+    .brewery-roster {
+      margin-top: clamp(28px, 5vw, 56px);
+      border-top: 1px solid var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .brewery-row {
+      display: grid;
+      grid-template-columns: 110px 1fr auto;
+      gap: 18px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--ink);
+    }
+    .brewery-row span:first-child,
+    .brewery-row span:last-child {
+      color: var(--tomato);
+    }
 
     .collection-band {
       background: var(--paper);
@@ -551,6 +721,20 @@
       margin-top: clamp(26px, 5vw, 70px);
       background: var(--martini);
       transform: none;
+    }
+    .label-frame.teaser {
+      background:
+        linear-gradient(135deg, transparent 0 48%, var(--line) 48% 49%, transparent 49% 100%),
+        var(--ice);
+    }
+    .label-frame.teaser:nth-child(4) {
+      margin-top: clamp(26px, 5vw, 70px);
+      background:
+        linear-gradient(45deg, transparent 0 48%, var(--line) 48% 49%, transparent 49% 100%),
+        var(--martini);
+    }
+    .label-frame.teaser:hover {
+      background: var(--basil);
     }
     .label-frame b {
       font-family: var(--display);
@@ -741,6 +925,7 @@
       .split,
       .product-grid,
       .product-card,
+      .series-pair,
       .story-grid,
       .faq-grid,
       .closing-grid,
@@ -759,7 +944,12 @@
       .label-grid {
         grid-template-columns: 1fr;
       }
-      .label-frame:nth-child(2) { margin-top: 0; }
+      .label-frame:nth-child(2),
+      .label-frame.teaser:nth-child(4) { margin-top: 0; }
+      .series-side + .series-side {
+        border-left: 0;
+        border-top: 1px solid var(--paper);
+      }
     }
 
     @media (max-width: 520px) {
@@ -795,10 +985,26 @@
         padding-bottom: 10px;
         gap: 18px;
       }
-      .tagline { margin-top: 14px; }
       .hero-actions { margin-top: 16px; }
       .hero-product { gap: 10px; }
       .hero-bottle span { font-size: 10px; }
+      .catalog-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .catalog-body { padding: 12px; }
+      .catalog-card h3 { font-size: clamp(1rem, 5.2vw, 1.4rem); }
+      .catalog-card.teaser .catalog-visual { font-size: clamp(2rem, 13vw, 3.8rem); }
+      .details-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .brewery-row {
+        grid-template-columns: 72px 1fr;
+      }
+      .brewery-row span:last-child {
+        grid-column: 2;
+      }
       .marquee span { padding: 12px 0; }
       section { padding: clamp(48px, 12vw, 68px) 0; }
       .label-image {
@@ -888,7 +1094,7 @@
         <div class="hero-copy reveal">
           <div class="hero-brand">
             <strong>Sake Art Tokyo</strong>
-            <span>Akasaka Tokyo / Urasato / Tsuchida</span>
+            <span>Akasaka Tokyo / Sake &amp; Craft Sake</span>
           </div>
           <div class="hero-main">
             <h1>
@@ -897,26 +1103,25 @@
               <span class="h1-line">Sake.</span>
             </h1>
             <p class="lead">
-              <span>浦里酒造・土田酒造とつくる、東京発のオリジナル日本酒。</span>
+              <span>赤坂の日本酒バーChill Laboから生まれた、東京発のSAKEブランド。</span>
               <span>温度にも、時間にも、正解はない</span>
               <span>好きな時に、好きな人と</span>
               <span>好きなようにお楽しみください！</span>
             </p>
-            <p class="tagline">Buy it. Drink it. Share it.</p>
             <div class="hero-actions">
-              <a class="btn primary" href="#product" data-track="select_item" data-location="hero">2本から選ぶ</a>
+              <a class="btn primary" href="#product" data-track="navigate_section" data-location="hero">コレクションを見る</a>
               <a class="btn" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener" data-track="click_map" data-location="hero">赤坂で試す</a>
             </div>
           </div>
           <div class="hero-side" aria-label="Sake Art Tokyo product visuals">
             <div class="hero-product" aria-label="Sake Art Tokyo products">
-              <a class="hero-bottle" href="#melon-cotton-candy" data-track="select_item" data-location="hero_visual" data-product="melon-cotton-candy">
+              <a class="hero-bottle" href="#sat-001" data-track="select_item" data-location="hero_visual" data-product="sat-001">
                 <img src="assets/images/optimized/urazato-melon-cotton-candy.jpg" alt="Sake Art Tokyo Melon Cotton Candyのボトルビジュアル" width="900" height="1124">
-                <span>Melon Cotton Candy</span>
+                <span>SAT 001 / Melon Cotton Candy</span>
               </a>
-              <a class="hero-bottle" href="#chocolate-banana-muffin" data-track="select_item" data-location="hero_visual" data-product="chocolate-banana-muffin">
+              <a class="hero-bottle" href="#sat-002" data-track="select_item" data-location="hero_visual" data-product="sat-002">
                 <img src="assets/images/optimized/tsuchida-chocolate-banana-muffin.jpg" alt="Sake Art Tokyo Chocolate Banana Muffinのボトルビジュアル" width="900" height="1124">
-                <span>Chocolate Banana Muffin</span>
+                <span>SAT 002 / Chocolate Banana Muffin</span>
               </a>
             </div>
           </div>
@@ -925,31 +1130,94 @@
     </section>
 
     <div class="marquee" aria-hidden="true">
-      <span>ONLINE SHOP / CHILL LABO / INSTAGRAM / ONLINE SHOP / CHILL LABO / INSTAGRAM /&nbsp;</span>
-      <span>ONLINE SHOP / CHILL LABO / INSTAGRAM / ONLINE SHOP / CHILL LABO / INSTAGRAM /&nbsp;</span>
+      <span>THE COLLECTION / SAT 001 / SAT 002 / SAT 003 / SAT 004 /&nbsp;</span>
+      <span>THE COLLECTION / SAT 001 / SAT 002 / SAT 003 / SAT 004 /&nbsp;</span>
     </div>
 
     <section id="product">
       <div class="wrap">
-        <div class="split">
-          <div>
-            <p class="section-kicker">products</p>
-            <h2 class="section-title">Two Sakes. Two Moods.</h2>
-          </div>
-          <div>
-            <p class="section-copy">
-              軽く明るい浦里、ゆっくり深い土田。まずは気分と香りで選んでください。販売開始までは、InstagramとChill Laboで最新情報をお知らせします。
-            </p>
-            <div class="cta-row">
-              <a class="btn primary" href="#melon-cotton-candy" data-track="select_item" data-location="products_intro" data-product="melon-cotton-candy">浦里を見る</a>
-              <a class="btn" href="#chocolate-banana-muffin" data-track="select_item" data-location="products_intro" data-product="chocolate-banana-muffin">土田を見る</a>
-            </div>
-          </div>
+        <div class="section-intro">
+          <p class="section-kicker">the collection</p>
+          <h2 class="section-title">The Collection.</h2>
+          <p class="section-copy">
+            SATの通し番号で、蔵と作品を少しずつ増やしていきます。今選べる2本と、秋に加わる柏崎のクラフトSAKEプロジェクト。
+          </p>
         </div>
-        <div class="product-grid" aria-label="Sake Art Tokyo products">
-          <article id="melon-cotton-candy" class="product-card">
+        <div class="catalog-grid" aria-label="Sake Art Tokyo collection">
+          <a class="catalog-card" href="#sat-001" data-track="select_item" data-location="collection_index" data-product="sat-001">
+            <div class="catalog-visual">
+              <img src="assets/images/optimized/urazato-melon-cotton-candy.jpg" alt="SAT 001 Melon Cotton Candy" width="900" height="1124" loading="lazy">
+            </div>
+            <div class="catalog-body">
+              <p class="catalog-number">SAT 001</p>
+              <h3>Melon<br>Cotton<br>Candy</h3>
+              <p class="catalog-meta">浦里酒造 / Bright &amp; Fruity</p>
+              <span class="catalog-link">詳細を見る</span>
+            </div>
+          </a>
+          <a class="catalog-card" href="#sat-002" data-track="select_item" data-location="collection_index" data-product="sat-002">
+            <div class="catalog-visual">
+              <img src="assets/images/optimized/tsuchida-chocolate-banana-muffin.jpg" alt="SAT 002 Chocolate Banana Muffin" width="900" height="1124" loading="lazy">
+            </div>
+            <div class="catalog-body">
+              <p class="catalog-number">SAT 002</p>
+              <h3>Chocolate<br>Banana<br>Muffin</h3>
+              <p class="catalog-meta">土田酒造 / Rich &amp; Slow</p>
+              <span class="catalog-link">詳細を見る</span>
+            </div>
+          </a>
+          <a class="catalog-card teaser" href="#kashiwazaki-series" data-track="select_series" data-location="collection_index" data-product="sat-003">
+            <div class="catalog-visual">003</div>
+            <div class="catalog-body">
+              <p class="catalog-number">SAT 003</p>
+              <h3>New<br>Craft<br>Sake</h3>
+              <p class="catalog-meta">Kashiwazaki / Craft Sake</p>
+              <span class="catalog-link">Coming Autumn 2026</span>
+            </div>
+          </a>
+          <a class="catalog-card teaser" href="#kashiwazaki-series" data-track="select_series" data-location="collection_index" data-product="sat-004">
+            <div class="catalog-visual">004</div>
+            <div class="catalog-body">
+              <p class="catalog-number">SAT 004</p>
+              <h3>New<br>Craft<br>Sake</h3>
+              <p class="catalog-meta">Kashiwazaki / Craft Sake</p>
+              <span class="catalog-link">Coming Autumn 2026</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="series-band" id="kashiwazaki-series">
+      <div class="wrap">
+        <div class="section-intro">
+          <h2 class="section-title">One brewery. Two answers.</h2>
+          <p class="section-copy">柏崎の同じ蔵から生まれる、まったく違う2つのクラフトSAKE。商品名、蔵名、味わいは確定後に公開します。</p>
+        </div>
+        <div class="series-pair" aria-label="秋発売予定の柏崎クラフトSAKE 2商品">
+          <article class="series-side">
+            <strong>003</strong>
+            <span>SAT 003 / Craft Sake / Coming Autumn 2026</span>
+          </article>
+          <article class="series-side">
+            <strong>004</strong>
+            <span>SAT 004 / Craft Sake / Coming Autumn 2026</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="product-details">
+      <div class="wrap">
+        <div class="details-heading">
+          <h2>Current releases.</h2>
+          <p>現在公開している2作品。価格と販売開始日は、確定後に更新します。</p>
+        </div>
+        <div class="product-grid" aria-label="Sake Art Tokyo current product details">
+          <article id="sat-001" class="product-card" data-product-id="sat-001">
             <img src="assets/images/optimized/urazato-melon-cotton-candy.jpg" alt="Melon Cotton Candyのボトルビジュアル" width="900" height="1124" loading="lazy">
             <div class="product-info">
+              <p class="product-number">SAT 001 / Sake</p>
               <h3>Melon<br>Cotton<br>Candy.</h3>
               <p class="product-copy">メロンを思わせる明るい香りと、米由来のやわらかな甘味。冷酒では軽快に、温度が上がるほどふくらみを楽しめます。</p>
               <ul class="taste-tags" aria-label="Melon Cotton Candy taste tags">
@@ -963,12 +1231,13 @@
                 <div><dt>Alc.</dt><dd>12%</dd></div>
                 <div><dt>Price</dt><dd>Coming soon</dd></div>
               </dl>
-              <a class="btn primary" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-track="click_instagram" data-location="product_card" data-product="melon-cotton-candy">発売情報をInstagramで受け取る</a>
+              <a class="btn primary" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-track="click_instagram" data-location="product_card" data-product="sat-001">発売情報をInstagramで受け取る</a>
             </div>
           </article>
-          <article id="chocolate-banana-muffin" class="product-card reverse">
+          <article id="sat-002" class="product-card reverse" data-product-id="sat-002">
             <img src="assets/images/optimized/tsuchida-chocolate-banana-muffin.jpg" alt="Chocolate Banana Muffinのボトルビジュアル" width="900" height="1124" loading="lazy">
             <div class="product-info">
+              <p class="product-number">SAT 002 / Sake</p>
               <h3>Chocolate<br>Banana<br>Muffin.</h3>
               <p class="product-copy">バナナ、穀物、カカオを思わせる濃い香り。常温から燗で、ゆっくり時間をかけて変化を楽しむ一本です。</p>
               <ul class="taste-tags" aria-label="Chocolate Banana Muffin taste tags">
@@ -982,14 +1251,14 @@
                 <div><dt>Alc.</dt><dd>14%</dd></div>
                 <div><dt>Price</dt><dd>Coming soon</dd></div>
               </dl>
-              <a class="btn primary" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-track="click_instagram" data-location="product_card" data-product="chocolate-banana-muffin">発売情報をInstagramで受け取る</a>
+              <a class="btn primary" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-track="click_instagram" data-location="product_card" data-product="sat-002">発売情報をInstagramで受け取る</a>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="collection-band" id="collection">
+    <section class="collection-band" id="labels">
       <div class="wrap">
         <div class="split">
           <div>
@@ -1000,20 +1269,28 @@
         </div>
         <div class="label-wall">
           <div class="label-grid" aria-label="Sake Art Tokyo label collection">
-            <a class="label-frame featured has-image" href="#melon-cotton-candy" data-label-name="Melon Cotton Candy" aria-label="Melon Cotton Candyの商品詳細を見る" data-track="select_item" data-location="collection" data-product="melon-cotton-candy">
+            <a class="label-frame featured has-image" href="#sat-001" data-label-name="Melon Cotton Candy" aria-label="SAT 001 Melon Cotton Candyの商品詳細を見る" data-track="select_item" data-location="label_collection" data-product="sat-001">
               <img class="label-image" src="assets/images/optimized/urazato-melon-cotton-candy.jpg" alt="Sake Art Tokyo Melon Cotton Candyのラベルアート" width="900" height="1124" loading="lazy">
               <div class="label-fallback">
                 <b>SAKE</b>
                 <span>Melon Cotton Candy</span>
               </div>
             </a>
-            <a class="label-frame has-image" href="#chocolate-banana-muffin" data-label-name="Chocolate Banana Muffin" aria-label="Chocolate Banana Muffinの商品詳細を見る" data-track="select_item" data-location="collection" data-product="chocolate-banana-muffin">
+            <a class="label-frame has-image" href="#sat-002" data-label-name="Chocolate Banana Muffin" aria-label="SAT 002 Chocolate Banana Muffinの商品詳細を見る" data-track="select_item" data-location="label_collection" data-product="sat-002">
               <img class="label-image" src="assets/images/optimized/tsuchida-chocolate-banana-muffin.jpg" alt="Sake Art Tokyo Chocolate Banana Muffinのラベルアート" width="900" height="1124" loading="lazy">
               <div class="label-fallback">
                 <b>SAKE</b>
                 <span>Chocolate Banana Muffin</span>
               </div>
             </a>
+            <div class="label-frame teaser" aria-label="SAT 003 ラベルは秋公開予定">
+              <b>003</b>
+              <span>Artwork under wraps / Autumn 2026</span>
+            </div>
+            <div class="label-frame teaser" aria-label="SAT 004 ラベルは秋公開予定">
+              <b>004</b>
+              <span>Artwork under wraps / Autumn 2026</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1037,12 +1314,17 @@
           </article>
           <article class="story-card">
             <b>Brewery</b>
-            <p>浦里酒造、土田酒造と向き合いながら、香り、温度、時間で表情が変わる日本酒を目指します。</p>
+            <p>ひとつの型を押しつけず、それぞれの蔵と酒に合う挑戦を重ねます。秋には柏崎から2つのクラフトSAKEが加わります。</p>
           </article>
           <article class="story-card">
             <b>People</b>
             <p>詳しくなくてもいい。ワイン、クラフトビール、甘い香りのお酒が好きな人にも開いていく日本酒です。</p>
           </article>
+        </div>
+        <div class="brewery-roster" aria-label="蔵元と作品の対応一覧">
+          <div class="brewery-row"><span>SAT 001</span><span>浦里酒造</span><span>Melon Cotton Candy</span></div>
+          <div class="brewery-row"><span>SAT 002</span><span>土田酒造</span><span>Chocolate Banana Muffin</span></div>
+          <div class="brewery-row"><span>SAT 003-004</span><span>柏崎の蔵</span><span>Coming Autumn 2026</span></div>
         </div>
       </div>
     </section>
@@ -1137,7 +1419,17 @@
       </div>
     </div>
   </footer>
+  <script id="sat-product-data" type="application/json">
+    [
+      {"id":"sat-001","name":"Melon Cotton Candy","brewery":"浦里酒造","type":"sake","status":"announced","mood":["fruity","light"],"volume":"720ml","alcohol":"12%"},
+      {"id":"sat-002","name":"Chocolate Banana Muffin","brewery":"土田酒造","type":"sake","status":"announced","mood":["aromatic","slow"],"volume":"720ml","alcohol":"14%"},
+      {"id":"sat-003","name":null,"brewery":null,"region":"柏崎","type":"craft-sake","status":"coming-autumn-2026","series":"kashiwazaki-project"},
+      {"id":"sat-004","name":null,"brewery":null,"region":"柏崎","type":"craft-sake","status":"coming-autumn-2026","series":"kashiwazaki-project"}
+    ]
+  </script>
   <script>
+    const productCatalog = JSON.parse(document.querySelector('#sat-product-data')?.textContent || '[]');
+    const productsById = new Map(productCatalog.map((product) => [product.id, product]));
     const ageButton = document.querySelector('[data-age-confirm]');
     const denyButton = document.querySelector('[data-age-deny]');
 
@@ -1164,8 +1456,12 @@
 
     document.querySelectorAll('[data-track]').forEach((element) => {
       element.addEventListener('click', () => {
+        const product = productsById.get(element.dataset.product);
         trackEvent(element.dataset.track, {
           product: element.dataset.product || '',
+          product_name: product?.name || '',
+          product_type: product?.type || '',
+          product_status: product?.status || '',
           location: element.dataset.location || '',
           href: element.getAttribute('href') || ''
         });
