@@ -3,8 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sake Art Tokyo by Chill Labo. 温度にも、時間にも、正解はない 好きな時に、好きな人と 好きなようにお楽しみください！">
-  <title>Sake Art Tokyo | Parsons Studio Direction</title>
+  <meta name="description" content="赤坂の日本酒バーChill Laboが、浦里酒造・土田酒造とつくるオリジナル日本酒。フルーティーな香り、温度による味わいの変化、アートラベルをお楽しみください。">
+  <link rel="canonical" href="https://toraikura.github.io/sake-art-tokyo-lp/">
+  <meta property="og:title" content="SAKE ART TOKYO｜浦里酒造・土田酒造とつくる東京発の日本酒">
+  <meta property="og:description" content="赤坂の日本酒バーChill Laboが、蔵元とつくるオリジナル日本酒。好きな時に、好きな人と、好きなようにお楽しみください。">
+  <meta property="og:image" content="https://toraikura.github.io/sake-art-tokyo-lp/assets/images/urazato-melon-cotton-candy.png">
+  <meta property="og:url" content="https://toraikura.github.io/sake-art-tokyo-lp/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SAKE ART TOKYO｜東京発のオリジナル日本酒">
+  <meta name="twitter:description" content="Chill Laboから生まれた、温度と時間を自由に楽しむ日本酒。">
+  <meta name="twitter:image" content="https://toraikura.github.io/sake-art-tokyo-lp/assets/images/urazato-melon-cotton-candy.png">
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%2311150F"/><text x="8" y="38" font-size="18" font-family="Arial Black" fill="%23F2EFE5">SAT</text></svg>'>
+  <title>SAKE ART TOKYO｜浦里酒造・土田酒造とつくる東京発の日本酒</title>
   <script>
     (function () {
       document.documentElement.classList.add('js');
@@ -155,8 +166,8 @@
     .hero-copy {
       padding: clamp(14px, 3vw, 44px) clamp(34px, 5vw, 72px) clamp(18px, 3vw, 42px);
       display: grid;
-      grid-template-columns: minmax(0, .76fr) minmax(360px, .46fr);
-      grid-template-rows: auto 1fr auto;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, .52fr);
+      grid-template-rows: auto auto;
       gap: clamp(28px, 5vw, 72px);
       background:
         linear-gradient(90deg, rgba(17,21,15,.055) 1px, transparent 1px),
@@ -167,7 +178,7 @@
     h1 {
       margin: 0 0 18px;
       font-family: var(--display);
-      font-size: clamp(4.4rem, 14.2vw, 15.5rem);
+      font-size: clamp(4.4rem, 11.6vw, 12rem);
       line-height: .76;
       text-transform: uppercase;
       max-width: 7.4ch;
@@ -199,13 +210,47 @@
       font-size: clamp(1.4rem, 3vw, 3rem);
       line-height: .9;
     }
+    .hero-brand span {
+      overflow-wrap: anywhere;
+    }
     .hero-main {
+      align-self: start;
+    }
+    .hero-product {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
       align-self: end;
+    }
+    .hero-bottle {
+      display: block;
+      border: 1px solid var(--ink);
+      background: var(--ice);
+      overflow: hidden;
+      transition: transform .18s ease;
+    }
+    .hero-bottle:hover {
+      transform: translate(4px, -4px);
+    }
+    .hero-bottle img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      display: block;
+      object-fit: cover;
+    }
+    .hero-bottle span {
+      display: block;
+      padding: 10px 11px;
+      border-top: 1px solid var(--ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
     }
     .hero-side {
       align-self: stretch;
       display: grid;
-      grid-template-rows: auto;
+      grid-template-rows: auto auto;
       gap: 24px;
       border-left: 1px solid var(--ink);
       padding-left: clamp(18px, 3vw, 34px);
@@ -256,6 +301,12 @@
       font-size: clamp(.78rem, 1.3vw, .95rem);
       font-weight: 900;
       text-transform: uppercase;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
     }
     .cta-row {
       display: flex;
@@ -353,6 +404,127 @@
       grid-template-columns: minmax(0, .72fr) minmax(0, 1fr);
       gap: clamp(28px, 6vw, 84px);
       align-items: start;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: clamp(28px, 5vw, 56px);
+    }
+    .product-card {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1fr);
+      gap: 0;
+      border: 1px solid var(--ink);
+      background: var(--ice);
+      overflow: hidden;
+    }
+    .product-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      display: block;
+      object-fit: cover;
+      border-right: 1px solid var(--ink);
+    }
+    .product-info {
+      padding: clamp(18px, 3vw, 28px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .product-info h3 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2rem, 4.8vw, 4.4rem);
+      line-height: .86;
+      text-transform: uppercase;
+    }
+    .product-copy {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .spec-list {
+      display: grid;
+      gap: 0;
+      margin: 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .spec-list div {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .spec-list div:last-child {
+      border-bottom: 0;
+    }
+    .spec-list dt {
+      color: var(--muted);
+    }
+    .spec-list dd {
+      margin: 0;
+    }
+    .taste-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .taste-tags li {
+      padding: 6px 8px;
+      border: 1px solid var(--ink);
+      background: var(--paper);
+    }
+    .story-grid,
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: clamp(28px, 5vw, 56px);
+    }
+    .story-card,
+    .faq-card,
+    .drink-card {
+      border: 1px solid var(--ink);
+      background: var(--ice);
+      padding: clamp(18px, 3vw, 28px);
+    }
+    .story-card b,
+    .faq-card b,
+    .drink-card b {
+      display: block;
+      margin-bottom: 10px;
+      font-family: var(--display);
+      font-size: clamp(1.45rem, 3vw, 2.8rem);
+      line-height: .9;
+      text-transform: uppercase;
+    }
+    .story-card p,
+    .faq-card p,
+    .drink-card p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .drink-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
     }
 
     .collection-band {
@@ -586,6 +758,12 @@
       opacity: 1;
       transform: none;
     }
+    .scroll-sentinel {
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      pointer-events: none;
+    }
 
     @media (max-width: 920px) {
       .nav-links { display: none; }
@@ -607,9 +785,18 @@
         padding-top: 18px;
       }
       .split,
+      .product-grid,
+      .product-card,
+      .story-grid,
+      .drink-grid,
+      .faq-grid,
       .closing-grid,
       .footer-grid {
         grid-template-columns: 1fr;
+      }
+      .product-card img {
+        border-right: 0;
+        border-bottom: 1px solid var(--ink);
       }
       .label-grid {
         grid-template-columns: 1fr;
@@ -651,6 +838,9 @@
         gap: 18px;
       }
       .tagline { margin-top: 14px; }
+      .hero-actions { margin-top: 16px; }
+      .hero-product { gap: 10px; }
+      .hero-bottle span { font-size: 10px; }
       .index-link {
         grid-template-columns: 32px 1fr auto;
         gap: 8px;
@@ -660,6 +850,12 @@
       section { padding: clamp(48px, 12vw, 68px) 0; }
       .label-image {
         min-height: 420px;
+      }
+      .product-card img {
+        min-height: 300px;
+      }
+      .spec-list div {
+        grid-template-columns: 82px 1fr;
       }
       .lead,
       .section-copy {
@@ -696,10 +892,10 @@
   <div class="age-gate" role="dialog" aria-modal="true" aria-labelledby="age-title">
     <div class="age-card">
       <h2 id="age-title">20+<br>Only.</h2>
-      <p>このページは酒類を扱います。<br>20歳以上ですか？</p>
+      <p>Sake Art Tokyoは酒類を扱うページです。20歳未満の方は閲覧できません。</p>
       <div class="age-actions">
         <button class="btn primary" type="button" data-age-confirm>はい、20歳以上です</button>
-        <a class="btn" href="about:blank">いいえ</a>
+        <button class="btn" type="button" data-age-deny>いいえ</button>
       </div>
     </div>
   </div>
@@ -739,7 +935,7 @@
         <div class="hero-copy reveal">
           <div class="hero-brand">
             <strong>Sake Art Tokyo</strong>
-            <span>Brand LP / Chill Labo / Akasaka</span>
+            <span>Akasaka Tokyo / Urasato / Tsuchida</span>
           </div>
           <div class="hero-main">
             <h1>
@@ -748,18 +944,34 @@
               <span class="h1-line">Sake.</span>
             </h1>
             <p class="lead">
+              <span>浦里酒造・土田酒造とつくる、東京発のオリジナル日本酒。</span>
               <span>温度にも、時間にも、正解はない</span>
               <span>好きな時に、好きな人と</span>
               <span>好きなようにお楽しみください！</span>
             </p>
-            <p class="tagline">Buy it. Drink it. Gift it. Share it.</p>
+            <p class="tagline">Buy it. Drink it. Share it.</p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#collection" data-track="view_product">2本の日本酒を見る</a>
+              <a class="btn" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-track="click_shop">オンラインで購入</a>
+              <a class="btn" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener" data-track="click_map">赤坂で試飲する</a>
+            </div>
           </div>
           <div class="hero-side" aria-label="Page index">
+            <div class="hero-product" aria-label="Sake Art Tokyo products">
+              <a class="hero-bottle" href="#collection" data-track="view_product">
+                <img src="assets/images/urazato-melon-cotton-candy.png" alt="Sake Art Tokyo Melon Cotton Candyのボトルビジュアル" width="1122" height="1402">
+                <span>Melon Cotton Candy</span>
+              </a>
+              <a class="hero-bottle" href="#collection" data-track="view_product">
+                <img src="assets/images/tsuchida-chocolate-banana-muffin.png" alt="Sake Art Tokyo Chocolate Banana Muffinのボトルビジュアル" width="1122" height="1402">
+                <span>Chocolate Banana Muffin</span>
+              </a>
+            </div>
             <div class="hero-index">
-              <a class="index-link" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener"><em>01</em><span>Online Shop</span><span>Buy</span></a>
+              <a class="index-link" href="#collection"><em>01</em><span>2 Bottles</span><span>View</span></a>
               <a class="index-link" href="#collection"><em>02</em><span>Label Collection</span><span>View</span></a>
               <a class="index-link" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener"><em>03</em><span>Chill Labo Map</span><span>Map</span></a>
-              <a class="index-link" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener"><em>04</em><span>Chill Labo Instagram</span><span>Instagram</span></a>
+              <a class="index-link" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-track="click_shop"><em>04</em><span>Online Shop</span><span>Buy</span></a>
             </div>
           </div>
         </div>
@@ -785,14 +997,53 @@
           </div>
           <div>
             <p class="section-copy">
-              オンラインではボトルを。<br>
-              赤坂では一杯を。<br>
-              入口はここから。
+              まずは気になる香りから。オンラインではボトルを、赤坂のChill Laboではグラスで試せます。
             </p>
             <div class="cta-row">
-              <a class="btn primary" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-slot="transaction-cta">オンラインショップはこちら</a>
+              <a class="btn primary" href="#collection" data-track="view_product">2本の違いを見る</a>
+              <a class="btn" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-slot="transaction-cta" data-track="click_shop">オンラインショップはこちら</a>
             </div>
           </div>
+        </div>
+        <div class="product-grid" aria-label="Sake Art Tokyo products">
+          <article class="product-card">
+            <img src="assets/images/urazato-melon-cotton-candy.png" alt="Melon Cotton Candyのボトルビジュアル" width="1122" height="1402" loading="lazy">
+            <div class="product-info">
+              <h3>Melon<br>Cotton<br>Candy.</h3>
+              <p class="product-copy">メロンを思わせる明るい香りと、米由来のやわらかな甘味。冷酒では軽快に、温度が上がるほどふくらみを楽しめます。</p>
+              <ul class="taste-tags" aria-label="Melon Cotton Candy taste tags">
+                <li>Fruity</li>
+                <li>Light</li>
+                <li>Cold / Room Temp</li>
+              </ul>
+              <dl class="spec-list">
+                <div><dt>Brewery</dt><dd>浦里酒造</dd></div>
+                <div><dt>Volume</dt><dd>販売ページで確認</dd></div>
+                <div><dt>ABV</dt><dd>販売ページで確認</dd></div>
+                <div><dt>Price</dt><dd>販売ページで確認</dd></div>
+              </dl>
+              <a class="btn primary" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-track="click_product" data-product="melon-cotton-candy">販売ページを見る</a>
+            </div>
+          </article>
+          <article class="product-card">
+            <img src="assets/images/tsuchida-chocolate-banana-muffin.png" alt="Chocolate Banana Muffinのボトルビジュアル" width="1122" height="1402" loading="lazy">
+            <div class="product-info">
+              <h3>Chocolate<br>Banana<br>Muffin.</h3>
+              <p class="product-copy">バナナ、穀物、カカオを思わせる濃い香り。常温から燗で、ゆっくり時間をかけて変化を楽しむ一本です。</p>
+              <ul class="taste-tags" aria-label="Chocolate Banana Muffin taste tags">
+                <li>Aromatic</li>
+                <li>Slow</li>
+                <li>Room Temp / Warm</li>
+              </ul>
+              <dl class="spec-list">
+                <div><dt>Brewery</dt><dd>土田酒造</dd></div>
+                <div><dt>Volume</dt><dd>販売ページで確認</dd></div>
+                <div><dt>ABV</dt><dd>販売ページで確認</dd></div>
+                <div><dt>Price</dt><dd>販売ページで確認</dd></div>
+              </dl>
+              <a class="btn primary" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-track="click_product" data-product="chocolate-banana-muffin">販売ページを見る</a>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -808,21 +1059,49 @@
         </div>
         <div class="label-wall">
           <div class="label-grid" aria-label="Sake Art Tokyo label collection">
-            <a class="label-frame featured has-image" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-label-name="Melon Cotton Candy" aria-label="BASEでMelon Cotton Candyを見る">
-              <img class="label-image" src="assets/images/urazato-melon-cotton-candy.png" alt="Sake Art Tokyo Melon Cotton Candy visual mock">
+            <a class="label-frame featured has-image" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-label-name="Melon Cotton Candy" aria-label="BASEでMelon Cotton Candyを見る" data-track="click_product" data-product="melon-cotton-candy">
+              <img class="label-image" src="assets/images/urazato-melon-cotton-candy.png" alt="Sake Art Tokyo Melon Cotton Candyのラベルアート" width="1122" height="1402" loading="lazy">
               <div class="label-fallback">
                 <b>SAKE</b>
                 <span>Melon Cotton Candy</span>
               </div>
             </a>
-            <a class="label-frame has-image" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-label-name="Chocolate Banana Muffin" aria-label="BASEでChocolate Banana Muffinを見る">
-              <img class="label-image" src="assets/images/tsuchida-chocolate-banana-muffin.png" alt="Sake Art Tokyo Chocolate Banana Muffin visual mock">
+            <a class="label-frame has-image" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-label-name="Chocolate Banana Muffin" aria-label="BASEでChocolate Banana Muffinを見る" data-track="click_product" data-product="chocolate-banana-muffin">
+              <img class="label-image" src="assets/images/tsuchida-chocolate-banana-muffin.png" alt="Sake Art Tokyo Chocolate Banana Muffinのラベルアート" width="1122" height="1402" loading="lazy">
               <div class="label-fallback">
                 <b>SAKE</b>
                 <span>Chocolate Banana Muffin</span>
               </div>
             </a>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="story">
+      <div class="wrap">
+        <div class="split">
+          <div>
+            <p class="section-kicker">why we make it</p>
+            <h2 class="section-title">Born at a sake bar.</h2>
+          </div>
+          <p class="section-copy">
+            100種類以上の日本酒を扱ってきた赤坂の日本酒バー、Chill Labo。毎日お客様の好みと向き合ってきた私たちが、蔵元と一緒に「本当に飲みたい日本酒」をつくります。
+          </p>
+        </div>
+        <div class="story-grid">
+          <article class="story-card">
+            <b>Bar</b>
+            <p>赤坂で日本酒を飲む場所から生まれたブランド。オンラインだけで完結させず、グラスで試せる入口も残します。</p>
+          </article>
+          <article class="story-card">
+            <b>Brewery</b>
+            <p>浦里酒造、土田酒造と向き合いながら、香り、温度、時間で表情が変わる日本酒を目指します。</p>
+          </article>
+          <article class="story-card">
+            <b>People</b>
+            <p>詳しくなくてもいい。ワイン、クラフトビール、甘い香りのお酒が好きな人にも開いていく日本酒です。</p>
+          </article>
         </div>
       </div>
     </section>
@@ -834,11 +1113,11 @@
           <h2 class="section-title">Drink at Chill Labo.</h2>
           <p class="section-copy">赤坂のChill Laboで、グラスで試せます。最新の提供状況はInstagramで確認してください。</p>
           <div class="cta-row">
-            <a class="btn primary" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener" data-slot="relationship-cta">チルラボに飲みに行く(Map)</a>
-            <a class="btn" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-slot="relationship-cta">Instagramを見てみる</a>
+            <a class="btn primary" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener" data-slot="relationship-cta" data-track="click_map">チルラボに飲みに行く(Map)</a>
+            <a class="btn" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-slot="relationship-cta" data-track="click_instagram">Instagramを見てみる</a>
           </div>
         </div>
-        <a class="store-map reveal" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" aria-label="InstagramでChill Laboを見る">
+        <a class="store-map reveal" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" aria-label="InstagramでChill Laboを見る" data-track="click_instagram">
           <div>
             <strong>Instagram</strong>
             <em>@chilllabotokyo</em>
@@ -848,11 +1127,57 @@
       </div>
     </section>
 
+    <div class="scroll-sentinel" data-scroll-marker="50" aria-hidden="true"></div>
+
     <section id="menu">
       <div class="wrap">
         <figure class="style-comic reveal">
-          <img src="assets/images/sake-style-comic.png" alt="いろんな温度と時間で日本酒を自由に楽しむ漫画">
+          <img src="assets/images/sake-style-comic.png" alt="いろんな温度と時間で日本酒を自由に楽しむ漫画" width="941" height="1672" loading="lazy">
         </figure>
+        <div class="drink-grid" aria-label="温度別の楽しみ方">
+          <article class="drink-card">
+            <b>Cold</b>
+            <p>冷やして軽く。香りを明るく、食事と一緒に。</p>
+          </article>
+          <article class="drink-card">
+            <b>Room Temp</b>
+            <p>常温でゆっくり。甘味と余韻をほどいて。</p>
+          </article>
+          <article class="drink-card">
+            <b>Warm</b>
+            <p>温めても正解。米の旨味を立ち上げて。</p>
+          </article>
+          <article class="drink-card">
+            <b>With Friends</b>
+            <p>好きな人と、好きなように。会話のそばに。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="wrap">
+        <div class="split">
+          <div>
+            <p class="section-kicker">faq</p>
+            <h2 class="section-title">Before you buy.</h2>
+          </div>
+          <p class="section-copy">詳しい容量、度数、価格、配送条件、在庫状況はオンラインショップの商品ページで確認してください。</p>
+        </div>
+        <div class="faq-grid">
+          <article class="faq-card">
+            <b>どこで買えますか？</b>
+            <p>オンラインショップで購入できます。Chill Laboでは提供状況によりグラスで試せます。</p>
+          </article>
+          <article class="faq-card">
+            <b>おすすめ温度は？</b>
+            <p>冷酒、常温、燗のどれも楽しめます。まずは冷やして、少しずつ温度を戻す飲み方がおすすめです。</p>
+          </article>
+          <article class="faq-card">
+            <b>ギフト対応は？</b>
+            <p>ギフト箱、ラッピング、配送指定などの対応可否はオンラインショップの表示を確認してください。</p>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -860,11 +1185,12 @@
       <div class="wrap closing-grid">
         <h2>Buy it.<br>Drink it.<br>Meet it.</h2>
         <div class="cta-row">
-          <a class="btn primary" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-slot="transaction-cta">オンラインで買う</a>
-          <a class="btn basil" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener" data-slot="relationship-cta">チルラボに飲みに行く(Map)</a>
+          <a class="btn primary" href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener" data-slot="transaction-cta" data-track="click_shop">オンラインで買う</a>
+          <a class="btn basil" href="https://maps.app.goo.gl/FvvtXtq12wqjzcv8A" target="_blank" rel="noopener" data-slot="relationship-cta" data-track="click_map">チルラボに飲みに行く(Map)</a>
         </div>
       </div>
     </section>
+    <div class="scroll-sentinel" data-scroll-marker="90" aria-hidden="true"></div>
   </main>
 
   <footer class="footer">
@@ -875,7 +1201,7 @@
         <p class="legal-note">
           特商法・酒類販売に関する表示は
           <a href="https://chillkaku.buyshop.jp/" target="_blank" rel="noopener">オンラインショップ</a>
-          にてご確認ください。免許番号等の実データは確定情報のみ掲載します。
+          にてご確認ください。
         </p>
       </div>
       <div class="footer-links">
@@ -888,13 +1214,51 @@
   </footer>
   <script>
     const ageButton = document.querySelector('[data-age-confirm]');
+    const denyButton = document.querySelector('[data-age-deny]');
+
+    function trackEvent(name, detail = {}) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: name, ...detail });
+    }
 
     function unlockAge() {
       try { localStorage.setItem('sat-age-confirmed', 'yes'); } catch (error) {}
       document.documentElement.classList.add('age-ok');
+      trackEvent('age_confirm');
     }
 
     ageButton?.addEventListener('click', unlockAge);
+    denyButton?.addEventListener('click', () => {
+      const card = document.querySelector('.age-card p');
+      if (card) card.textContent = '20歳未満の方はこのページを閲覧できません。';
+    });
+
+    document.querySelectorAll('[data-track]').forEach((element) => {
+      element.addEventListener('click', () => {
+        trackEvent(element.dataset.track, {
+          product: element.dataset.product || '',
+          href: element.getAttribute('href') || ''
+        });
+      });
+    });
+
+    const seenMarkers = new Set();
+    const observer = 'IntersectionObserver' in window
+      ? new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const marker = entry.target.dataset.scrollMarker;
+            if (!marker || seenMarkers.has(marker)) return;
+            seenMarkers.add(marker);
+            trackEvent(`scroll_${marker}`);
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: .1 })
+      : null;
+
+    document.querySelectorAll('[data-scroll-marker]').forEach((marker) => {
+      observer?.observe(marker);
+    });
   </script>
 </body>
 </html>
