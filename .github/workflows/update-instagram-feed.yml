@@ -3,7 +3,8 @@ name: Update Instagram feed
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 * * * *"
+    # GitHub Actions uses UTC. 17:00 UTC is 02:00 JST the following day.
+    - cron: "0 17 * * *"
 
 permissions:
   contents: write

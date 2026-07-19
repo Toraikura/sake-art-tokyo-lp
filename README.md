@@ -15,7 +15,7 @@ This is a visual mock / art direction preview. Product details, license informat
 
 ## Automatic Instagram feed
 
-The Chill Labo panel reads `assets/data/instagram-feed.json`. GitHub Actions runs every hour, fetches the latest three posts through the official Instagram API, stores the images in this repository, and requests a Pages rebuild.
+The Chill Labo panel reads `assets/data/instagram-feed.json`. GitHub Actions runs daily at 02:00 JST (`17:00 UTC`), fetches the latest three posts through the official Instagram API, stores the images in this repository, and requests a Pages rebuild.
 
 ### One-time Meta setup
 
