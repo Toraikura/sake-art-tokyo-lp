@@ -5,6 +5,10 @@ const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
 const userId = process.env.INSTAGRAM_USER_ID;
 const apiVersion = process.env.INSTAGRAM_API_VERSION || 'v25.0';
 const itemLimit = Number(process.env.INSTAGRAM_ITEM_LIMIT || 3);
+// Host for the Instagram media graph. Default uses the Instagram Graph API via a
+// linked Facebook Page (graph.facebook.com) so a non-expiring Page token works.
+// Set INSTAGRAM_GRAPH_HOST=graph.instagram.com to use the Instagram Login API instead.
+const graphHost = process.env.INSTAGRAM_GRAPH_HOST || 'graph.facebook.com';
 
 if (!accessToken || !userId) {
   console.log('Instagram secrets are not configured; keeping the current feed.');
@@ -23,7 +27,7 @@ const fields = [
   'permalink',
   'timestamp'
 ].join(',');
-const endpoint = new URL(`https://graph.instagram.com/${apiVersion}/${userId}/media`);
+const endpoint = new URL(`https://${graphHost}/${apiVersion}/${userId}/media`);
 endpoint.searchParams.set('fields', fields);
 endpoint.searchParams.set('limit', String(Math.max(itemLimit * 3, 12)));
 endpoint.searchParams.set('access_token', accessToken);
