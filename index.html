@@ -820,10 +820,8 @@
     }
     .store-band .section-kicker { color: var(--martini); }
     .store-band .section-copy { color: color-mix(in srgb, var(--ice) 78%, transparent); }
-    .store-map {
+    .instagram-panel {
       min-height: 430px;
-      display: grid;
-      place-items: center;
       border: 1px solid var(--ice);
       background:
         linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px),
@@ -831,32 +829,106 @@
         var(--night);
       background-size: 42px 42px;
       box-shadow: none;
-      text-align: center;
-      padding: 24px;
+      padding: 14px;
     }
-    .store-map strong {
+    .instagram-panel-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 8px 4px 18px;
+    }
+    .instagram-panel-head strong,
+    .instagram-panel-head span {
+      font-family: var(--mono);
+      font-weight: 900;
+    }
+    .instagram-panel-head strong {
+      font-size: clamp(1.25rem, 2.7vw, 2.15rem);
+      text-transform: uppercase;
+    }
+    .instagram-panel-head span {
+      color: var(--martini);
+      font-size: 12px;
+    }
+    .instagram-panel-head a {
+      color: var(--ice);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .instagram-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .instagram-post {
+      position: relative;
+      min-height: 150px;
+      overflow: hidden;
+      border: 1px solid var(--ice);
+      background: var(--night);
+      color: var(--ice);
+    }
+    .instagram-post:first-child {
+      grid-column: 1 / -1;
+      min-height: 300px;
+    }
+    .instagram-post img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      transition: transform .25s ease;
+    }
+    .instagram-post:hover img {
+      transform: scale(1.025);
+    }
+    .instagram-post-label {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      z-index: 1;
+      padding: 6px 8px;
+      background: var(--ice);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .instagram-fallback {
+      grid-column: 1 / -1;
+      min-height: 390px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .instagram-fallback strong {
       display: block;
       font-family: var(--display);
       font-size: clamp(2.4rem, 6vw, 6rem);
       line-height: .9;
       text-transform: uppercase;
     }
-    .store-map span {
-      display: block;
-      margin-top: 14px;
-      font-family: var(--mono);
-      color: var(--martini);
-      font-weight: 900;
-    }
-    .store-map em {
+    .instagram-fallback em {
       display: block;
       margin-top: 16px;
       color: var(--ice);
       font-family: var(--mono);
-      font-size: clamp(.95rem, 1.8vw, 1.35rem);
       font-style: normal;
       font-weight: 900;
-      text-transform: lowercase;
+    }
+    .instagram-fallback span {
+      display: block;
+      margin-top: 14px;
+      color: var(--martini);
+      font-family: var(--mono);
+      font-weight: 900;
     }
 
     .style-comic {
@@ -1431,13 +1503,24 @@
             <a class="btn" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-slot="relationship-cta" data-track="click_instagram">Instagramを見てみる</a>
           </div>
         </div>
-        <a class="store-map reveal" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" aria-label="InstagramでChill Laboを見る" data-track="click_instagram">
-          <div>
-            <strong>Instagram</strong>
-            <em>@chilllabotokyo</em>
-            <span>日々の空気 / 最新情報</span>
+        <div class="instagram-panel reveal">
+          <div class="instagram-panel-head">
+            <div>
+              <strong>Latest from Chill Labo</strong>
+              <span>@chilllabotokyo</span>
+            </div>
+            <a href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" data-track="click_instagram">View profile</a>
           </div>
-        </a>
+          <div class="instagram-grid" data-instagram-feed aria-live="polite">
+            <a class="instagram-post instagram-fallback" href="https://www.instagram.com/chilllabotokyo/?hl=ja" target="_blank" rel="noopener" aria-label="InstagramでChill Laboを見る" data-track="click_instagram">
+              <span>
+                <strong>Instagram</strong>
+                <em>@chilllabotokyo</em>
+                <span>日々の空気 / 最新情報</span>
+              </span>
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1582,6 +1665,53 @@
     document.querySelectorAll('[data-scroll-marker]').forEach((marker) => {
       observer?.observe(marker);
     });
+
+    async function loadInstagramFeed() {
+      const feed = document.querySelector('[data-instagram-feed]');
+      if (!feed) return;
+
+      try {
+        const response = await fetch('assets/data/instagram-feed.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Instagram feed: ${response.status}`);
+        const payload = await response.json();
+        const items = Array.isArray(payload.items) ? payload.items.slice(0, 3) : [];
+        if (!items.length) return;
+
+        const fragment = document.createDocumentFragment();
+        items.forEach((item, index) => {
+          const link = document.createElement('a');
+          link.className = 'instagram-post';
+          link.href = item.permalink;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.dataset.track = 'click_instagram_post';
+          link.dataset.location = 'latest_feed';
+
+          const image = document.createElement('img');
+          image.src = item.image;
+          image.alt = item.caption || `Chill Labo Instagram post ${index + 1}`;
+          image.loading = index === 0 ? 'eager' : 'lazy';
+          image.decoding = 'async';
+
+          const label = document.createElement('span');
+          label.className = 'instagram-post-label';
+          label.textContent = index === 0 ? 'Latest post' : 'View post';
+
+          link.append(image, label);
+          link.addEventListener('click', () => trackEvent('click_instagram_post', {
+            location: 'latest_feed',
+            href: item.permalink
+          }));
+          fragment.append(link);
+        });
+
+        feed.replaceChildren(fragment);
+      } catch (error) {
+        console.info('Instagram feed fallback active.');
+      }
+    }
+
+    loadInstagramFeed();
   </script>
 </body>
 </html>
