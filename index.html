@@ -671,6 +671,30 @@
       color: var(--muted);
       font-weight: 800;
     }
+    .faq-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .flavor-card {
+      grid-column: 1 / -1;
+    }
+    .flavor-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .flavor-grid > div {
+      border-top: 1px solid var(--ink);
+      padding-top: 16px;
+    }
+    .flavor-grid strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--tomato);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 900;
+    }
     .brewery-roster {
       margin-top: clamp(28px, 5vw, 56px);
       border-top: 1px solid var(--ink);
@@ -969,6 +993,7 @@
       .table-grid,
       .story-grid,
       .faq-grid,
+      .flavor-grid,
       .closing-grid,
       .footer-grid {
         grid-template-columns: 1fr;
@@ -1428,21 +1453,27 @@
 
     <section id="faq">
       <div class="wrap">
-        <div class="split">
-          <div>
-            <p class="section-kicker">faq</p>
-            <h2 class="section-title">Before you buy.</h2>
-          </div>
-          <p class="section-copy">発売前に、よく聞かれそうな不安だけ先にまとめます。価格、発売日、配送条件は確定後に更新します。</p>
+        <div>
+          <p class="section-kicker">faq</p>
+          <h2 class="section-title">Before you buy.</h2>
         </div>
         <div class="faq-grid">
-          <article class="faq-card">
-            <b>甘口ですか？</b>
-            <p>香りは甘く、味わいは食事に合わせやすい設計です。甘さだけで押すお酒ではありません。</p>
+          <article class="faq-card flavor-card">
+            <b>どんな味ですか？</b>
+            <div class="flavor-grid">
+              <div>
+                <strong>浦里 / Melon Cotton Candy</strong>
+                <p>酸味のない、フルーティーで軽やかな一本。エスニック料理と合わせて、冷酒・常温・燗のどれでも楽しめます。</p>
+              </div>
+              <div>
+                <strong>土田 / Chocolate Banana Muffin</strong>
+                <p>濃厚でねっとりとした味わい。あん肝にバルサミコ酢を合わせて熱燗で。バームクーヘンやアイスにかけてもおいしく楽しめます。</p>
+              </div>
+            </div>
           </article>
           <article class="faq-card">
             <b>保存方法は？</b>
-            <p>開栓前は冷暗所または冷蔵で保管してください。開栓後は冷蔵し、少しずつ温度を変えて楽しめます。</p>
+            <p>開栓後も常温で保存できます。直射日光と高温を避けて保管してください。</p>
           </article>
           <article class="faq-card">
             <b>Chill Laboで飲めますか？</b>
