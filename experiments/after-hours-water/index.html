@@ -146,10 +146,10 @@ function createWaterSurface(initialCanvas) {
   vec3 normal=normalize(vec3(-slope*2.4,1.));
   vec2 reflection=uv+slope*.26+vec2(field.x*.6,field.x*.9);
   // Two broad coloured reflections, rather than all-over rainbow metal.
-  float lightA=exp(-pow((reflection.x-.31+sin(reflection.y*3.5+time*.06)*.085)/.18,2.));
-  float lightB=exp(-pow((reflection.x-.76-sin(reflection.y*4.0-time*.04)*.11)/.16,2.));
-  lightA*=.35+.65*exp(-pow((reflection.y-.57)/.50,2.));
-  lightB*=.24+.76*exp(-pow((reflection.y-.45)/.43,2.));
+  float lightA=exp(-pow(abs((reflection.x-.31+sin(reflection.y*3.5+time*.06)*.085)/.18),2.));
+  float lightB=exp(-pow(abs((reflection.x-.76-sin(reflection.y*4.0-time*.04)*.11)/.16),2.));
+  lightA*=.35+.65*exp(-pow(abs((reflection.y-.57)/.50),2.));
+  lightB*=.24+.76*exp(-pow(abs((reflection.y-.45)/.43),2.));
   vec3 water=mix(vec3(.068,.153,.172),vec3(.118,.096,.188),deep);
   vec3 lime=mix(vec3(.69,.77,.44),vec3(.57,.43,.74),deep);
   vec3 violet=mix(vec3(.55,.47,.72),vec3(.73,.57,.61),deep);
@@ -339,7 +339,7 @@ if('IntersectionObserver'in window){const obs=new IntersectionObserver(es=>{game
 function saveArt(){
  const output=document.createElement('canvas');output.width=output.height=1200;const cx=output.getContext('2d');
  if(!cx){notify('このブラウザでは画像を作成できませんでした。');return;}
- cx.fillStyle='#17151c';cx.fillRect(0,0,1200,1200);const art=document.createElement('canvas');art.width=art.height=1080;
+ cx.fillStyle='#17151c';cx.fillRect(0,0,1200,1200,1200);const art=document.createElement('canvas');art.width=art.height=1080;
  const ac=art.getContext('2d');if(ac){water.copyTo(ac,1080,1080);cx.drawImage(art,60,-50);}
  cx.fillStyle='#f4f0e8';cx.font='700 24px Arial, sans-serif';cx.fillText('SAKE ART TOKYO / YOUR EDITION',70,78);
  cx.font='900 150px Arial, sans-serif';cx.fillText('AFTER',60,943);cx.fillText('HOURS.',60,1078);
