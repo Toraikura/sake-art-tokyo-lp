@@ -1,0 +1,28 @@
+name: Intuitive preview verification
+on:
+  push:
+    branches: [feat/intuitive-play-labels-20260908]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: lp
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: Toraikura/sake-clash
+          ref: 9e391336f4b4dceee217289cc1100e5a1d55885a
+          path: game
+          persist-credentials: false
+      - name: Archive exact sources for local verification
+        run: tar --exclude=.git -czf source-snapshot.tar.gz lp game
+      - uses: actions/upload-artifact@v4
+        with:
+          name: intuitive-source-snapshot
+          path: source-snapshot.tar.gz
+          retention-days: 3
