@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install playwright==1.57.0
-      - run: python -m playwright install --with-deps chromium
+      - run: python -m playwright install --with-deps chromium webkit
       - name: Check JavaScript syntax and controller
         run: |
           set -euo pipefail
@@ -45,6 +45,18 @@ jobs:
           EVIDENCE_DIR=evidence/details python tests/intuitive/test_http_details.py
           EVIDENCE_DIR=evidence/source-cards python tests/source-water/test_ui.py
           EVIDENCE_DIR=evidence/english python tests/english/test_ui.py
+      - name: WebKit touch scrolling and closed overlays
+        run: |
+          set -euo pipefail
+          python -m http.server 4213 --bind 127.0.0.1 > /tmp/webkit-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4213/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4213/ > /dev/null
+          BASE_URL=http://127.0.0.1:4213/ EVIDENCE_DIR=evidence/webkit python tests/safari/test_overlay.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -52,4 +64,5 @@ jobs:
           path: |
             evidence/
             /tmp/site-server.log
+            /tmp/webkit-server.log
           retention-days: 7

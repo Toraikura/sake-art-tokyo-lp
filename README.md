@@ -21,7 +21,9 @@ canonical・OGP・Twitter画像・構造化データのURLは `https://sakeartto
 
 英語版のcanonical / og:urlは `https://sakearttokyo.com/en/`、商品詳細は `/en/#sat-001` / `/en/#sat-002` です。両言語に相互のhreflangを設定しています。ゲームは同じ `/play/` に `lang=en` を渡し、`play/locale.js` で表示だけ翻訳します。元のモデル・原画・記録は変更しません。ラベル、ポスター、漫画に描かれた日本語は原画像のまま維持しています。
 
-CSS / JSのURLは `?v=20260908-en1` 付きです。共有ファイルの更新時は両HTMLと、該当するゲームのmodule importの版番号を揃え、旧キャッシュとの混在を防ぎます。
+CSS / JSのURLには版番号を付けています（`site.css` 以外は `?v=20260908-en1`）。共有ファイルの更新時は両HTMLと、該当するゲームのmodule importの版番号を揃え、旧キャッシュとの混在を防ぎます。
+
+タッチ端末ではヘッダーを通常のスクロール配置にしています。iPhone Safariで黒い固定帯が居残る報告への対策で、PCの追従ヘッダーは維持します。この変更の `site.css` は両言語とも `?v=20260909-scroll1` です。実機での解消確認と、WebKitブラウザの検証結果は分けて扱います。
 
 浦里選択時はライム系、土田選択時は紫系。区切り線、PLAYの背景と強調文字、ストーリーの強調、漫画セクションの背景まで連動します。本文・エチケット・漫画の原画は維持しています。
 
@@ -53,6 +55,8 @@ python3 tests/english/test_ui.py
 ```
 
 HTTPテストの初期URLは `http://127.0.0.1:4190/`。`BASE_URL=https://sakearttokyo.com/` で公開ページも検証できます。375px／390pxのタッチエミュレーションと実機iPhone Safariは別の検証です。
+
+WebKitでは別ポート4213で配信し、`BASE_URL=http://127.0.0.1:4213/ python3 tests/safari/test_overlay.py` を実行します（`python3 -m playwright install webkit` が必要）。スクロール、表示高さの変更、ゲーム・画像保存・ポリシー画面を閉じた後、ブラウザバックを確認します。iOS Safari自体のツールバーや描画の不具合を再現する検証ではありません。
 
 ## 履歴と公開
 

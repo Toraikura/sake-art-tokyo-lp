@@ -20,3 +20,9 @@ html:not(.js) .record-art img{opacity:1}html:not(.js) .record-fallback{visibilit
 .art-caption strong{text-shadow:0 2px 12px #17151c}
 .art-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:4px}
 @media(max-width:700px){.art-stage{inset:0 -7%}.art-caption{bottom:16px}.art-tip{left:0;top:23px}}
+
+/* Keep the touch header in normal flow: no persistent opaque layer over the page
+   when mobile Safari changes its visible viewport while scrolling. */
+@media (hover: none) and (pointer: coarse) {
+  .site-header { position: relative; top: auto; }
+}
