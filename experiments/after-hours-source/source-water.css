@@ -28,6 +28,10 @@
 .source-scene[data-source="urasato"] [data-flow-source="urasato"],.source-scene[data-source="tsuchida"] [data-flow-source="tsuchida"]{opacity:1}
 .source-footer{display:flex;justify-content:flex-end;padding-block:9px 21px}
 .source-footer .text-link{font-size:10px;color:var(--muted)}
+/* Match each supplied label's portrait ratio; keep only the artwork's own white margin. */
+.label-collection .label-stack{aspect-ratio:972 / 1200}
+.label-collection .label-stack[data-release="sat-002"]{aspect-ratio:1027 / 1200}
+.label-collection .sleeve img{padding:0}
 .source-still .source-card,.source-still .source-art,.source-still .source-flow path{transition:none}
 @media(max-width:1050px) and (min-width:701px){.source-cards{gap:10px;padding-left:12px}.source-name{left:9px;top:9px}.source-card{min-height:70px}.source-scene .art-wrap{min-height:360px}.source-scene .art-caption strong{font-size:17px}}
 @media(max-width:700px){.source-scene{padding-top:28px}.source-cards{padding:0;justify-content:flex-end;gap:12px}.source-card{flex:1 1 0;max-width:159px;aspect-ratio:1.75;min-height:76px}.source-name{font-size:15px;left:11px;top:10px}.source-scene .art-wrap{height:310px;min-height:310px;flex:none}.source-scene .art-caption{bottom:15px;right:0}.source-scene .art-caption strong{font-size:18px;letter-spacing:-.025em}.source-scene .art-caption .mono{font-size:7px}.source-scene .art-tip{top:25px;font-size:9px;left:0}.source-scene .art-tip span:first-child{width:24px;height:24px;font-size:15px}.source-footer{padding:0 0 15px}.source-footer .text-link{font-size:10px}.hero-desc{max-width:330px}}
