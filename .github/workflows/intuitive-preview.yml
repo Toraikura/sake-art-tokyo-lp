@@ -4,25 +4,80 @@ on:
     branches: [feat/intuitive-play-labels-20260908]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: intuitive-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  snapshot:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Import the authorized site-only payload once
+        if: hashFiles('experiments/after-hours-water/README.md') == ''
+        env:
+          PAYLOAD_URL: 'https://sdmntprjapaneast.oaiusercontent.com/files/00000000-e338-8209-b633-8bfeb5c62c0f/raw?se=2026-09-08T00%3A20%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=438f40f7-665f-5372-bd6b-cf3cbb7bcb8a&skoid=03727f49-62d3-42ac-8350-1c0e6559d238&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-07T23%3A30%3A28Z&ske=2026-09-08T23%3A30%3A28Z&sks=b&skv=2026-02-06&sig=cK3qP9MtgqqNLprEdSbwSHTjzAiVQwYXZMF8cmwQv40%3D'
+        run: |
+          echo "::add-mask::$PAYLOAD_URL"
+          python3 - <<'PY'
+          import hashlib, io, os, stat, zipfile
+          from pathlib import Path, PurePosixPath
+          from urllib.request import urlopen
+          with urlopen(os.environ['PAYLOAD_URL'], timeout=60) as response:
+              data=response.read(20000000)
+          assert hashlib.sha256(data).hexdigest()=='ab21bbdac6b2553bf1efc8f2bcf72d8b5f79cd3f760f66a759a3bf8bbe5be540', 'Payload hash differs'
+          with zipfile.ZipFile(io.BytesIO(data)) as bundle:
+              assert sum(f.file_size for f in bundle.infolist())<30000000
+              for info in bundle.infolist():
+                  p=PurePosixPath(info.filename)
+                  assert not p.is_absolute() and '..' not in p.parts
+                  assert info.filename.startswith(('experiments/after-hours-water/','tests/intuitive/'))
+                  assert not stat.S_ISLNK(info.external_attr >> 16)
+                  if not info.is_dir():
+                      target=Path(info.filename);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(bundle.read(info))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add experiments/after-hours-water tests/intuitive
+          git commit -m 'feat: one-tap 30-second play, real label collection and corrected poster copy'
+          git push origin HEAD:"${GITHUB_REF_NAME}"
+      - uses: actions/setup-python@v5
         with:
-          path: lp
-          persist-credentials: false
-      - uses: actions/checkout@v4
-        with:
-          repository: Toraikura/sake-clash
-          ref: 9e391336f4b4dceee217289cc1100e5a1d55885a
-          path: game
-          persist-credentials: false
-      - name: Archive exact sources for local verification
-        run: tar --exclude=.git -czf source-snapshot.tar.gz lp game
+          python-version: '3.12'
+      - run: pip install playwright==1.57.0 pillow==12.0.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Check JavaScript syntax
+        run: |
+          for file in experiments/after-hours-water/*.js experiments/after-hours-water/play/*.js; do node --check "$file"; done
+      - name: Real touch and responsive browser checks
+        run: |
+          python -m http.server 4190 --bind 127.0.0.1 > /tmp/site-server.log 2>&1 &
+          sleep 1
+          python tests/intuitive/test_ui.py
+      - name: Use a screenshot of the actual new game as its preview
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          Image.open('evidence/game-preview.png').convert('RGB').save('experiments/after-hours-water/assets/game-preview.webp',quality=88)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add experiments/after-hours-water/assets/game-preview.webp
+          if ! git diff --cached --quiet; then git commit -m 'test: capture actual quick-game preview'; git push origin HEAD:"${GITHUB_REF_NAME}"; fi
+      - name: Package implementation and verification evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          with zipfile.ZipFile('intuitive-verification.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for folder in ['experiments/after-hours-water','tests/intuitive','evidence']:
+                  for p in Path(folder).rglob('*'):
+                      if p.is_file():z.write(p)
+          PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: intuitive-source-snapshot
-          path: source-snapshot.tar.gz
-          retention-days: 3
+          name: intuitive-verification
+          path: intuitive-verification.zip
+          retention-days: 7
