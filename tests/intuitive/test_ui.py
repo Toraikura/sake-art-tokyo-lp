@@ -111,6 +111,7 @@ with sync_playwright() as p:
    page.locator('#labels').screenshot(path=str(OUT/'labels-desktop.png'))
    page.locator('#sat-002 .record-art').screenshot(path=str(OUT/'poster-corrected.png'))
  results.append('No horizontal page overflow; entire board, hand, pause and close controls fit 360x640, 375x550, 390x844, 430x932 and 1440x1000 Chromium viewports.')
+ context.close()
  browser.close()
 OUT.joinpath('results.json').write_text(json.dumps({'checks':results,'browser':'Playwright Chromium, touch / viewport emulation, not an iPhone device','pageErrors':errors},ensure_ascii=False,indent=2))
 print(json.dumps(results,ensure_ascii=False,indent=2))

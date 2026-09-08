@@ -55,12 +55,18 @@ def clean_diagnostics():
 def loaded_images(page, label):
     """Scroll real lazy images into view and check the browser's decoded dimensions."""
     for img in page.locator("img[src]").all():
+        if not img.is_visible() and img.get_attribute("loading") == "lazy":
+            # The desktop-only brand mark deliberately does not load on mobile.
+            report["images"].append({"page": label, "src": img.get_attribute("src"),
+                                     "state": "hidden lazy image; outside visible-image check"})
+            continue
         if img.is_visible():
             img.scroll_into_view_if_needed()
         img.evaluate("""img => new Promise((resolve, reject) => {
             if (img.complete) return img.naturalWidth ? resolve() : reject(new Error(img.src));
-            img.addEventListener('load', resolve, {once: true});
-            img.addEventListener('error', () => reject(new Error(img.src)), {once: true});
+            const timeout = setTimeout(() => reject(new Error('Image load timed out: ' + img.src)), 15000);
+            img.addEventListener('load', () => { clearTimeout(timeout); resolve(); }, {once: true});
+            img.addEventListener('error', () => { clearTimeout(timeout); reject(new Error(img.src)); }, {once: true});
         })""")
         info = img.evaluate("img => ({src: img.currentSrc || img.src, width: img.naturalWidth, height: img.naturalHeight})")
         assert info["width"] > 0 and info["height"] > 0, info
@@ -310,6 +316,7 @@ with sync_playwright() as playwright:
         (OUT / "http-details-results.json").write_text(
             json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
         )
+        context.close()
         browser.close()
 
 print(json.dumps(report, ensure_ascii=False, indent=2))
