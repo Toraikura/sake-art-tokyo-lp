@@ -310,6 +310,7 @@ with sync_playwright() as playwright:
         (OUT / "http-details-results.json").write_text(
             json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
         )
+        context.close()
         browser.close()
 
 print(json.dumps(report, ensure_ascii=False, indent=2))

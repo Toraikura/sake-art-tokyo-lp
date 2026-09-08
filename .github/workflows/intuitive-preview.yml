@@ -1,7 +1,7 @@
 name: Intuitive preview verification
 on:
   push:
-    branches: [feat/intuitive-play-labels-20260908]
+    branches: [feat/intuitive-play-labels-20260908, codex/source-water-20260908]
   workflow_dispatch:
 permissions:
   contents: read
@@ -14,6 +14,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -40,6 +42,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:4190/experiments/after-hours-water/ > /dev/null
           python tests/intuitive/test_ui.py
           EVIDENCE_DIR=evidence/details python tests/intuitive/test_http_details.py
+          EVIDENCE_DIR=evidence/source-cards python tests/source-water/test_ui.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

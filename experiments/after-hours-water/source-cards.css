@@ -1,11 +1,11 @@
-/* Isolated experiment: translucent water dissolves into the unchanged surface. */
+/* Source-card selection over the existing water surface. No connecting effects. */
 .hero-main{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-copy{min-width:0}
 .source-scene{position:relative;align-self:stretch;min-width:0;display:flex;flex-direction:column;padding-top:40px;isolation:isolate}
 .source-cards{display:flex;gap:13px;justify-content:flex-end;padding:0 0 0 18px;position:relative;z-index:2}
 .source-card{position:relative;isolation:isolate;overflow:hidden;width:174px;aspect-ratio:1.75;min-height:60px;flex:0 1 174px;padding:0;border:1px solid #aaa59e38;border-radius:7px;background:#202629;text-align:left;touch-action:manipulation;transition:border-color .35s,opacity .35s;opacity:.64}
 .source-art{position:absolute;inset:0;width:100%;height:100%;filter:saturate(.53) brightness(.73);transition:filter .35s}
 .source-card::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(100deg,#0d15172b,transparent 65%);pointer-events:none}
-.source-card[aria-pressed="true"]{border-color:#d6ec96;box-shadow:0 0 0 1px #d6ec9645;opacity:1}
+.source-card[aria-pressed="true"]{border-color:#d6ec96;opacity:1}
 .source-card[aria-pressed="true"] .source-art{filter:saturate(.95) brightness(1.04)}
 .source-card[data-source="urasato"][aria-pressed="true"]::after{background:none}
 .source-card:focus-visible{outline:2px solid #c5cdae;outline-offset:4px}
@@ -21,20 +21,19 @@
 .source-scene .art-caption{right:0;bottom:33px}
 .source-scene .art-caption strong{font-size:clamp(17px,1.7vw,25px)}
 .source-scene .art-caption .mono{font-size:8px}
-.source-flow{position:absolute;inset:0;z-index:3;width:100%;height:100%;overflow:visible;pointer-events:none}
-.source-flow path{stroke:none;opacity:0;transition:opacity .55s ease;filter:blur(.55px)}
-.source-flow .flow-veil{filter:blur(2.2px)}
-.source-flow .flow-wisp{filter:blur(.85px)}
-.source-scene[data-source="urasato"] [data-flow-source="urasato"],.source-scene[data-source="tsuchida"] [data-flow-source="tsuchida"]{opacity:1}
 .source-footer{display:flex;justify-content:flex-end;padding-block:9px 21px}
 .source-footer .text-link{font-size:10px;color:var(--muted)}
 /* Match each supplied label's portrait ratio; keep only the artwork's own white margin. */
 .label-collection .label-stack{aspect-ratio:972 / 1200}
 .label-collection .label-stack[data-release="sat-002"]{aspect-ratio:1027 / 1200}
 .label-collection .sleeve img{padding:0}
-.source-still .source-card,.source-still .source-art,.source-still .source-flow path{transition:none}
+.source-still .source-card,.source-still .source-art{transition:none}
 @media(max-width:1050px) and (min-width:701px){.source-cards{gap:10px;padding-left:12px}.source-name{left:9px;top:9px}.source-card{min-height:70px}.source-scene .art-wrap{min-height:360px}.source-scene .art-caption strong{font-size:17px}}
 @media(max-width:700px){.source-scene{padding-top:28px}.source-cards{padding:0;justify-content:flex-end;gap:12px}.source-card{flex:1 1 0;max-width:159px;aspect-ratio:1.75;min-height:76px}.source-name{font-size:15px;left:11px;top:10px}.source-scene .art-wrap{height:310px;min-height:310px;flex:none}.source-scene .art-caption{bottom:15px;right:0}.source-scene .art-caption strong{font-size:18px;letter-spacing:-.025em}.source-scene .art-caption .mono{font-size:7px}.source-scene .art-tip{top:25px;font-size:9px;left:0}.source-scene .art-tip span:first-child{width:24px;height:24px;font-size:15px}.source-footer{padding:0 0 15px}.source-footer .text-link{font-size:10px}.hero-desc{max-width:330px}}
 @media(max-width:700px){.hero-main{grid-template-columns:minmax(0,1fr)}.hero h1{font-size:clamp(50px,16.4vw,104px)}.hero-meta .edition{max-width:48%;text-align:right}}
 @media(max-width:375px){.source-card{max-width:153px}.source-scene .art-wrap{height:295px;min-height:295px}}
-@media(prefers-reduced-motion:reduce){.source-card,.source-art,.source-flow path{transition:none!important}}
+@media(prefers-reduced-motion:reduce){.source-card,.source-art{transition:none!important}}
+.hero-brand{margin-top:27px;color:var(--muted);font-size:9px;line-height:1.5;letter-spacing:.1em}
+.source-scene .source-copy{font-size:12px;line-height:1.6;color:#ddd9df;margin:0 0 3px}
+.source-scene .source-brewery{font-size:10px;line-height:1.5;letter-spacing:.12em;color:var(--muted);margin:0 0 7px}
+@media(max-width:700px){.hero-brand{font-size:8px;margin-top:23px}.source-scene .source-copy{font-size:11px}.source-scene .source-brewery{font-size:9px;margin-bottom:5px}}

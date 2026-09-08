@@ -19,8 +19,12 @@ function setMood(next){
  mood=next==='deep'?'deep':'light';document.body.dataset.mood=mood;
  const deep=mood==='deep',id=deep?'sat-002':'sat-001';
  $$('[data-mood-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.moodChoice===mood)));
- $('#side-title').textContent=deep?'SIDE B / DEEP VELVET':'SIDE A / SOFT LIGHT';
- $('#choice-note').textContent=(deep?'「濃密に。」の気分なら、まずは002。':'「軽やかに。」の気分なら、まずは001。')+' 気分の言葉で選ぶ案内です。味覚診断ではありません。';
+ const brewery=deep?'土田酒造':'浦里酒造';
+ $('#source-scene').dataset.source=deep?'tsuchida':'urasato';
+ $('#side-title').textContent=deep?'SIDE B / TSUCHIDA':'SIDE A / URAZATO';
+ $('#source-brewery').textContent=brewery;
+ $('#source-copy').textContent=deep?'森の奥、湧き出す深み。':'霧の向こう、澄んだ余韻。';
+ $('#choice-note').textContent=brewery+'の一本から。';
  $('.hero #mood-link').href='#'+id;
  $$('.record').forEach(el=>el.dataset.selected=String(el.id===id));
  window.dispatchEvent(new CustomEvent('sat:mood',{detail:{id,mood}}));
@@ -31,6 +35,7 @@ const params=new URLSearchParams(location.search);const bottle=params.get('bottl
 setMood(bottle==='sat-002'?'deep':bottle==='sat-001'?'light':params.get('mood'));
 function updateMotion(){
  $('#motion').setAttribute('aria-pressed',String(paused));$('#motion-text').textContent=paused?'動きを再開':'動きを止める';
+ $('#source-scene').classList.toggle('source-still',paused||media.matches);
  if(paused){cancelAnimationFrame(raf);raf=0;}else loopStart();paint();
 }
 $('#motion').addEventListener('click',()=>{userMotionChoice=true;paused=!paused;updateMotion();});
