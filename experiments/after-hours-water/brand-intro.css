@@ -1,5 +1,5 @@
 /* A quiet introduction on the existing paper, followed by the two releases. */
-.theme-rule { height: 3px; background: var(--lime); }
+.theme-rule { height: 3px; background: var(--accent); }
 .brand-intro {
   position: relative;
   isolation: isolate;

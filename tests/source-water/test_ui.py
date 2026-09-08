@@ -83,13 +83,12 @@ def verify_geometry(page, width):
     assert rule.count() == 1 and rule.text_content().strip() == "" and rule.locator("*").count() == 0
     rule_style = rule.evaluate("""element => {
       const style = getComputedStyle(element);
-      const color = document.createElement('span').style;
-      color.color = style.getPropertyValue('--lime').trim();
       return {height: element.getBoundingClientRect().height,
-        background: style.backgroundColor, lime: color.color};
+        background: style.backgroundColor,
+        motionDot: getComputedStyle(document.querySelector('.motion-dot')).backgroundColor};
     }""")
     assert abs(rule_style["height"] - 3) < .05, rule_style
-    assert rule_style["background"] == rule_style["lime"], rule_style
+    assert rule_style["background"] == rule_style["motionDot"], rule_style
     assert page.locator('.source-scene svg:not(.source-art)').count() == 0
     assert page.locator('script[src*="source-water"]').count() == 0
     assert page.locator('link[rel="stylesheet"][href*="source-cards.css"]').count() == 1
@@ -320,7 +319,7 @@ def run():
             page.locator("#motion").click()
             verify_brand_and_products(page, width)
             verify_remaining_navigation(page, width)
-            checks.append(f"{width}px: source/copy/record sync, no hero CTA/flow/badges/banner copy, 3px lime rule, source controls, brand before products, clipped desktop logo behind uncut text/mobile hidden, always-visible product stories/storage and real navigation/PLAY entries passed.")
+            checks.append(f"{width}px: source/copy/record sync, no hero CTA/flow/badges/banner copy, 3px rule matching the selected motion-dot color, source controls, brand before products, clipped desktop logo behind uncut text/mobile hidden, always-visible product stories/storage and real navigation/PLAY entries passed.")
             context.close()
 
         context = browser.new_context(viewport={"width": 390, "height": 844},
