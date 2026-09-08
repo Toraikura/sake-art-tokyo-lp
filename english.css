@@ -1,0 +1,28 @@
+/* English copy shares the original layout, with breathing room for longer words. */
+html[lang="en"] { overflow-wrap: break-word; }
+.hero-ja { max-width: 20em; text-wrap: balance; }
+.hero-desc { max-width: 31em; line-height: 1.85; }
+.brand-copy p { overflow-wrap: normal; line-height: 1.9; }
+.brand-copy strong { line-height: 1.5; }
+.brand-copy strong span { display: inline; }
+.record-story { line-height: 1.85; }
+.record-story .record-storage { line-height: 1.8; }
+.story-body { line-height: 1.9; }
+.source-name { font: 500 12px/1.2 var(--mono); letter-spacing: .07em; }
+.source-name small { font: 10px/1.4 "Hiragino Mincho ProN", "Yu Mincho", serif; }
+.source-scene .source-brewery { letter-spacing: .06em; }
+.source-scene .source-copy { max-width: 25em; }
+.comic-heading p { max-width: 34em; margin-inline: auto; }
+.label-save-head h2 { line-height: 1.3; }
+@media (max-width: 700px) {
+  .hero-ja { max-width: 18em; font-size: 21px; }
+  .hero-desc { max-width: 28em; font-size: 13px; }
+  .hero-meta .edition { font-size: 7px; }
+  .brand-copy strong { font-size: 23px; line-height: 1.5; }
+  .brand-copy p + p { margin-top: 36px; }
+  .manifesto h2 { font-size: 38px; line-height: 1.2; text-wrap: balance; }
+  .source-name { font-size: 11px; }
+  .source-scene .source-copy { font-size: 10px; }
+  .connection h3 { line-height: 1.4; }
+  .footer-bottom p { max-width: 39em; }
+}

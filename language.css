@@ -1,0 +1,14 @@
+/* The same compact language navigation on both editions. */
+.language-switch { display: flex; align-items: center; gap: 2px; order: 3;
+  font: 10px/1.2 var(--mono); letter-spacing: .04em; }
+.language-switch a { display: inline-flex; align-items: center; justify-content: center;
+  min-width: 32px; min-height: 44px; color: var(--muted); }
+.language-switch a[aria-current="page"] { color: var(--paper); text-decoration: underline;
+  text-decoration-color: var(--accent); text-underline-offset: 5px; }
+@media (max-width: 700px) {
+  .nav-right { gap: 10px; }
+  .nav { gap: 12px; }
+}
+@media (max-width: 480px) {
+  .logo span { display: none; }
+}

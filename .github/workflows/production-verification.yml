@@ -44,6 +44,7 @@ jobs:
           python tests/intuitive/test_ui.py
           EVIDENCE_DIR=evidence/details python tests/intuitive/test_http_details.py
           EVIDENCE_DIR=evidence/source-cards python tests/source-water/test_ui.py
+          EVIDENCE_DIR=evidence/english python tests/english/test_ui.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

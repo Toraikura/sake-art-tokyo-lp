@@ -7,3 +7,5 @@ Engine source: Toraikura/sake-clash, iPhone preview commit `9e391336f4b4dceee217
 The original sake-clash repository and both existing game URLs are unchanged. This is a deliberately isolated version, not a new default of the full game. Update the upstream pin and retest explicitly before syncing future engine changes.
 
 The timer and CPU do not tick before the first successful deployment. Outcome is determined by the real engine; victories and scores are never fabricated. No relationship to product taste or drinking safety is inferred.
+
+The LP UI uses `locale.js` for English display when `/play/?lang=en` is requested. Other query values retain Japanese. Card labels, feedback, accessible names and the touch-preview caption are translated at the presentation layer; the original model messages, simulation and timing are unchanged. Standalone English results and exit links return to `/en/`.

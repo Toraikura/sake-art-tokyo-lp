@@ -3,6 +3,7 @@
  * WebKit's transient user activation. Desktop downloads remain unchanged. */
 (function () {
   'use strict';
+  const english = document.documentElement.lang === 'en';
   const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const link = document.querySelector('#save-label');
@@ -21,7 +22,7 @@
       if (url.origin !== location.origin || !/\.png$/i.test(url.pathname)) return null;
       const name = link.download || url.pathname.split('/').pop();
       return { url: url.href, name, key: `${url.href}\n${name}`,
-        alt: document.querySelector('#label-image')?.alt || '日本酒のエチケット' };
+        alt: document.querySelector('#label-image')?.alt || (english ? 'Sake label' : '日本酒のエチケット') };
     } catch (_) { return null; }
   }
 
@@ -64,12 +65,12 @@
       head.className = 'label-save-head';
       const title = document.createElement('h2');
       title.id = 'label-save-title';
-      title.textContent = 'エチケットを写真に保存';
+      title.textContent = english ? 'Save the label to Photos' : 'エチケットを写真に保存';
       const close = document.createElement('button');
       close.type = 'button';
       close.className = 'label-save-close';
       close.textContent = '×';
-      close.setAttribute('aria-label', 'エチケット表示を閉じる');
+      close.setAttribute('aria-label', english ? 'Close label image' : 'エチケット表示を閉じる');
       close.addEventListener('click', closeOriginal);
       head.appendChild(title);
       head.appendChild(close);
@@ -79,7 +80,7 @@
       image.id = 'label-save-image';
       image.className = 'label-save-image';
       image.addEventListener('error', () => {
-        help.textContent = '画像を読み込めませんでした。閉じて、もう一度お試しください。';
+        help.textContent = english ? 'The image could not load. Close this window and try again.' : '画像を読み込めませんでした。閉じて、もう一度お試しください。';
       });
       dialog.appendChild(head);
       dialog.appendChild(help);
@@ -92,7 +93,7 @@
       location.assign(item.url);
       return;
     }
-    help.textContent = '画像を長押し →「写真に保存」';
+    help.textContent = english ? 'Touch and hold the image, then choose “Save to Photos”.' : '画像を長押し →「写真に保存」';
     image.alt = item.alt;
     image.src = item.url;
     if (dialog.open) return;
@@ -136,7 +137,7 @@
         if (!active || requestEpoch !== epoch || waitingKey !== item.key || selected()?.key !== item.key) return;
         waitingKey = '';
         if (entry.failed) showOriginal(item);
-        else tell('準備できました。もう一度「このエチケットを保存」をタップしてください。');
+        else tell(english ? 'Ready. Tap “Save this label” again.' : '準備できました。もう一度「このエチケットを保存」をタップしてください。');
       });
     return entry;
   }
@@ -165,12 +166,12 @@
     if (sharing) return;
     nearby = true;
     const item = selected();
-    if (!item) { tell('エチケットを選び直して、もう一度お試しください。'); return; }
+    if (!item) { tell(english ? 'Select a label and try again.' : 'エチケットを選び直して、もう一度お試しください。'); return; }
     const entry = prepare(item);
     if (!shareAvailable || entry?.failed) { showOriginal(item); return; }
     if (!entry.file) {
       waitingKey = item.key;
-      tell('画像を準備しています。準備できたら、もう一度タップしてください。');
+      tell(english ? 'Preparing the image. Tap again when it is ready.' : '画像を準備しています。準備できたら、もう一度タップしてください。');
       return;
     }
     const shareEpoch = epoch;

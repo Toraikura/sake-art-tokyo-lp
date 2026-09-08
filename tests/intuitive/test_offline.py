@@ -11,6 +11,7 @@ import json
 import mimetypes
 import os
 import re
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 APP = ROOT
@@ -24,15 +25,20 @@ def data_uri(path):
 
 def markup(game=False, release_count=None):
     folder = APP / 'play' if game else APP
+    def local_path(url):
+        path = urlsplit(url).path
+        return (APP / path.lstrip('/')) if path.startswith('/') else folder / path
     html = (folder / 'index.html').read_text()
-    html = re.sub(r'<link rel="stylesheet" href="([^"]+)">', lambda m: '<style>' + (folder / m[1]).read_text() + '</style>', html)
+    html = re.sub(r'<link rel="stylesheet" href="([^"]+)">', lambda m: '<style>' + local_path(m[1]).read_text() + '</style>', html)
     html = re.sub(r'<script\b[^>]*\bsrc="[^"]+"[^>]*></script>', '', html)
     if game:
         parts = []
-        for name in ['model.js', 'art.js', 'preview.js', 'render.js', 'game.js']:
+        for name in ['model.js', 'art.js', 'preview.js', 'locale.js', 'render.js', 'game.js']:
             source = (folder / name).read_text()
             source = re.sub(r'^import .*?;\s*', '', source, flags=re.M)
             source = re.sub(r'\bexport\s+(?=const |function )', '', source)
+            if name == 'locale.js':
+                source += '\nconst t = translate;\n'  # Alias normally supplied by the module imports.
             parts.append(source)
         script = '(()=>{\n' + '\n'.join(parts) + '\n})();'
     else:

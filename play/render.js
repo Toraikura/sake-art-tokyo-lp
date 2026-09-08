@@ -4,6 +4,7 @@
 import { W, H, AREAS, clamp } from './model.js';
 import { COLORS, glyph } from './art.js';
 import { preview, ray } from './preview.js';
+import { translate as t } from './locale.js?v=20260908-en1';
 let cached = null;
 let magnifier = null;
 export function draw(canvas, g, cursor, selected, reduced, showLens = false) {
@@ -235,6 +236,6 @@ function lens(ctx, board, p, valid, unit, ratio) {
     ctx.fillStyle = '#213a32';
     ctx.font = `bold ${10 / unit}px sans-serif`;
     ctx.textAlign = 'center';
-    ctx.fillText(valid ? '離して配置 · 初動の予測' : '× ここには置けません', x + w / 2, y + h - 6 / unit);
+    ctx.fillText(t(valid ? '離して配置 · 初動の予測' : '× ここには置けません'), x + w / 2, y + h - 6 / unit);
     ctx.restore();
 }

@@ -2,6 +2,7 @@
 (function () {
   'use strict';
   const $ = selector => document.querySelector(selector);
+  const english = document.documentElement.lang === 'en';
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const releases = JSON.parse($('#label-releases').textContent);
   if (!Array.isArray(releases) || !releases.length || releases.some(release =>
@@ -22,7 +23,7 @@
     const release = releases[index];
     $('#label-error').hidden = true;
     front.src = release.image;
-    front.alt = `${release.jp || release.name}のエチケット`;
+    front.alt = english ? `${release.name.replace(/\.$/, '')} label` : `${release.jp || release.name}のエチケット`;
     $('#label-name').textContent = release.name;
     $('#label-brewery').textContent = `${release.id.toUpperCase().replace('-', ' ')} / ${release.brewery}`;
     $('#label-counter').textContent = `${pad(index + 1)} / ${pad(releases.length)}`;
@@ -36,7 +37,7 @@
     stack.disabled = releases.length === 1;
     $('#label-prev').disabled = releases.length === 1;
     $('#label-next').disabled = releases.length === 1;
-    stack.setAttribute('aria-label', `${release.jp || release.name}。次のエチケットを見る`);
+    stack.setAttribute('aria-label', english ? `${release.name} View the next label` : `${release.jp || release.name}。次のエチケットを見る`);
     stack.dataset.release = release.id;
     window.dispatchEvent(new CustomEvent('sat:label', { detail: { id: release.id } }));
   }
@@ -116,8 +117,14 @@
   function fail() {
     if (!modal.open) return;
     loading.hidden = false;
-    $('#play-loading-text').textContent = 'ゲームを読み込めませんでした。もう一度お試しください。';
+    $('#play-loading-text').textContent = english ? 'The game could not load. Please try again.' : 'ゲームを読み込めませんでした。もう一度お試しください。';
     $('#retry-play').hidden = false;
+  }
+
+  function gameURL() {
+    const url = new URL(english ? '/play/' : './play/', location.href);
+    if (english) url.searchParams.set('lang', 'en');
+    return url;
   }
 
   function load() {
@@ -130,11 +137,11 @@
     $('#retry-play').hidden = true;
     session = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() :
       `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    const url = new URL('./play/', location.href);
+    const url = gameURL();
     url.searchParams.set('session', session);
     url.searchParams.set('bottle', launchRelease.id);
     frame = document.createElement('iframe');
-    frame.title = 'SAKE CLASH、30秒のCPU対戦';
+    frame.title = english ? 'SAKE CLASH, a 30-second CPU battle' : 'SAKE CLASH、30秒のCPU対戦';
     frame.referrerPolicy = 'same-origin';
     frame.src = url.href;
     frame.addEventListener('error', fail);
@@ -145,7 +152,7 @@
   function openGame(trigger) {
     if (modal.open || $('#age')?.open) return;
     if (typeof modal.showModal !== 'function') {
-      location.assign(new URL('./play/', location.href).href);
+      location.assign(gameURL().href);
       return;
     }
     returnFocus = trigger;

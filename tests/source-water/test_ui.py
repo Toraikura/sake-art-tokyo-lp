@@ -471,7 +471,8 @@ def run():
     ], cwd=ROOT, text=True).strip()
     assert not preserved, "Preserved candidate / original game changed: " + preserved
     candidate = ROOT / "experiments/after-hours-water"
-    for name in ("model.js", "art.js", "preview.js", "render.js", "game.css"):
+    # Localization changes renderer text only; simulation, artwork and geometry stay original.
+    for name in ("model.js", "art.js", "preview.js", "game.css"):
         assert (ROOT / "play" / name).read_bytes() == (candidate / "play" / name).read_bytes(), name
     checks.append("The after-hours-water candidate and original game have no diff from origin/main.")
 

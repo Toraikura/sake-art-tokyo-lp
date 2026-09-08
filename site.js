@@ -5,6 +5,7 @@
 'use strict';
 document.documentElement.classList.add('js');
 const $=(s)=>document.querySelector(s), $$=(s)=>Array.from(document.querySelectorAll(s));
+const english=document.documentElement.lang==='en';
 const AGE_KEY='sat-age-confirmed';
 const media=window.matchMedia('(prefers-reduced-motion: reduce)');
 let mood='light',phase=.7,paused=media.matches,allowed=false,gameActive=false;
@@ -19,11 +20,11 @@ function setMood(next,syncLabel=true){
  mood=next==='deep'?'deep':'light';document.body.dataset.mood=mood;
  const deep=mood==='deep',id=deep?'sat-002':'sat-001';
  $$('[data-mood-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.moodChoice===mood)));
- const brewery=deep?'土田酒造':'浦里酒造';
+ const brewery=english?(deep?'Tsuchida Brewery':'Urazato Brewery'):(deep?'土田酒造':'浦里酒造');
  $('#source-scene').dataset.source=deep?'tsuchida':'urasato';
  $('#side-title').textContent=deep?'SIDE B / TSUCHIDA':'SIDE A / URAZATO';
  $('#source-brewery').textContent=brewery;
- $('#source-copy').textContent=deep?'森の奥、湧き出す深み。':'霧の向こう、澄んだ余韻。';
+ $('#source-copy').textContent=english?(deep?'Forest springs. Quiet depth.':'Beyond the mist, a clear finish.'):(deep?'森の奥、湧き出す深み。':'霧の向こう、澄んだ余韻。');
  $$('.record').forEach(el=>el.dataset.selected=String(el.id===id));
  if(syncLabel)window.dispatchEvent(new CustomEvent('sat:mood',{detail:{id,mood}}));
  paint();
@@ -37,7 +38,8 @@ window.addEventListener('sat:label',event=>{
 const params=new URLSearchParams(location.search);const bottle=params.get('bottle');
 setMood(bottle==='sat-002'?'deep':bottle==='sat-001'?'light':params.get('mood'));
 function updateMotion(){
- $('#motion').setAttribute('aria-pressed',String(paused));$('#motion-text').textContent=paused?'動きを再開':'動きを止める';
+ $('#motion').setAttribute('aria-pressed',String(paused));$('#motion-text').textContent=english?(paused?'Resume':'Pause'):(paused?'動きを再開':'動きを止める');
+ if(english)$('#motion').setAttribute('aria-label',paused?'Resume animation':'Pause animation');
  $('#source-scene').classList.toggle('source-still',paused||media.matches);
  if(paused){cancelAnimationFrame(raf);raf=0;}else loopStart();paint();
 }
@@ -256,7 +258,7 @@ function enter(){
  if(['sat-001','sat-002','sat-003'].includes(bottle)){setTimeout(()=>{document.getElementById(bottle).scrollIntoView({behavior:'auto',block:'start'});},50);}
 }
 $('#age-yes').addEventListener('click',enter);
-$('#age-no').addEventListener('click',()=>{$('#age-copy').textContent='20歳以上の方に向けたご案内です。このタブを閉じてください。';$('#age-actions').hidden=true;});
+$('#age-no').addEventListener('click',()=>{$('#age-copy').textContent=english?'This site is for people aged 20 and over. Please close this tab.':'20歳以上の方に向けたご案内です。このタブを閉じてください。';$('#age-actions').hidden=true;});
 age.addEventListener('cancel',e=>e.preventDefault());
 if(!allowed){if(typeof age.showModal==='function')age.showModal();else{age.setAttribute('open','');document.querySelector('main').inert=true;$('#age-yes').addEventListener('click',()=>{document.querySelector('main').inert=false;age.removeAttribute('open');});}}else enter();
 $('#privacy-open').addEventListener('click',()=>{if(typeof policy.showModal==='function')policy.showModal();else policy.setAttribute('open','');});

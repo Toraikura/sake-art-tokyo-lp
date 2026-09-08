@@ -1,13 +1,15 @@
 import {W,H,DT,CARDS,createMatch,start,pause,resume,step,share,deploy,clamp} from './model.js';
-import {draw} from './render.js';
+import {draw} from './render.js?v=20260908-en1';
 import {glyph} from './art.js';
+import {locale,sitePath,translate as t,localizeDocument} from './locale.js?v=20260908-en1';
+localizeDocument();
 const $=s=>document.querySelector(s), canvas=$('#arena'), wrap=$('.arena-wrap'), slot=$('.arena-slot');
 const buttons=[...document.querySelectorAll('.game-card')], dialog=$('#result');
 const params=new URLSearchParams(location.search), session=params.get('session')||'';
 const bottle=/^sat-\d{3}$/.test(params.get('bottle')||'')?params.get('bottle'):'sat-001';
 const embedded=window.parent!==window, reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const send=(type,extra={})=>{if(embedded)parent.postMessage({channel:'sat-quick-v1',session,type,...extra},location.origin);};
-$('#explore').href=`../#${bottle}`;
+$('#explore').href=`${sitePath}#${bottle}`;
 let m,selected=null,cursor=null,gesture=null,keyboardPoint={x:W/2,y:H*.58};
 let last=0,acc=0,raf=0,paintAt=0,done=false,disposed=false,suppressClickUntil=0;
 const pointers=new Set();
@@ -83,13 +85,13 @@ function renderHUD(){
  $('#first-target').hidden=!playing||m.played!==0||!selected||!!gesture;
  buttons.forEach((b,i)=>{
   const id=m.hand[i],card=CARDS[id];
-  if(b.dataset.card!==id){b.dataset.card=id;b.querySelector('.cost').textContent=card.cost;b.querySelector('b').textContent=card.name;paintCard(b,id);}
+  if(b.dataset.card!==id){b.dataset.card=id;b.querySelector('.cost').textContent=card.cost;b.querySelector('b').textContent=t(card.name);paintCard(b,id);}
   b.dataset.cost=card.cost;b.disabled=!playing;b.setAttribute('aria-pressed',String(selected?.index===i));
-  b.setAttribute('aria-label',`${i+1} ${card.name}、補給${card.cost}`);
+  b.setAttribute('aria-label',locale==='en'?`${i+1} ${t(card.name)}, supply ${card.cost}`:`${i+1} ${card.name}、補給${card.cost}`);
   b.classList.toggle('selected',selected?.index===i);b.classList.toggle('prompt',playing&&m.played===0&&!selected&&i===0);
   b.classList.toggle('spell',!card.hp);b.classList.toggle('unaffordable',m.energy<card.cost);
  });
- $('#feedback').textContent=m.messageLife>0&&m.played>0?m.message:m.messageLife>0&&m.message!=='カードを選び、緑の床へ配置'?m.message:'';
+ $('#feedback').textContent=t(m.messageLife>0&&m.played>0?m.message:m.messageLife>0&&m.message!=='カードを選び、緑の床へ配置'?m.message:'');
 }
 function newMatch(){
  if(dialog.open)dialog.close();
@@ -98,10 +100,10 @@ function newMatch(){
 }
 function showResult(){
  const paused=m.status==='paused',pct=share(m);
- $('#result-title').textContent=paused?'ひと休み。':m.status==='won'?'あなたの勝ち！':m.status==='lost'?'CPUの勝ち。':'いい勝負。';
+ $('#result-title').textContent=t(paused?'ひと休み。':m.status==='won'?'あなたの勝ち！':m.status==='lost'?'CPUの勝ち。':'いい勝負。');
  $('#result-eyebrow').textContent=paused?'PAUSED':'NICE PLAY.';
  $('#result-score').textContent=paused?'':pct.toFixed(1)+'%';$('#result-score').hidden=paused;
- $('#result-caption').textContent=paused?'時間と盤面は止まっています。':'あなたが広げた色。次は、日本酒の個性へ。';
+ $('#result-caption').textContent=t(paused?'時間と盤面は止まっています。':'あなたが広げた色。次は、日本酒の個性へ。');
  $('#explore').hidden=paused;$('#resume').hidden=!paused;$('#replay').hidden=paused;
  if(!dialog.open)dialog.showModal();
  (paused?$('#resume'):$('#explore')).focus({preventScroll:true});
@@ -114,7 +116,7 @@ function autoStop(){pointers.clear();cancel();if(m.played>0)stop();}
 $('#pause').addEventListener('click',stop);$('#cancel').addEventListener('click',()=>cancel());
 $('#resume').addEventListener('click',()=>{if(dialog.open)dialog.close();resume(m);last=0;acc=0;renderHUD();canvas.focus({preventScroll:true});});
 $('#replay').addEventListener('click',newMatch);
-$('#exit').addEventListener('click',()=>{if(embedded)send('exit');else location.href='../';});
+$('#exit').addEventListener('click',()=>{if(embedded)send('exit');else location.href=sitePath;});
 $('#explore').addEventListener('click',e=>{if(embedded){e.preventDefault();send('explore');}});
 dialog.addEventListener('cancel',e=>{e.preventDefault();if(m.status==='paused')$('#resume').click();});
 window.addEventListener('blur',autoStop);
