@@ -56,14 +56,11 @@ def verify_selection(page, source):
             assert 0.9 <= saturation <= 1.05, (card_source, style)
         else:
             assert style["opacity"] < 0.85 and brightness < 1, (card_source, style)
-        opacity = page.locator(f'[data-flow="{card_source}"]').evaluate(
-            "element => Number(getComputedStyle(element).opacity)"
-        )
-        assert abs(opacity - int(selected)) < 0.001, (card_source, opacity)
-        soft_opacity = page.locator(f'[data-flow-soft="{card_source}"]').evaluate(
-            "element => Number(getComputedStyle(element).opacity)"
-        )
-        assert abs(soft_opacity - int(selected)) < 0.001, (card_source, soft_opacity)
+        layers = page.locator(f'.source-flow [data-flow-source="{card_source}"]')
+        assert layers.count() == 4, card_source
+        for layer in layers.all():
+            opacity = layer.evaluate("element => Number(getComputedStyle(element).opacity)")
+            assert abs(opacity - int(selected)) < 0.001, (card_source, opacity)
 
 
 def verify_geometry(page, width):
@@ -97,45 +94,53 @@ def verify_geometry(page, width):
       const origins = { urasato: [570, 595], tsuchida: [469, 967] };
       return Object.entries(origins).map(([source, xy]) => {
         const art = document.querySelector(`.source-card[data-source="${source}"] .source-art`);
-        const path = flow.querySelector(`[data-flow="${source}"]`);
-        const soft = flow.querySelector(`[data-flow-soft="${source}"]`);
         const expected = new DOMPoint(...xy).matrixTransform(art.getScreenCTM());
-        const actual = path.getPointAtLength(0).matrixTransform(flow.getScreenCTM());
         const bounds = art.getBoundingClientRect();
-        return { source, expected: { x: expected.x, y: expected.y },
-          actual: { x: actual.x, y: actual.y },
+        const layers = Array.from(flow.querySelectorAll(`[data-flow-source="${source}"]`), path => {
+          const actual = path.getPointAtLength(0).matrixTransform(flow.getScreenCTM());
+          const gradientId = path.getAttribute('fill').match(/^url\(#([^)]*)\)$/)?.[1];
+          const gradient = document.getElementById(gradientId);
+          const length = path.getTotalLength();
+          const points = Array.from({length: 96}, (_, i) => path.getPointAtLength(length * i / 96));
+          const area = Math.abs(points.reduce((sum, p, i) => {
+            const next = points[(i + 1) % points.length]; return sum + p.x * next.y - next.x * p.y;
+          }, 0)) / 2;
+          return { role: path.hasAttribute('data-flow') ? 'main' :
+              path.hasAttribute('data-flow-veil') ? 'veil' : 'wisp',
+            actual: {x: actual.x, y: actual.y}, d: path.getAttribute('d'),
+            stroke: getComputedStyle(path).stroke, fill: getComputedStyle(path).fill,
+            area, length,
+            stops: gradient ? Array.from(gradient.querySelectorAll('stop'), stop =>
+              ({offset: stop.offset.baseVal, opacity: Number(getComputedStyle(stop).stopOpacity)})) : []};
+        });
+        return { source, expected: { x: expected.x, y: expected.y }, layers,
           inside: expected.x >= bounds.left && expected.x <= bounds.right &&
                   expected.y >= bounds.top && expected.y <= bounds.bottom,
-          stroke: parseFloat(getComputedStyle(path).strokeWidth),
-          stopOpacity: Math.max(...Array.from(document.querySelectorAll(`#flow-fade-${source} stop`),
-            stop => Number(getComputedStyle(stop).stopOpacity))),
-          softEdge: {sameCurve: soft.getAttribute('d') === path.getAttribute('d'),
-            stroke: parseFloat(getComputedStyle(soft).strokeWidth),
-            filter: getComputedStyle(soft).filter,
-            stops: Array.from(document.querySelectorAll(`#flow-edge-${source} stop`),
-              stop => ({offset: stop.offset.baseVal, opacity: Number(getComputedStyle(stop).stopOpacity)}))},
-          pointerEvents: getComputedStyle(flow).pointerEvents,
-          length: path.getTotalLength() };
+          pointerEvents: getComputedStyle(flow).pointerEvents };
       });
     }""")
     for item in measured:
         assert item["inside"], (width, item)
-        error = max(abs(item["expected"][k] - item["actual"][k]) for k in ("x", "y"))
-        assert error < 1, ("source anchor drift", width, item)
-        # Revised review request: readable thin water, roughly 1.2 CSS px / .46
-        # peak opacity, rather than the previous almost-invisible .55 px strand.
-        assert 1 <= item["stroke"] <= 1.25, (width, item)
-        assert 0.4 <= item["stopOpacity"] <= 0.5, (width, item)
         assert item["pointerEvents"] == "none", (width, item)
-        assert item["length"] > 10, (width, item)
-        edge = item["softEdge"]
-        assert edge["sameCurve"] and 0 < edge["stroke"] <= 2.8, (width, edge)
-        blur = re.fullmatch(r"blur\(([\d.]+)px\)", edge["filter"])
-        assert blur and 0 < float(blur.group(1)) <= 0.45, (width, edge)
-        assert 0 < max(stop["opacity"] for stop in edge["stops"]) <= 0.13, (width, edge)
-        assert any(abs(stop["offset"] - 0.55) < 0.001 and stop["opacity"] == 0
-                   for stop in edge["stops"]), (width, edge)
-        assert all(stop["opacity"] == 0 for stop in edge["stops"] if stop["offset"] >= 0.549), (width, edge)
+        layers = item["layers"]
+        assert sorted(layer["role"] for layer in layers) == ["main", "veil", "wisp", "wisp"]
+        assert len({layer["d"] for layer in layers}) == 4, ("duplicate membranes", width)
+        for layer in layers:
+            error = max(abs(item["expected"][k] - layer["actual"][k]) for k in ("x", "y"))
+            assert error < 1, ("source anchor drift", width, layer)
+            assert layer["stroke"] == "none" and layer["fill"] != "none", (width, layer)
+            assert layer["d"].rstrip().endswith("Z") and layer["area"] > 0.1, (width, layer)
+            assert layer["length"] > 10, (width, layer)
+            stops = layer["stops"]
+            assert len(stops) >= 3 and all(0 <= stop["opacity"] < 1 for stop in stops), (width, layer)
+            peak = max(stop["opacity"] for stop in stops)
+            assert peak > 0, ("invisible membrane", width, layer)
+            assert abs(stops[-1]["offset"] - 1) < .001 and stops[-1]["opacity"] == 0, (width, layer)
+            if layer["role"] == "main":
+                peak_index = next(i for i, stop in enumerate(stops) if stop["opacity"] == peak)
+                tail = stops[peak_index:]
+                assert any(stop["offset"] < .95 and stop["opacity"] == 0 for stop in tail), (width, layer)
+                assert all(b["opacity"] <= a["opacity"] for a, b in zip(tail, tail[1:])), (width, layer)
     visible_features = page.evaluate("""() => {
       const art = document.querySelector('.source-card[data-source="tsuchida"] .source-art');
       const bounds = art.getBoundingClientRect();
@@ -159,10 +164,11 @@ def verify_geometry(page, width):
 def source_still(page):
     assert "source-still" in page.locator("#source-scene").get_attribute("class")
     for selector in (".source-card", ".source-art", ".source-flow path"):
-        durations = page.locator(selector).first.evaluate(
-            "element => getComputedStyle(element).transitionDuration"
-        ).split(",")
-        assert all(float(value.strip().removesuffix("s")) == 0 for value in durations)
+        for element in page.locator(selector).all():
+            durations = element.evaluate(
+                "element => getComputedStyle(element).transitionDuration"
+            ).split(",")
+            assert all(float(value.strip().removesuffix("s")) == 0 for value in durations)
 
 
 def monitor(page):
@@ -240,7 +246,7 @@ def run():
             page.locator("#motion").click()
             source_still(page)
             page.locator("#motion").click()
-            checks.append(f"{width}px: layout, 44px targets, cropped-art anchors, readable thin strokes, selected-art brightness, bamboo/basin visibility, touch/click/keyboard source sync, no card ripple, water gesture, global stop passed.")
+            checks.append(f"{width}px: layout, 44px targets, cropped-art anchors, four translucent stroke-free membranes with fading ends, selected-art brightness, bamboo/basin visibility, touch/click/keyboard source sync, no card ripple, water gesture, global stop passed.")
             context.close()
 
         context = browser.new_context(

@@ -1,4 +1,4 @@
-/* Isolated experiment: one restrained strand over the unchanged water renderer. */
+/* Isolated experiment: translucent water dissolves into the unchanged surface. */
 .hero-main{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-copy{min-width:0}
 .source-scene{position:relative;align-self:stretch;min-width:0;display:flex;flex-direction:column;padding-top:40px;isolation:isolate}
 .source-cards{display:flex;gap:13px;justify-content:flex-end;padding:0 0 0 18px;position:relative;z-index:2}
@@ -22,9 +22,10 @@
 .source-scene .art-caption strong{font-size:clamp(17px,1.7vw,25px)}
 .source-scene .art-caption .mono{font-size:8px}
 .source-flow{position:absolute;inset:0;z-index:3;width:100%;height:100%;overflow:visible;pointer-events:none}
-.source-flow path{fill:none;stroke-width:1.2px;stroke-linecap:round;opacity:0;transition:opacity .55s ease}
-.source-flow .flow-soft-edge{stroke-width:2.8px;filter:blur(.45px)}
-.source-scene[data-source="urasato"] [data-flow="urasato"],.source-scene[data-source="tsuchida"] [data-flow="tsuchida"],.source-scene[data-source="urasato"] [data-flow-soft="urasato"],.source-scene[data-source="tsuchida"] [data-flow-soft="tsuchida"]{opacity:1}
+.source-flow path{stroke:none;opacity:0;transition:opacity .55s ease;filter:blur(.55px)}
+.source-flow .flow-veil{filter:blur(2.2px)}
+.source-flow .flow-wisp{filter:blur(.85px)}
+.source-scene[data-source="urasato"] [data-flow-source="urasato"],.source-scene[data-source="tsuchida"] [data-flow-source="tsuchida"]{opacity:1}
 .source-footer{display:flex;justify-content:flex-end;padding-block:9px 21px}
 .source-footer .text-link{font-size:10px;color:var(--muted)}
 .source-still .source-card,.source-still .source-art,.source-still .source-flow path{transition:none}
