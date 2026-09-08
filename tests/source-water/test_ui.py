@@ -23,7 +23,7 @@ OUT = Path(os.environ.get("EVIDENCE_DIR", "/private/tmp/sat-source-cards-tests")
 OUT.mkdir(parents=True, exist_ok=True)
 CHROME = os.environ.get("PLAYWRIGHT_EXECUTABLE_PATH")
 checks, geometry, page_errors, http_errors, loaded_artwork, navigation = [], [], [], [], [], []
-production, image_checks, theme_checks = [], [], []
+production, image_checks, theme_checks, label_sync_checks = [], [], [], []
 FORBIDDEN_FLOW = (
     "#source-flow, .source-flow, [data-flow], [data-flow-source], [data-flow-veil], "
     "[data-flow-wisp], [data-flow-soft], [data-origin-x], [data-origin-y]"
@@ -43,6 +43,8 @@ BRAND_LINES = (
 
 def verify_production_metadata(page):
     assert urlsplit(page.url).path == urlsplit(BASE).path
+    assert page.locator("#hero-title > span").all_text_contents() == ["NOT", "JUST", "SAKE"]
+    assert page.locator("#hero-title").get_attribute("aria-label") == "Not just sake まだ知らない、好きがある。"
     assert page.locator(".preview-tag").count() == 0
     for fragment in ("DESIGN EXPERIMENT", "CONCEPT B"):
         assert fragment not in page.locator("body").inner_text()
@@ -217,6 +219,111 @@ def verify_still(page):
     for element in page.locator(".source-card, .source-art").all():
         durations = element.evaluate("element => getComputedStyle(element).transitionDuration").split(",")
         assert all(float(value.strip().removesuffix("s")) == 0 for value in durations)
+
+
+def verify_label_source_sync(page, width, reduced_motion=False):
+    """Use actual inputs; observe focus/scroll at the event, after actionability scroll."""
+    stack = page.locator("#label-stack")
+    before_ripples = page.locator("#liquid").get_attribute("data-ripples")
+    cdp = page.context.new_cdp_session(page) if width < 700 else None
+    # The caller has selected Tsuchida using a source card. Exercise both
+    # directions and every label input without dispatching selection events.
+    actions = (
+        ("#label-stack", "click", "urasato"),
+        ("#label-next", "click", "tsuchida"),
+        ("#label-prev", "click", "urasato"),
+        ("#label-stack", "ArrowRight", "tsuchida"),
+        ("#label-stack", "ArrowLeft", "urasato"),
+        ("#label-stack", "swipe-left", "tsuchida"),
+        ("#label-stack", "swipe-right", "urasato"),
+        ("#label-stack", "Enter", "tsuchida"),
+    )
+    for selector, action, source in actions:
+        control = page.locator(selector)
+        control.scroll_into_view_if_needed()
+        page.wait_for_timeout(250)
+        if action != "click":
+            control.evaluate("element => element.focus({preventScroll: true})")
+        event = "pointerup" if action.startswith("swipe-") else "click" if action == "click" else "keydown"
+        control.evaluate("""(element, event) => {
+          element.__labelInputObservation = null;
+          element.addEventListener(event, () => {
+            element.__labelInputObservation = {scrollY, url: location.href,
+              focus: document.activeElement.id};
+          }, {once: true, capture: true});
+        }""", event)
+        if action == "click":
+            control.tap() if width < 700 else control.click()
+        elif action.startswith("swipe-"):
+            box = stack.bounding_box()
+            direction = -1 if action == "swipe-left" else 1
+            x = box["x"] + box["width"] * (.78 if direction < 0 else .22)
+            y = box["y"] + box["height"] * .5
+            if cdp:
+                cdp.send("Input.dispatchTouchEvent", {"type": "touchStart", "touchPoints": [{"x": x, "y": y}]})
+                for dx in (20, 45, 80, 120):
+                    cdp.send("Input.dispatchTouchEvent", {"type": "touchMove", "touchPoints": [{"x": x + dx * direction, "y": y}]})
+                cdp.send("Input.dispatchTouchEvent", {"type": "touchEnd", "touchPoints": []})
+            else:
+                page.mouse.move(x, y)
+                page.mouse.down()
+                page.mouse.move(x + 120 * direction, y, steps=6)
+                page.mouse.up()
+        else:
+            page.keyboard.press(action)
+        if reduced_motion:
+            assert not stack.evaluate("element => element.classList.contains('is-flipping')")
+            duration = page.locator(".sleeve.front").evaluate("element => getComputedStyle(element).transitionDuration")
+            assert all(float(value.strip().removesuffix("s")) == 0 for value in duration.split(","))
+        verify_selection(page, source)
+        verify_theme(page, source, width)
+        assert page.locator("#liquid").get_attribute("data-ripples") == before_ripples
+        before = control.evaluate("element => element.__labelInputObservation")
+        after = page.evaluate("() => ({scrollY, url: location.href, focus: document.activeElement.id})")
+        sample = {"width": width, "reducedMotion": reduced_motion, "input": action,
+                  "selector": selector, "source": source, "before": before, "after": after}
+        label_sync_checks.append(sample)
+        assert before is not None, sample
+        assert abs(after["scrollY"] - before["scrollY"]) < 3, sample
+        assert after["focus"] == before["focus"] and after["url"] == before["url"], sample
+        assert not stack.evaluate("element => element.classList.contains('is-flipping')"), sample
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), sample
+        if reduced_motion:
+            verify_still(page)
+    if cdp:
+        cdp.detach()
+
+    if not reduced_motion:
+        # Start a real animated flip, then select the current source before its
+        # 150 ms commit. Focus without scrolling permits real keyboard input to
+        # the distant source card; no timers or application state are changed.
+        source = page.locator('.source-card[data-source="tsuchida"]')
+        source.evaluate("""element => {
+          element.__flipOverride = null;
+          element.addEventListener('click', () => {
+            const stack = document.querySelector('#label-stack');
+            element.__flipOverride = {flipping: stack.classList.contains('is-flipping'),
+              release: stack.dataset.release, scrollY};
+          }, {once: true, capture: true});
+        }""")
+        stack.evaluate("element => element.focus({preventScroll: true})")
+        page.keyboard.press("Enter")
+        source.evaluate("element => element.focus({preventScroll: true})")
+        page.keyboard.press("Enter")
+        at_override = source.evaluate("element => element.__flipOverride")
+        assert at_override and at_override["flipping"] and at_override["release"] == "sat-002", (
+            "The input race was not exercised before the pending flip committed", at_override)
+        verify_selection(page, "tsuchida")
+        verify_theme(page, "tsuchida", width)
+        assert not stack.evaluate("element => element.classList.contains('is-flipping')")
+        assert source.evaluate("element => element === document.activeElement")
+        assert abs(page.evaluate("scrollY") - at_override["scrollY"]) < 3
+        assert page.locator("#liquid").get_attribute("data-ripples") == before_ripples
+        label_sync_checks.append({"width": width, "input": "source overrides in-flight flip",
+                                  "source": "tsuchida", "atOverride": at_override})
+    page.locator("#labels").screenshot(path=str(OUT / f"label-source-sync-{width}{'-reduced' if reduced_motion else ''}.png"))
+    checks.append(f"{width}px{' reduced motion' if reduced_motion else ''}: real label tap/click, arrow controls/keys and swipes sync source/caption/record/full theme without moving scroll or focus; "
+                  + ("label transitions stay disabled." if reduced_motion else "a real source selection cancels an in-flight flip."))
 
 
 def verify_brand_and_products(page, width):
@@ -406,6 +513,7 @@ def run():
             page.locator("#motion").click()
             verify_still(page)
             page.locator("#motion").click()
+            verify_label_source_sync(page, width)
             verify_brand_and_products(page, width)
             verify_remaining_navigation(page, width)
             verify_production_images(page, width)
@@ -423,6 +531,7 @@ def run():
         verify_selection(page, "tsuchida")
         verify_still(page)
         page.locator("#source-scene").screenshot(path=str(OUT / "reduced-motion-390.png"))
+        verify_label_source_sync(page, 390, reduced_motion=True)
         checks.append("Reduced motion: cards remain selectable with added transitions disabled.")
         old_url = urljoin(BASE, "experiments/after-hours-source/")
         candidate_url = urljoin(BASE, "experiments/after-hours-water/")
@@ -449,7 +558,7 @@ except Exception as error:
     OUT.joinpath("results.json").write_text(json.dumps({
         "status": "FAIL", "failure": str(error), "checks": checks, "geometry": geometry,
         "pageErrors": page_errors, "httpErrors": http_errors, "loadedArtwork": loaded_artwork, "navigation": navigation,
-        "production": production, "images": image_checks, "themes": theme_checks,
+        "production": production, "images": image_checks, "themes": theme_checks, "labelSourceSync": label_sync_checks,
     }, ensure_ascii=False, indent=2))
     raise
 OUT.joinpath("results.json").write_text(json.dumps({
@@ -459,7 +568,7 @@ OUT.joinpath("results.json").write_text(json.dumps({
     "notTested": ["iPhone Safari physical device", "iOS saving", "human first-impression evaluation"],
     "separateSuite": "tests/intuitive/test_ui.py covers the unchanged full game / label integration.",
     "pageErrors": page_errors, "httpErrors": http_errors, "loadedArtwork": loaded_artwork, "navigation": navigation,
-    "production": production, "images": image_checks, "themes": theme_checks,
+    "production": production, "images": image_checks, "themes": theme_checks, "labelSourceSync": label_sync_checks,
     "testedFiles": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
                     for path in PAGE_DIR.iterdir() if path.is_file()},
 }, ensure_ascii=False, indent=2))

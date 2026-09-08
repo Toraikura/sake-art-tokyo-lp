@@ -8,7 +8,7 @@ GitHub Pagesは `main` のリポジトリルートを公開します。`CNAME` �
 
 - `index.html`: 完成候補の水源カードUIを昇格した本番LP。ブランド思想、商品説明、エチケット、ゲーム導線、漫画を掲載。
 - `site.css`, `intuitive.css`, `source-cards.css`, `brand-intro.css`: レイアウトと浦里／土田のテーマ。
-- `site.js`, `intuitive.js`: 水面、カード、年齢確認、エチケットとiframe制御。
+- `site.js`, `intuitive.js`, `label-save.js`: 水面、カード、年齢確認、エチケットとiframe制御。
 - `play/`: LP用の30秒ゲーム。元のSAKE CLASH・75秒版・既存記録は変更しません。
 - `assets/`: 原画・エチケットPNG・表示画像。実物ラベルと漫画は再生成していません。
 - `privacy.html`, `robots.txt`, `sitemap.xml`, `favicon.svg`: 本番用の案内と検索向けファイル。
@@ -16,6 +16,10 @@ GitHub Pagesは `main` のリポジトリルートを公開します。`CNAME` �
 canonical・OGP・Twitter画像・構造化データのURLは `https://sakearttokyo.com/` を基準にします。商品詳細はルート内の `#sat-001` / `#sat-002`、ゲームは `/play/` で開きます。
 
 浦里選択時はライム系、土田選択時は紫系。区切り線、PLAYの背景と強調文字、ストーリーの強調、漫画セクションの背景まで連動します。本文・エチケット・漫画の原画は維持しています。
+
+水源カードとエチケットの選択は双方向に連動します。エチケットをめくった時も水面・SIDE・蔵名・ページ全体の色が切り替わり、現在のスクロール位置を保ちます。
+
+iPhone・iPadの保存ボタンは、対応環境では選択中の原寸PNGを共有メニューへ渡します。写真への保存は端末側で行います。共有非対応やエラー時は原寸画像を表示し、長押し保存を案内します。PCのPNGダウンロードは維持します。
 
 ## 販売開始時
 
@@ -33,6 +37,7 @@ python3 -m http.server 4190 --bind 127.0.0.1
 node --check site.js
 node --check intuitive.js
 node tests/intuitive/test_controller.cjs
+node tests/intuitive/test_label_save.cjs
 python3 tests/intuitive/test_ui.py
 python3 tests/intuitive/test_http_details.py
 python3 tests/source-water/test_ui.py

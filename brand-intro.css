@@ -93,3 +93,13 @@ body[data-mood="deep"] {
 .comic-section { background: var(--section-paper); }
 .light button:focus-visible, .light a:focus-visible, .light summary:focus-visible,
 .light input:focus-visible { outline-color: var(--accent-ink); }
+
+/* Original artwork for iPhone/iPad long-press saving when sharing is unavailable. */
+.label-save-dialog { width: min(520px, calc(100% - 32px)); padding: 22px; }
+.label-save-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.label-save-head h2 { margin: 0; font-size: 20px; }
+.label-save-close { flex: 0 0 44px; width: 44px; height: 44px; padding: 0;
+  border: 1px solid #b6b0ad; background: transparent; color: var(--ink); font-size: 25px; }
+#label-save-help { margin-top: 14px; font-size: 13px; line-height: 1.8; }
+.label-save-image { width: auto; max-width: 100%; height: auto; max-height: 60dvh;
+  object-fit: contain; margin: 18px auto 0; -webkit-touch-callout: default; user-select: auto; }

@@ -38,6 +38,7 @@
     $('#label-next').disabled = releases.length === 1;
     stack.setAttribute('aria-label', `${release.jp || release.name}。次のエチケットを見る`);
     stack.dataset.release = release.id;
+    window.dispatchEvent(new CustomEvent('sat:label', { detail: { id: release.id } }));
   }
 
   function settle() {

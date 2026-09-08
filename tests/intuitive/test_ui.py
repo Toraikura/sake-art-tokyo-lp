@@ -5,6 +5,26 @@ import json,time,os
 BASE=os.environ.get('BASE_URL','http://127.0.0.1:4190/')
 OUT=Path(os.environ.get('EVIDENCE_DIR','evidence'));OUT.mkdir(parents=True,exist_ok=True)
 results=[]
+def assert_source_sync(page,release):
+ mood,source,side,brewery=('light','urasato','SIDE A / URAZATO','浦里酒造') if release=='sat-001' else ('deep','tsuchida','SIDE B / TSUCHIDA','土田酒造')
+ assert page.locator('#label-stack').get_attribute('data-release')==release
+ assert page.locator('body').get_attribute('data-mood')==mood
+ assert page.locator('#source-scene').get_attribute('data-source')==source
+ assert page.locator('.source-card[aria-pressed="true"]').count()==1
+ assert page.locator(f'.source-card[data-source="{source}"]').get_attribute('aria-pressed')=='true'
+ assert page.locator('.record[data-selected="true"]').count()==1
+ assert page.locator(f'#{release}').get_attribute('data-selected')=='true'
+ assert page.locator('#side-title').inner_text()==side
+ assert page.locator('#source-brewery').inner_text()==brewery
+ colors=page.evaluate("""() => {
+  const style=s=>getComputedStyle(document.querySelector(s));
+  return {title:style('#hero-title .last').color,dot:style('.motion-dot').backgroundColor,
+   rule:style('.theme-rule').backgroundColor,play:style('.arcade').backgroundColor,
+   comic:style('.comic-section').backgroundColor};
+ }""")
+ assert colors['title']==colors['dot']==colors['rule'],colors
+ return colors
+
 with sync_playwright() as p:
  browser=p.chromium.launch(headless=True,executable_path=os.environ.get('PLAYWRIGHT_EXECUTABLE_PATH'),args=['--no-sandbox'])
  context=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,device_scale_factor=1)
@@ -13,12 +33,18 @@ with sync_playwright() as p:
  page.goto(BASE,wait_until='networkidle');page.wait_for_timeout(300)
  assert not errors,errors
  assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'LP horizontal overflow'
+ assert page.locator('#hero-title > span').all_text_contents()==['NOT','JUST','SAKE']
+ assert page.locator('#hero-title').get_attribute('aria-label')=='Not just sake まだ知らない、好きがある。'
+ light_theme=assert_source_sync(page,'sat-001')
  page.locator('[data-mood-choice="deep"]').tap()
  assert page.locator('#label-stack').get_attribute('data-release')=='sat-002'
+ deep_theme=assert_source_sync(page,'sat-002')
+ assert all(deep_theme[key]!=light_theme[key] for key in light_theme),(light_theme,deep_theme)
  page.locator('#labels').scroll_into_view_if_needed();page.wait_for_timeout(500)
  page.locator('#labels').screenshot(path=str(OUT/'labels-390.png'))
  page.locator('#label-stack').tap();page.wait_for_timeout(400)
  assert page.locator('#label-counter').inner_text()=='01 / 02'
+ assert assert_source_sync(page,'sat-001')==light_theme,'Label tap did not restore the complete 浦里 theme'
  assert page.locator('#save-label').get_attribute('download')=='SAT_001_Melon_Cotton_Candy.png'
  with page.expect_download() as dl: page.locator('#save-label').tap()
  download=dl.value;download.save_as(str(OUT/download.suggested_filename))
@@ -30,6 +56,7 @@ with sync_playwright() as p:
  for dx in [20,45,80,120]:cdp.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x-dx,'y':y}]})
  cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});page.wait_for_timeout(450)
  assert page.locator('#label-counter').inner_text()=='02 / 02','Swipe double-advanced or did not advance'
+ assert assert_source_sync(page,'sat-002')==deep_theme,'Label swipe did not restore the complete 土田 theme'
  before=page.locator('#label-counter').inner_text()
  # Vertical scrolling must not select another label.
  box=page.locator('#label-stack').bounding_box();x=box['x']+box['width']/2;y=box['y']+box['height']*.7
@@ -37,7 +64,8 @@ with sync_playwright() as p:
  for dy in [15,35,65,95]:cdp.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x,'y':y-dy}]})
  cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});page.wait_for_timeout(500)
  assert page.locator('#label-counter').inner_text()==before
- results.append('Label tap, horizontal swipe, vertical-scroll discrimination, deep-mood sync and correct original PNG download passed.')
+ assert assert_source_sync(page,'sat-002')==deep_theme,'Vertical scroll changed the source or theme'
+ results.append('Hero SAKE text and aria-label have no English trailing period. Label tap and horizontal swipe synchronize the source card, water caption, body theme, selected product and section colors; vertical scroll preserves selection; original PNG download passed.')
  page.locator('#play').scroll_into_view_if_needed();page.wait_for_timeout(500)
  page.locator('#play').screenshot(path=str(OUT/'play-entry-390.png'))
  previous_scroll=page.evaluate('scrollY')

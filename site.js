@@ -15,7 +15,7 @@ const water=createWaterSurface(c);c=water.canvas;
 const age=$('#age'),policy=$('#policy');
 try{allowed=localStorage.getItem(AGE_KEY)==='yes';}catch(_){}
 function notify(text){$('#toast').textContent=text;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{$('#toast').textContent='';},6000);}
-function setMood(next){
+function setMood(next,syncLabel=true){
  mood=next==='deep'?'deep':'light';document.body.dataset.mood=mood;
  const deep=mood==='deep',id=deep?'sat-002':'sat-001';
  $$('[data-mood-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.moodChoice===mood)));
@@ -25,10 +25,15 @@ function setMood(next){
  $('#source-brewery').textContent=brewery;
  $('#source-copy').textContent=deep?'森の奥、湧き出す深み。':'霧の向こう、澄んだ余韻。';
  $$('.record').forEach(el=>el.dataset.selected=String(el.id===id));
- window.dispatchEvent(new CustomEvent('sat:mood',{detail:{id,mood}}));
+ if(syncLabel)window.dispatchEvent(new CustomEvent('sat:mood',{detail:{id,mood}}));
  paint();
 }
 $$('[data-mood-choice]').forEach(b=>b.addEventListener('click',()=>setMood(b.dataset.moodChoice)));
+window.addEventListener('sat:label',event=>{
+ const id=event.detail?.id,next=id==='sat-001'?'light':id==='sat-002'?'deep':null;
+ // The label has already changed; update the source/theme without restarting its flip.
+ if(next&&next!==mood)setMood(next,false);
+});
 const params=new URLSearchParams(location.search);const bottle=params.get('bottle');
 setMood(bottle==='sat-002'?'deep':bottle==='sat-001'?'light':params.get('mood'));
 function updateMotion(){
