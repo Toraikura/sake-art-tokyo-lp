@@ -24,8 +24,6 @@ function setMood(next){
  $('#side-title').textContent=deep?'SIDE B / TSUCHIDA':'SIDE A / URAZATO';
  $('#source-brewery').textContent=brewery;
  $('#source-copy').textContent=deep?'森の奥、湧き出す深み。':'霧の向こう、澄んだ余韻。';
- $('#choice-note').textContent=brewery+'の一本から。';
- $('.hero #mood-link').href='#'+id;
  $$('.record').forEach(el=>el.dataset.selected=String(el.id===id));
  window.dispatchEvent(new CustomEvent('sat:mood',{detail:{id,mood}}));
  paint();

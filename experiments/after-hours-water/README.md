@@ -1,4 +1,4 @@
-# AFTER HOURS — source-card UI / 2026-09-08
+# AFTER HOURS — source cards and brand introduction / 2026-09-08
 
 ## Scope
 
@@ -11,13 +11,23 @@ The main LP, original products, real labels, final comic, original SAKE CLASH re
 - 右側上部に浦里・土田のカードを横並びで配置。PCは各174×約99px、390pxは各159×約91px、375pxは各153×約87px。選択中は細枠・丸印・明度差で表示します。
 - 浦里は筑波山・田園・霧、土田は森・岩・湧水・石鉢とししおどしが見える構図。提供PNGの画素を変更せず、SVGの表示範囲で切り取っています。カードの絵はイラストであり、実際の取水地点を検証した資料ではありません。
 - カードと水面をつなぐSVG・膜・ストローク・座標計算・専用スクリプトは削除しました。カード選択では大きな波紋も発生しません。水面そのものの既存アニメーション・タップ波紋は維持します。
-- 選択は水面色、SIDE、蔵名、短い情景文、商品CTA、商品表示、エチケット、ゲーム結果の商品案内へ連動します。CTA文言は両方「この蔵の一本へ」。旧「軽やかに／濃密に」の選択UIはありません。
+- 選択は水面色、SIDE、蔵名、短い情景文、商品表示、エチケット、ゲーム結果の商品案内へ連動します。最新の依頼により、ヒーローの「この蔵の一本へ」「PLAY GAME」は削除しました。旧「軽やかに／濃密に」の選択UIはありません。
 - 浦里: `SIDE A / URAZATO`、浦里酒造、「霧の向こう、澄んだ余韻。」。
 - 土田: `SIDE B / TSUCHIDA`、土田酒造、「森の奥、湧き出す深み。」。
 - ヒーロー左下は両方 `SAKE ART TOKYO from CHILL LABO`。ブランド・URAZATOの表示表記を統一しています。
-- スマホではコピー・CTA・ブランド、カード、水面の順。見出しの切れと横はみ出しを防ぎ、カードと水面は別々の操作対象にしています。
+- スマホではコピー・ブランド、カード、水面の順。見出しの切れと横はみ出しを防ぎ、カードと水面は別々の操作対象にしています。ヘッダーの「お酒を見る」とゲームセクションの起動ボタンは維持します。
 - `prefers-reduced-motion` と手動停止では追加のカード遷移も停止します。キーボードとタッチの両方で選択できます。
 - エチケットは前回の余白修正を維持し、浦里972:1200／土田1027:1200の比率で表示。画像本来の白フチだけを残します。保存PNGは変更しません。
+
+## ブランド思想と商品説明
+
+- 「同じ日本酒。まったく違う、入り口。」を削除し、商品前にユーザー指定のブランド文章を一度だけ掲載。二つの指定文を太字とサイズ差で強調します。引用符以外の文章は変更せず、見え方に合わせて折り返します。
+- 新しいボタン・タグ・アイコン・補足見出しは追加しません。既存の紙色とタイポグラフィを使い、三つの段落の間に余白を設けます。
+- 提供された立体ロゴ `1.png` は、画像を加工せず `assets/sat-dimensional-logo.png` に配置。PCのみ右側に最大280px・不透明度45%で表示し、700px以下では非表示にします。
+- ブランド思想 → 浦里 → 土田の順。PCの商品2列、スマホの商品1列は既存の構造を維持しています。
+- 「この一本を、もう少し。」の折りたたみは撤去。商品名の下に、蔵との関係・香味・温度と時間による楽しみ方・常温保存を常時表示します。土田が貴醸酒であることと、両方が常温保存できることはユーザー提供情報です。香味・米由来の甘み・保存時の直射日光と高温の回避は既存root LPの記載に基づきます。製法や開発経緯は創作していません。
+- ヒーロー内の2ボタンと、それらに対するJavaScript参照を撤去。ヘッダー、ゲームセクション、エチケット保存、商品詳細導線は維持します。
+- 追加のスタイルは `brand-intro.css` に限定。水面描画、ゲーム、元の商品・エチケット画像、漫画は変更しません。
 
 ## 比較・推奨
 
@@ -28,10 +38,12 @@ The main LP, original products, real labels, final comic, original SAKE CLASH re
 | 選び方 | 軽やか／濃密という気分 | 浦里／土田という具体的なつくり手 |
 | 水面 | 抽象水面を表示 | 同じ水面を選択した蔵に連動 |
 | 追加演出 | なし | 接続演出なし。カードの状態差だけ |
-| CTA | この気分の一本へ | この蔵の一本へ |
-| スマホ | 既存配置 | タイトル幅を修正し、カード・CTA・補助文の余白を整理 |
+| ヒーローのボタン | この気分の一本へ／PLAY GAME | ユーザー指定により削除。既存のナビとゲームセクションを利用 |
+| 商品前 | 二つの酒を紹介する見出し | ブランド思想を一度だけ掲載 |
+| 商品説明 | 折りたたみ | 常時表示 |
+| スマホ | 既存配置 | タイトル幅を修正し、カード・補助文・本文の余白を整理 |
 
-PC1440px・1024px、390px・375pxの画面レビューでは、カードが選択肢に見え、CTAとPLAYが隠れず、水面・短句・SIDEのまとまりも維持できています。線のあった前案より情報の優先順位が明快です。これは制作上の判断で、初見ユーザーの認知や好みを実測した結果ではありません。
+PC1440px・1024px、390px・375pxの画面レビューでは、カードが選択肢に見え、水面・短句・SIDEのまとまりを維持できています。ブランドの考え方を読んでから具体的な二本に進む流れは、この構成で採用可能です。これは制作上の判断で、初見ユーザーの認知や好みを実測した結果ではありません。
 
 残る確認はiPhone Safari実機での表示・タップ・PNG保存です。原画2枚は計4,201,459 bytesのため、公開前にはカード用配信画像の軽量化とモバイル通信での初回表示確認を推奨します。
 
@@ -71,11 +83,23 @@ python tests/source-water/test_ui.py
 
 `BASE_URL` optionally overrides the HTTP test URL. `PLAYWRIGHT_EXECUTABLE_PATH` optionally selects an existing Chromium; otherwise install Playwright's Chromium normally. `test_offline.py` offers component-only checks where browser navigation is blocked. It inlines assets/styles and bundles modules without changing game logic. It does NOT substitute for same-origin iframe, real downloads, navigation or deployment verification.
 
-Local Chromium over HTTP verifies the canonical page, source selection, no connecting-effect DOM, label interactions/downloads, real game start and natural match, replay, product navigation and browser back. Node syntax checks and controller unit tests are also run. Source-card evidence includes 1440px, 390px and 375px; supplemental checks include smaller game viewports and real PNG hashes. Reports and final status are recorded in the delivery memo after the run completes.
+Local Chromium over HTTP verifies the canonical page, source selection, no connecting-effect DOM, exact brand copy and emphasis, the brand/product order, visible product descriptions, remaining navigation, label interactions/downloads, real game start and natural match, replay, product navigation and browser back. Node syntax checks and controller unit tests are also run. Source-card and brand evidence includes 1440px, 390px and 375px; supplemental checks include smaller game viewports and real PNG hashes. Reports and final status are recorded in the delivery memo after the run completes.
 
 Physical iPhone Safari, iOS-specific saving and slow-network first-load behavior remain NOT TESTED. A push to the work branch triggers verification only; it is not a Pages publication.
 
 ## 変更ファイル一覧
+
+最新のブランド思想・商品説明の修正:
+
+- `experiments/after-hours-water/index.html`: ブランド本文・常時表示の商品説明・ヒーロー2ボタン削除。
+- `experiments/after-hours-water/brand-intro.css`: 本文・ロゴ・商品段落の余白とレスポンシブ表示。
+- `experiments/after-hours-water/assets/sat-dimensional-logo.png`: 提供ロゴを無加工で追加。
+- `experiments/after-hours-water/site.js`: 削除したCTA・旧紹介見出しへの参照を撤去。
+- `experiments/after-hours-water/README.md`: 今回の内容・判断・検証範囲。
+- `tests/source-water/test_ui.py`: ブランドと商品の表示、残したナビ・PLAYの実クリック検証。
+- `tests/intuitive/test_http_details.py`: スマホの非表示・遅延読み込み画像を可視画像の検査から除外し、画像の読み込み待ちを15秒に制限。ロゴの実デコードはPC幅のカード・ブランド検証で確認します。
+
+この作業ブランチの先行変更:
 
 - `experiments/after-hours-water/index.html`: ヒーロー構造、水源カード、ブランド・補助文。
 - `experiments/after-hours-water/site.js`: 選択状態・文言・停止状態の同期。

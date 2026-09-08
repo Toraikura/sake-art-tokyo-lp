@@ -1,4 +1,4 @@
-"""HTTP regression for the canonical LP's source-card-only hero.
+"""HTTP regression for the canonical LP's source cards and brand introduction.
 
 Uses real touch, click and keyboard input. The existing intuitive suite covers
 the unchanged game integration separately. Chromium viewport emulation is not
@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import parse_qs, urljoin, urlsplit
 
 from playwright.sync_api import sync_playwright
 
@@ -21,10 +21,21 @@ BASE = os.environ.get("BASE_URL", "http://127.0.0.1:4190/experiments/after-hours
 OUT = Path(os.environ.get("EVIDENCE_DIR", "/private/tmp/sat-source-cards-tests"))
 OUT.mkdir(parents=True, exist_ok=True)
 CHROME = os.environ.get("PLAYWRIGHT_EXECUTABLE_PATH")
-checks, geometry, page_errors, http_errors, loaded_artwork = [], [], [], [], []
+checks, geometry, page_errors, http_errors, loaded_artwork, navigation = [], [], [], [], [], []
 FORBIDDEN_FLOW = (
     "#source-flow, .source-flow, [data-flow], [data-flow-source], [data-flow-veil], "
     "[data-flow-wisp], [data-flow-soft], [data-origin-x], [data-origin-y]"
+)
+BRAND_LINES = (
+    "SAKE ART TOKYOでつくりたいのは、",
+    "急いで飲み切るためのお酒ではなく、",
+    "開ける日までの時間も、一緒に楽しめる一本。",
+    "SAKE ART TOKYOがやりたいのは、",
+    "完成された酒を選んで並べることではなく、",
+    "蔵の個性に一歩踏み込んで、一緒に新しい表情をつくること。",
+    "今日開けてもいい。",
+    "少し寝かせてからでもいい。",
+    "好きな時に、好きな人と、好きなように。",
 )
 
 
@@ -40,15 +51,10 @@ def verify_selection(page, source):
     assert page.locator("#source-brewery").inner_text() == brewery
     assert page.locator("#source-copy").inner_text() == copy
     assert page.locator("#hero-brand").inner_text() == "SAKE ART TOKYO from CHILL LABO"
-    assert page.locator("#mood-link").get_attribute("href") == "#" + release
-    # Ignore only the decorative arrow; wording stays identical for both sources.
-    cta = page.locator("#mood-link").evaluate("""element => {
-      const clone = element.cloneNode(true);
-      clone.querySelectorAll('[aria-hidden="true"]').forEach(node => node.remove());
-      return clone.textContent.trim();
-    }""")
-    assert cta == "この蔵の一本へ", cta
+    assert page.locator(".hero-actions, #mood-link, .hero [data-play], #choice-note").count() == 0
     assert page.locator("#label-stack").get_attribute("data-release") == release
+    assert page.locator(".record[data-selected=true]").count() == 1
+    assert page.locator("#" + release).get_attribute("data-selected") == "true"
     assert page.locator(FORBIDDEN_FLOW).count() == 0
     for card_source in ("urasato", "tsuchida"):
         selected = card_source == source
@@ -118,6 +124,100 @@ def verify_still(page):
         assert all(float(value.strip().removesuffix("s")) == 0 for value in durations)
 
 
+def verify_brand_and_products(page, width):
+    page.locator(".nav-shop").click()
+    page.wait_for_url("**/#bottles")
+    intro = page.locator("#bottles .brand-intro")
+    assert intro.count() == 1 and intro.is_visible()
+    copy = intro.locator(".brand-copy")
+    assert "".join(copy.inner_text().split()) == "".join("".join(BRAND_LINES).split())
+    assert [node.text_content() for node in copy.locator("strong").all()] == [BRAND_LINES[2], BRAND_LINES[5]]
+    assert intro.locator("a, button, input, select, textarea, summary, [role=button]").count() == 0
+    assert page.locator(".record-details, .record details, .record summary").count() == 0
+    position = intro.evaluate("""element => {
+      const records = document.querySelector('#bottles .records');
+      return {before: Boolean(element.compareDocumentPosition(records) & Node.DOCUMENT_POSITION_FOLLOWING),
+        bottom: element.getBoundingClientRect().bottom, recordsTop: records.getBoundingClientRect().top};
+    }""")
+    assert position["before"] and position["bottom"] <= position["recordsTop"] + .5, position
+    mark = intro.locator(".brand-mark")
+    assert mark.count() == 1
+    assert mark.is_visible() == (width > 700)
+    intro.scroll_into_view_if_needed()
+    if width > 700:
+        mark.evaluate("img => img.decode()")
+        assert mark.evaluate("img => img.naturalWidth > 0 && img.naturalHeight > 0")
+    intro.screenshot(path=str(OUT / f"brand-intro-{width}.png"))
+    for release in ("sat-001", "sat-002"):
+        article = page.locator("#" + release)
+        story = article.locator(".record-story")
+        assert story.count() == 1 and story.is_visible()
+        assert story.locator("p").count() == 3
+        assert all(paragraph.is_visible() for paragraph in story.locator("p").all())
+        assert "常温保存できます。" in story.inner_text(), (release, story.inner_text())
+        if release == "sat-002":
+            assert "貴醸酒" in article.inner_text()
+        story.scroll_into_view_if_needed()
+        story.screenshot(path=str(OUT / f"record-story-{release}-{width}.png"))
+    bounds = page.evaluate("""() => {
+      const elements = document.querySelectorAll('.brand-intro, .brand-copy, .brand-mark, .record, .record-story');
+      return Array.from(elements).filter(element => getComputedStyle(element).display !== 'none').map(element => {
+        const rect = element.getBoundingClientRect();
+        const range = document.createRange(); range.selectNodeContents(element);
+        const text = range.getBoundingClientRect();
+        return {selector: element.id || element.className, left: Math.min(rect.left, text.left),
+          right: Math.max(rect.right, text.right), overflow: element.scrollWidth > element.clientWidth + 1};
+      });
+    }""")
+    for item in bounds:
+        assert item["left"] >= -.5 and item["right"] <= width + .5 and not item["overflow"], (width, item)
+    geometry.append({"width": width, "brandAndProductBounds": bounds})
+
+
+def verify_play_entry(page, selector):
+    trigger = page.locator(selector)
+    trigger.scroll_into_view_if_needed()
+    page.wait_for_timeout(700)
+    previous_scroll = page.evaluate("scrollY")
+    # Playwright may reposition a sticky navigation button while making it
+    # actionable. Observe the real click position before the application's
+    # click handler saves it, rather than using the pre-action measurement.
+    trigger.evaluate("""element => element.addEventListener('click', () => {
+      element.__testClickScrollY = window.scrollY;
+    }, {once: true, capture: true})""")
+    trigger.click()
+    click_scroll = trigger.evaluate("element => element.__testClickScrollY")
+    page.wait_for_function("document.querySelector('#play-loading').hidden")
+    iframe = page.locator("#play-frame-slot iframe")
+    url = urlsplit(iframe.get_attribute("src"))
+    assert url.path.endswith("/experiments/after-hours-water/play/")
+    assert parse_qs(url.query)["bottle"] == ["sat-002"]
+    frame = page.frame_locator("#play-frame-slot iframe")
+    frame.locator('#arena[data-status="playing"]').wait_for()
+    assert frame.locator("#time").inner_text() == "30"
+    assert frame.locator("#arena").get_attribute("data-played") == "0"
+    page.locator("#close-play").click()
+    page.wait_for_timeout(300)
+    assert not page.locator("#play-modal").is_visible()
+    restored_scroll = page.evaluate("scrollY")
+    sample = {"selector": selector, "beforeAction": previous_scroll,
+              "atClick": click_scroll, "afterClose": restored_scroll}
+    navigation.append(sample)
+    assert abs(restored_scroll - click_scroll) < 3, sample
+
+
+def verify_remaining_navigation(page, width):
+    if width > 700:
+        page.locator('.nav-links a[href="#bottles"]').click()
+        page.wait_for_url("**/#bottles")
+        verify_play_entry(page, ".nav-play")
+        page.locator('.nav-links a[href="#story"]').click()
+        page.wait_for_url("**/#story")
+    verify_play_entry(page, ".play-launch")
+    page.locator(".logo").click()
+    page.wait_for_url("**/#top")
+
+
 def monitor(page):
     page.on("pageerror", lambda error: page_errors.append(str(error)))
     def response_received(response):
@@ -173,13 +273,9 @@ def run():
             page.locator("#motion").click()
             verify_still(page)
             page.locator("#motion").click()
-            # Real CTA click must reach the release belonging to the selected card.
-            page.locator("#mood-link").click()
-            page.wait_for_url("**/#sat-002")
-            assert page.locator("#sat-002").is_visible()
-            page.go_back(wait_until="load")
-            assert not page.locator("#play-modal").is_visible()
-            checks.append(f"{width}px: two source cards, no flow/membrane/origin overlay, exact copy/brand/CTA sync, artwork brightness/crop, unclipped layout, 44px targets, click/touch/keyboard, no card ripple, original water gesture, stop control and CTA destination passed.")
+            verify_brand_and_products(page, width)
+            verify_remaining_navigation(page, width)
+            checks.append(f"{width}px: source/copy/record sync, no hero CTA or flow overlay, artwork and layout, source input and motion controls, brand before products, responsive brand mark, always-visible product stories/storage and real navigation/PLAY entries passed.")
             context.close()
 
         context = browser.new_context(viewport={"width": 390, "height": 844},
@@ -217,7 +313,7 @@ try:
 except Exception as error:
     OUT.joinpath("results.json").write_text(json.dumps({
         "status": "FAIL", "failure": str(error), "checks": checks, "geometry": geometry,
-        "pageErrors": page_errors, "httpErrors": http_errors, "loadedArtwork": loaded_artwork,
+        "pageErrors": page_errors, "httpErrors": http_errors, "loadedArtwork": loaded_artwork, "navigation": navigation,
     }, ensure_ascii=False, indent=2))
     raise
 OUT.joinpath("results.json").write_text(json.dumps({
@@ -226,7 +322,7 @@ OUT.joinpath("results.json").write_text(json.dumps({
     "executableOverride": CHROME,
     "notTested": ["iPhone Safari physical device", "iOS saving", "human first-impression evaluation"],
     "separateSuite": "tests/intuitive/test_ui.py covers the unchanged full game / label integration.",
-    "pageErrors": page_errors, "httpErrors": http_errors, "loadedArtwork": loaded_artwork,
+    "pageErrors": page_errors, "httpErrors": http_errors, "loadedArtwork": loaded_artwork, "navigation": navigation,
     "testedFiles": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
                     for path in PAGE_DIR.iterdir() if path.is_file()},
 }, ensure_ascii=False, indent=2))

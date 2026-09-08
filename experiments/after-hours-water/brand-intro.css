@@ -1,0 +1,63 @@
+/* A quiet introduction on the existing paper, followed by the two releases. */
+.brand-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(180px, 1fr);
+  align-items: start;
+  gap: clamp(32px, 6vw, 90px);
+  padding-block: 10px 90px;
+}
+.brand-copy { max-width: 800px; }
+.brand-copy p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+.brand-copy p + p { margin-top: 40px; }
+.brand-copy strong {
+  display: block;
+  margin-top: 12px;
+  font-size: clamp(22px, 2.05vw, 29px);
+  font-weight: 700;
+  line-height: 1.7;
+  letter-spacing: -.025em;
+  text-wrap: pretty;
+}
+.brand-copy .brand-closing { line-height: 2.15; }
+.brand-copy strong span { display: inline-block; max-width: 100%; }
+.brand-mark {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin-top: 66px;
+  justify-self: end;
+  opacity: .45;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.record-story {
+  max-width: 38em;
+  margin-block: 21px 25px;
+  font-size: 14px;
+  line-height: 2;
+}
+.record-story p + p { margin-top: 16px; }
+.record-story .record-storage { color: #625d66; font-size: 12px; }
+@media (max-width: 700px) {
+  .brand-intro {
+    display: block;
+    padding-block: 10px 64px;
+  }
+  .brand-mark { display: none; }
+  .brand-copy p { font-size: 14px; }
+  .brand-copy p + p { margin-top: 34px; }
+  .brand-copy strong {
+    font-size: 21px;
+    line-height: 1.8;
+    margin-top: 12px;
+  }
+  .brand-copy .brand-closing { line-height: 2.1; }
+  .record-story { margin-block: 20px 24px; font-size: 14px; }
+  .collection .records { row-gap: 62px; }
+}
