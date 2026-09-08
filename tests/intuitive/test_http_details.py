@@ -12,10 +12,10 @@ from playwright.sync_api import sync_playwright
 
 
 BASE = os.environ.get(
-    "BASE_URL", "http://127.0.0.1:4190/experiments/after-hours-water/"
+    "BASE_URL", "http://127.0.0.1:4190/"
 )
 OUT = Path(os.environ.get("EVIDENCE_DIR", "evidence"))
-SOURCE = Path(__file__).resolve().parents[2] / "experiments/after-hours-water"
+SOURCE = Path(__file__).resolve().parents[2]
 OUT.mkdir(parents=True, exist_ok=True)
 report = {
     "browser": "Playwright Chromium, touch / viewport emulation; not an iPhone device",
@@ -286,7 +286,7 @@ with sync_playwright() as playwright:
 
         # Real finished-match navigation and Back, followed by an actual reopening.
         frame.locator("#explore").tap()
-        page.wait_for_url("**/index.html#sat-002", wait_until="load")
+        page.wait_for_url(urljoin(BASE, "./#sat-002"), wait_until="load")
         page.go_back(wait_until="load")
         page.wait_for_timeout(400)
         assert page.url == BASE and not page.locator("#play-modal").is_visible()

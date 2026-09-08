@@ -23,14 +23,14 @@ class Element {
   close() { this.open = false; }
   focus(options) { this.focused = true; this.focusOptions = options; }
 }
-const app = path.resolve(__dirname, '../../experiments/after-hours-water');
+const app = path.resolve(__dirname, '../..');
 const elements = new Map();
 const el = selector => {
   if (!elements.has(selector)) elements.set(selector, new Element());
   return elements.get(selector);
 };
 const releases = [1, 2].map(n => ({id: `sat-00${n}`, name: `Sake ${n}`, brewery: 'Test',
-  image: `./assets/sat-00${n}-label.webp`, download: `./assets/sat-00${n}-label.png`, detail: `../../index.html#sat-00${n}`}));
+  image: `./assets/sat-00${n}-label.webp`, download: `./assets/sat-00${n}-label.png`, detail: `./#sat-00${n}`}));
 el('#label-releases').textContent = JSON.stringify(releases);
 const body = new Element(); body.dataset.mood = 'deep'; body.style.cssText = 'color: black';
 const doc = {body, documentElement: new Element(), querySelector: el,
@@ -41,8 +41,8 @@ const win = new Element(); win.scrollY = 420;
 win.scrollTo = (_, y) => { win.scrollY = y; };
 win.dispatchEvent = event => { win.emit(event.type, event); };
 const navigation = [];
-const location = {origin: 'https://toraikura.github.io',
-  href: 'https://toraikura.github.io/sake-art-tokyo-lp/experiments/after-hours-water/',
+const location = {origin: 'https://sakearttokyo.com',
+  href: 'https://sakearttokyo.com/',
   assign: href => navigation.push(href)};
 const context = {document: doc, window: win, location, URL, crypto, performance,
   setTimeout, clearTimeout, requestAnimationFrame: fn => fn(),
@@ -60,6 +60,8 @@ const deliver = (active, type, extra = {}, override = {}) => win.emit('message',
 });
 let active = launch();
 assert.equal(el('#play-modal').open, true);
+assert.equal(new URL(active.frame.src).origin, location.origin);
+assert.equal(new URL(active.frame.src).pathname, '/play/');
 assert.equal(new URL(active.frame.src).searchParams.get('bottle'), 'sat-002');
 assert.equal(el('#play-loading').hidden, false);
 deliver(active, 'ready', {}, {origin: 'https://untrusted.example'});
@@ -82,7 +84,7 @@ deliver(active, 'finished', {outcome: 'won', share: 200, played: 2});
 assert.equal(el('#play-modal').dataset.outcome, undefined);
 deliver(active, 'finished', {outcome: 'lost', share: 32, played: 3});
 deliver(active, 'explore');
-assert.equal(navigation.at(-1), 'https://toraikura.github.io/sake-art-tokyo-lp/index.html#sat-002');
+assert.equal(navigation.at(-1), 'https://sakearttokyo.com/#sat-002');
 assert.equal(el('#play-modal').open, false);
 assert.equal(active.frame.removed, true);
 assert.equal(body.style.cssText, 'color: black');

@@ -1,0 +1,95 @@
+/* A quiet introduction on the existing paper, followed by the two releases. */
+.theme-rule { height: 3px; background: var(--accent); }
+.brand-intro {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--paper);
+  padding-block: 10px 90px;
+}
+.brand-copy { position: relative; z-index: 1; max-width: 58%; }
+.brand-copy p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+.brand-copy p + p { margin-top: 40px; }
+.brand-copy strong {
+  display: block;
+  margin-top: 12px;
+  font-size: clamp(22px, 2.05vw, 29px);
+  font-weight: 700;
+  line-height: 1.7;
+  letter-spacing: -.025em;
+  text-wrap: pretty;
+}
+.brand-copy .brand-closing { line-height: 2.15; }
+.brand-copy strong span { display: inline-block; max-width: 100%; }
+.brand-mark {
+  position: absolute;
+  z-index: 0;
+  width: 58%;
+  max-width: none;
+  height: auto;
+  top: 50%;
+  right: -8%;
+  transform: translateY(-50%);
+  opacity: .3;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 24%);
+  mask-image: linear-gradient(90deg, transparent, #000 24%);
+  pointer-events: none;
+}
+.record-story {
+  max-width: 38em;
+  margin-block: 21px 25px;
+  font-size: 14px;
+  line-height: 2;
+}
+.record-story p + p { margin-top: 16px; }
+.record-story .record-storage { color: #625d66; font-size: 12px; }
+@media (max-width: 700px) {
+  .brand-intro {
+    display: block;
+    padding-block: 10px 64px;
+  }
+  .brand-mark { display: none; }
+  .brand-copy { max-width: none; }
+  .brand-copy p { font-size: 14px; }
+  .brand-copy p + p { margin-top: 34px; }
+  .brand-copy strong {
+    font-size: 21px;
+    line-height: 1.8;
+    margin-top: 12px;
+  }
+  .brand-copy .brand-closing { line-height: 2.1; }
+  .record-story { margin-block: 20px 24px; font-size: 14px; }
+  .collection .records { row-gap: 62px; }
+}
+
+/* Brewery accents continue through PLAY, story and the final comic. */
+body {
+  --section-dark: #252a1e;
+  --section-paper: #e5ebce;
+  --accent-ink: #526a20;
+  --accent-muted: #c5ccb4;
+  --accent-border: #727e5b;
+}
+body[data-mood="deep"] {
+  --section-dark: #252032;
+  --section-paper: #dfd5e9;
+  --accent-ink: #755095;
+  --accent-muted: #c8bed3;
+  --accent-border: #756483;
+}
+.arcade { background: var(--section-dark); }
+.arcade .chapter, .arcade h2 > span, .play-modal-head { color: var(--accent); }
+.play-meta { color: var(--accent-muted); }
+.play-launch, .play-modal, .play-modal-head { border-color: var(--accent-border); }
+.play-button { background: var(--accent); border-color: var(--section-paper); }
+.manifesto h2 em { color: var(--accent-ink); }
+.comic-section { background: var(--section-paper); }
+.light button:focus-visible, .light a:focus-visible, .light summary:focus-visible,
+.light input:focus-visible { outline-color: var(--accent-ink); }

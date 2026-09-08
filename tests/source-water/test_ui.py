@@ -1,4 +1,4 @@
-"""HTTP regression for the canonical LP's source cards and brand introduction.
+"""Production-root HTTP regression for source cards, brand and public metadata.
 
 Uses real touch, click and keyboard input. The existing intuitive suite covers
 the unchanged game integration separately. Chromium viewport emulation is not
@@ -16,12 +16,14 @@ from playwright.sync_api import sync_playwright
 
 
 ROOT = Path(__file__).resolve().parents[2]
-PAGE_DIR = ROOT / "experiments/after-hours-water"
-BASE = os.environ.get("BASE_URL", "http://127.0.0.1:4190/experiments/after-hours-water/")
+PAGE_DIR = ROOT
+BASE = os.environ.get("BASE_URL", "http://127.0.0.1:4190/")
+PUBLIC_URL = "https://sakearttokyo.com/"
 OUT = Path(os.environ.get("EVIDENCE_DIR", "/private/tmp/sat-source-cards-tests"))
 OUT.mkdir(parents=True, exist_ok=True)
 CHROME = os.environ.get("PLAYWRIGHT_EXECUTABLE_PATH")
 checks, geometry, page_errors, http_errors, loaded_artwork, navigation = [], [], [], [], [], []
+production, image_checks, theme_checks = [], [], []
 FORBIDDEN_FLOW = (
     "#source-flow, .source-flow, [data-flow], [data-flow-source], [data-flow-veil], "
     "[data-flow-wisp], [data-flow-soft], [data-origin-x], [data-origin-y]"
@@ -37,6 +39,86 @@ BRAND_LINES = (
     "少し寝かせてからでもいい。",
     "好きな時に、好きな人と、好きなように。",
 )
+
+
+def verify_production_metadata(page):
+    assert urlsplit(page.url).path == urlsplit(BASE).path
+    assert page.locator(".preview-tag").count() == 0
+    for fragment in ("DESIGN EXPERIMENT", "CONCEPT B"):
+        assert fragment not in page.locator("body").inner_text()
+    for item in page.locator('meta[name="robots"], meta[name="googlebot"]').all():
+        assert not set(re.split(r"[\s,]+", (item.get_attribute("content") or "").lower())) & {"noindex", "none"}
+    canonical = page.locator('link[rel="canonical"]')
+    assert canonical.count() == 1 and canonical.get_attribute("href") == PUBLIC_URL
+    expected = {
+        'meta[property="og:url"]': PUBLIC_URL,
+        'meta[property="og:type"]': "website",
+        'meta[property="og:site_name"]': "SAKE ART TOKYO",
+        'meta[property="og:image"]': PUBLIC_URL + "assets/sat-dimensional-logo.png",
+        'meta[name="twitter:card"]': "summary_large_image",
+        'meta[name="twitter:image"]': PUBLIC_URL + "assets/sat-dimensional-logo.png",
+    }
+    metadata = {selector: page.locator(selector).get_attribute("content") for selector in expected}
+    assert metadata == expected, metadata
+    assert page.locator('meta[property="og:title"]').get_attribute("content") == page.title()
+    assert page.locator('meta[name="description"]').get_attribute("content")
+    assert page.locator('meta[property="og:description"]').get_attribute("content")
+    structured = [json.loads(item.text_content()) for item in page.locator('script[type="application/ld+json"]').all()]
+    assert any(item.get("@type") == "WebSite" and item.get("url") == PUBLIC_URL for item in structured), structured
+    releases = json.loads(page.locator("#label-releases").text_content())
+    assert [item["detail"] for item in releases] == ["./#sat-001", "./#sat-002"]
+    assert page.locator(".record-shop[hidden]").count() == 2
+    assert all(not link.is_visible() for link in page.locator(".record-shop .shop-button").all())
+    production.append({"url": page.url, "canonical": PUBLIC_URL, "metadata": metadata,
+                       "productDetails": [item["detail"] for item in releases]})
+
+
+def verify_theme(page, source, width):
+    accent, dark, ink, paper = {
+        "urasato": ("rgb(213, 239, 131)", "rgb(37, 42, 30)", "rgb(82, 106, 32)", "rgb(229, 235, 206)"),
+        "tsuchida": ("rgb(197, 172, 243)", "rgb(37, 32, 50)", "rgb(117, 80, 149)", "rgb(223, 213, 233)"),
+    }[source]
+    expected = {
+        ".motion-dot": ("backgroundColor", accent), ".theme-rule": ("backgroundColor", accent),
+        ".arcade": ("backgroundColor", dark), "#play-title > span": ("color", accent),
+        ".arcade .chapter": ("color", accent), ".play-button": ("backgroundColor", accent),
+        ".manifesto h2 em": ("color", ink), ".comic-section": ("backgroundColor", paper),
+    }
+    measured = {}
+    for selector, (prop, value) in expected.items():
+        actual = page.locator(selector).first.evaluate("(element, prop) => getComputedStyle(element)[prop]", prop)
+        assert actual == value, (source, width, selector, actual, value)
+        measured[selector] = actual
+    theme_checks.append({"width": width, "source": source, "colors": measured})
+
+
+def verify_production_images(page, width):
+    for img in page.locator("img[src]").all():
+        if not img.is_visible() and img.get_attribute("loading") == "lazy":
+            image_checks.append({"width": width, "src": img.get_attribute("src"), "state": "intentionally hidden lazy image"})
+            continue
+        if img.is_visible():
+            img.scroll_into_view_if_needed()
+        img.evaluate("img => img.decode()")
+        info = img.evaluate("img => ({src: img.currentSrc || img.src, naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight})")
+        assert info["naturalWidth"] > 0 and info["naturalHeight"] > 0, info
+        image_checks.append({"width": width, **info})
+    for svg_image in page.locator("svg image[href]").all():
+        info = svg_image.evaluate("""async element => {
+          const img = new Image(); img.src = new URL(element.getAttribute('href'), document.baseURI).href;
+          await img.decode(); return {src: img.src, naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight};
+        }""")
+        assert info["naturalWidth"] > 0 and info["naturalHeight"] > 0, info
+        image_checks.append({"width": width, "kind": "svg artwork", **info})
+    if width > 700:
+        logo = page.locator(".brand-mark").evaluate("img => ({src: img.currentSrc || img.src, width: img.naturalWidth, height: img.naturalHeight})")
+        assert urlsplit(logo["src"]).path == "/assets/sat-dimensional-logo.png"
+        assert logo["width"] == int(page.locator('meta[property="og:image:width"]').get_attribute("content"))
+        assert logo["height"] == int(page.locator('meta[property="og:image:height"]').get_attribute("content"))
+    comic = page.locator("#comic-image")
+    assert comic.is_visible() and not page.locator("#comic-error").is_visible()
+    page.locator("#comic").screenshot(path=str(OUT / f"production-comic-{width}.png"))
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
 
 
 def verify_selection(page, source):
@@ -182,6 +264,8 @@ def verify_brand_and_products(page, width):
     intro.screenshot(path=str(OUT / f"brand-intro-{width}.png"))
     for release in ("sat-001", "sat-002"):
         article = page.locator("#" + release)
+        assert article.locator(".record-shop[hidden]").count() == 1
+        assert not article.locator(".shop-button").is_visible()
         story = article.locator(".record-story")
         assert story.count() == 1 and story.is_visible()
         assert story.locator("p").count() == 3
@@ -234,7 +318,7 @@ def verify_play_entry(page, selector):
     page.wait_for_function("document.querySelector('#play-loading').hidden")
     iframe = page.locator("#play-frame-slot iframe")
     url = urlsplit(iframe.get_attribute("src"))
-    assert url.path.endswith("/experiments/after-hours-water/play/")
+    assert url.path == urlsplit(urljoin(BASE, "play/")).path
     assert parse_qs(url.query)["bottle"] == ["sat-002"]
     frame = page.frame_locator("#play-frame-slot iframe")
     frame.locator('#arena[data-status="playing"]').wait_for()
@@ -276,11 +360,13 @@ def monitor(page):
 def run():
     preserved = subprocess.check_output([
         "git", "diff", "--name-only", "origin/main", "--",
-        "experiments/after-hours-water/play", "experiments/after-hours-water/game", "experiments/after-hours-water/intuitive.js",
-        "index.html", "assets", "sake-clash",
+        "experiments/after-hours-water", "sake-clash",
     ], cwd=ROOT, text=True).strip()
-    assert not preserved, "Game / root release artifacts changed: " + preserved
-    checks.append("Game/play, intuitive.js and root release artifacts have no diff from origin/main.")
+    assert not preserved, "Preserved candidate / original game changed: " + preserved
+    candidate = ROOT / "experiments/after-hours-water"
+    for name in ("model.js", "art.js", "preview.js", "render.js", "game.css"):
+        assert (ROOT / "play" / name).read_bytes() == (candidate / "play" / name).read_bytes(), name
+    checks.append("The after-hours-water candidate and original game have no diff from origin/main.")
 
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True, executable_path=CHROME, args=["--no-sandbox"])
@@ -291,14 +377,17 @@ def run():
             page = context.new_page()
             monitor(page)
             page.goto(BASE, wait_until="networkidle")
+            verify_production_metadata(page)
             page.locator("#source-scene").scroll_into_view_if_needed()
             verify_selection(page, "urasato")
+            verify_theme(page, "urasato", width)
             verify_geometry(page, width)
             page.screenshot(path=str(OUT / f"source-urasato-{width}.png"))
             before = page.locator("#liquid").get_attribute("data-ripples")
             target = page.locator('.source-card[data-source="tsuchida"]')
             target.tap() if width < 700 else target.click()
             verify_selection(page, "tsuchida")
+            verify_theme(page, "tsuchida", width)
             assert page.locator("#liquid").get_attribute("data-ripples") == before
             verify_geometry(page, width)
             page.screenshot(path=str(OUT / f"source-tsuchida-{width}.png"))
@@ -319,7 +408,8 @@ def run():
             page.locator("#motion").click()
             verify_brand_and_products(page, width)
             verify_remaining_navigation(page, width)
-            checks.append(f"{width}px: source/copy/record sync, no hero CTA/flow/badges/banner copy, 3px rule matching the selected motion-dot color, source controls, brand before products, clipped desktop logo behind uncut text/mobile hidden, always-visible product stories/storage and real navigation/PLAY entries passed.")
+            verify_production_images(page, width)
+            checks.append(f"{width}px: production root metadata/share targets, source/copy/record and full section color sync, hidden shop links, all visible images/SVG artwork/comic, no hero CTA/flow/badges/banner copy, brand and product layout, real navigation/PLAY entries passed.")
             context.close()
 
         context = browser.new_context(viewport={"width": 390, "height": 844},
@@ -334,15 +424,16 @@ def run():
         verify_still(page)
         page.locator("#source-scene").screenshot(path=str(OUT / "reduced-motion-390.png"))
         checks.append("Reduced motion: cards remain selectable with added transitions disabled.")
-        old_url = urljoin(BASE, "../after-hours-source/")
+        old_url = urljoin(BASE, "experiments/after-hours-source/")
+        candidate_url = urljoin(BASE, "experiments/after-hours-water/")
         page.goto(old_url, wait_until="networkidle")
-        page.wait_for_url(BASE)
+        page.wait_for_url(candidate_url)
         verify_selection(page, "urasato")
         assert page.locator(FORBIDDEN_FLOW).count() == 0
         page.goto(old_url + "?bottle=sat-002#labels", wait_until="networkidle")
-        page.wait_for_url(BASE + "?bottle=sat-002#labels")
+        page.wait_for_url(candidate_url + "?bottle=sat-002#labels")
         verify_selection(page, "tsuchida")
-        checks.append("The former after-hours-source URL redirects to canonical after-hours-water, preserving query/hash and the selected bottle.")
+        checks.append("The former after-hours-source URL still redirects to the preserved candidate, retaining query/hash and the selected bottle.")
         context.close()
         browser.close()
     assert not page_errors, page_errors
@@ -358,6 +449,7 @@ except Exception as error:
     OUT.joinpath("results.json").write_text(json.dumps({
         "status": "FAIL", "failure": str(error), "checks": checks, "geometry": geometry,
         "pageErrors": page_errors, "httpErrors": http_errors, "loadedArtwork": loaded_artwork, "navigation": navigation,
+        "production": production, "images": image_checks, "themes": theme_checks,
     }, ensure_ascii=False, indent=2))
     raise
 OUT.joinpath("results.json").write_text(json.dumps({
@@ -367,6 +459,7 @@ OUT.joinpath("results.json").write_text(json.dumps({
     "notTested": ["iPhone Safari physical device", "iOS saving", "human first-impression evaluation"],
     "separateSuite": "tests/intuitive/test_ui.py covers the unchanged full game / label integration.",
     "pageErrors": page_errors, "httpErrors": http_errors, "loadedArtwork": loaded_artwork, "navigation": navigation,
+    "production": production, "images": image_checks, "themes": theme_checks,
     "testedFiles": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
                     for path in PAGE_DIR.iterdir() if path.is_file()},
 }, ensure_ascii=False, indent=2))

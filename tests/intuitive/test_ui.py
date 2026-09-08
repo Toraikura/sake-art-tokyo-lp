@@ -1,7 +1,8 @@
 from pathlib import Path
+from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
 import json,time,os
-BASE=os.environ.get('BASE_URL','http://127.0.0.1:4190/experiments/after-hours-water/')
+BASE=os.environ.get('BASE_URL','http://127.0.0.1:4190/')
 OUT=Path(os.environ.get('EVIDENCE_DIR','evidence'));OUT.mkdir(parents=True,exist_ok=True)
 results=[]
 with sync_playwright() as p:
@@ -90,7 +91,7 @@ with sync_playwright() as p:
  frame.wait_for_selector('#arena[data-played="1"]')
  frame.locator('#explore').wait_for(state='visible',timeout=45000)
  frame.locator('#explore').tap()
- page.wait_for_url('**/index.html#sat-002')
+ page.wait_for_url(urljoin(BASE,'./#sat-002'))
  assert page.locator('#sat-002').count()==1
  page.go_back(wait_until='load');page.wait_for_timeout(300)
  assert not page.locator('#play-modal').is_visible()

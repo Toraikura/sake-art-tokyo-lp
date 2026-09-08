@@ -13,7 +13,7 @@ import os
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
-APP = ROOT / 'experiments/after-hours-water'
+APP = ROOT
 OUT = Path(os.environ.get('EVIDENCE_DIR', ROOT / 'evidence/offline'))
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -39,12 +39,13 @@ def markup(game=False, release_count=None):
         match = re.search(r'(<script id="label-releases" type="application/json">)(.*?)(</script>)', html, flags=re.S)
         releases = json.loads(match[2])
         if release_count is not None:
-            releases = [{**releases[i % 2], 'id': f'sat-{i+1:03d}', 'name': f'Test release {i+1}', 'detail': f'../../index.html#sat-{i+1:03d}'} for i in range(release_count)]
+            releases = [{**releases[i % 2], 'id': f'sat-{i+1:03d}', 'name': f'Test release {i+1}', 'detail': f'./#sat-{i+1:03d}'} for i in range(release_count)]
         for release in releases:
             for key in ['image', 'download']:
                 release[key] = data_uri(folder / release[key])
         html = html[:match.start(2)] + json.dumps(releases) + html[match.end(2):]
         html = re.sub(r'<img\b[^>]*>', lambda m: re.sub(r'\bsrc="([^"]+)"', lambda n: 'src="' + data_uri((folder / n[1]).resolve()) + '"' if not n[1].startswith(('https:', 'data:')) else n[0], m[0]), html)
+        html = re.sub(r'<image\b[^>]*>', lambda m: re.sub(r'\bhref="([^"]+)"', lambda n: 'href="' + data_uri((folder / n[1]).resolve()) + '"' if not n[1].startswith(('https:', 'data:')) else n[0], m[0]), html)
         script = (folder / 'site.js').read_text() + '\n' + (folder / 'intuitive.js').read_text()
     return html.replace('</body>', '<script>' + script + '</script></body>')
 
