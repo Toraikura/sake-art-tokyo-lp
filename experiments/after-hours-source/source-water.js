@@ -7,8 +7,8 @@
   const media = matchMedia('(prefers-reduced-motion: reduce)');
   // Coordinates refer to the original supplied artwork, then its visible SVG crop.
   const sources = {
-    urasato: { crop: [0, 410, 1122, 640], origin: [570, 595], landing: .53 },
-    tsuchida: { crop: [150, 720, 820, 470], origin: [469, 967], landing: .7 }
+    urasato: { crop: [0, 340, 1122, 640], origin: [570, 595], landing: .69 },
+    tsuchida: { crop: [0, 430, 1122, 640], origin: [469, 967], landing: .7 }
   };
   function layout() {
     const bounds = scene.getBoundingClientRect(), water = zone.getBoundingClientRect();
@@ -25,11 +25,15 @@
       const span = endY - y;
       const path = svg.querySelector(`[data-flow="${id}"]`);
       // Drift sideways from the pictured origin; never a vertical stream from the card edge.
-      path.setAttribute('d', `M ${x} ${y} C ${x + 12} ${y + span * .3}, ${endX - 32} ${endY - span * .18}, ${endX} ${endY}`);
+      const curve = `M ${x} ${y} C ${x + 12} ${y + span * .38}, ${endX - 52} ${endY - span * .16}, ${endX} ${endY}`;
+      path.setAttribute('d', curve);
+      svg.querySelector(`[data-flow-soft="${id}"]`).setAttribute('d', curve);
       path.dataset.originX = x;
       path.dataset.originY = y;
-      const fade = document.querySelector(`#flow-fade-${id}`);
-      for (const [key, value] of Object.entries({ x1: x, y1: y, x2: endX, y2: endY })) fade.setAttribute(key, value);
+      for (const prefix of ['flow-fade', 'flow-edge']) {
+        const fade = document.querySelector(`#${prefix}-${id}`);
+        for (const [key, value] of Object.entries({ x1: x, y1: y, x2: endX, y2: endY })) fade.setAttribute(key, value);
+      }
     }
   }
   function select() {

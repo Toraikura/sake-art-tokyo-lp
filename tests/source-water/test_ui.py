@@ -43,10 +43,27 @@ def verify_selection(page, source):
         selected = card_source == source
         card = page.locator(f'.source-card[data-source="{card_source}"]')
         assert card.get_attribute("aria-pressed") == str(selected).lower()
+        style = card.evaluate("""element => ({
+          opacity: Number(getComputedStyle(element).opacity),
+          filter: getComputedStyle(element.querySelector('.source-art')).filter
+        })""")
+        brightness = float(re.search(r"brightness\(([^)]+)\)", style["filter"]).group(1))
+        saturation = float(re.search(r"saturate\(([^)]+)\)", style["filter"]).group(1))
+        if selected:
+            # The revised selected artwork must no longer be dimmed below its
+            # supplied brightness, while the inactive option remains subordinate.
+            assert style["opacity"] == 1 and 1 <= brightness <= 1.1, (card_source, style)
+            assert 0.9 <= saturation <= 1.05, (card_source, style)
+        else:
+            assert style["opacity"] < 0.85 and brightness < 1, (card_source, style)
         opacity = page.locator(f'[data-flow="{card_source}"]').evaluate(
             "element => Number(getComputedStyle(element).opacity)"
         )
         assert abs(opacity - int(selected)) < 0.001, (card_source, opacity)
+        soft_opacity = page.locator(f'[data-flow-soft="{card_source}"]').evaluate(
+            "element => Number(getComputedStyle(element).opacity)"
+        )
+        assert abs(soft_opacity - int(selected)) < 0.001, (card_source, soft_opacity)
 
 
 def verify_geometry(page, width):
@@ -81,6 +98,7 @@ def verify_geometry(page, width):
       return Object.entries(origins).map(([source, xy]) => {
         const art = document.querySelector(`.source-card[data-source="${source}"] .source-art`);
         const path = flow.querySelector(`[data-flow="${source}"]`);
+        const soft = flow.querySelector(`[data-flow-soft="${source}"]`);
         const expected = new DOMPoint(...xy).matrixTransform(art.getScreenCTM());
         const actual = path.getPointAtLength(0).matrixTransform(flow.getScreenCTM());
         const bounds = art.getBoundingClientRect();
@@ -91,6 +109,11 @@ def verify_geometry(page, width):
           stroke: parseFloat(getComputedStyle(path).strokeWidth),
           stopOpacity: Math.max(...Array.from(document.querySelectorAll(`#flow-fade-${source} stop`),
             stop => Number(getComputedStyle(stop).stopOpacity))),
+          softEdge: {sameCurve: soft.getAttribute('d') === path.getAttribute('d'),
+            stroke: parseFloat(getComputedStyle(soft).strokeWidth),
+            filter: getComputedStyle(soft).filter,
+            stops: Array.from(document.querySelectorAll(`#flow-edge-${source} stop`),
+              stop => ({offset: stop.offset.baseVal, opacity: Number(getComputedStyle(stop).stopOpacity)}))},
           pointerEvents: getComputedStyle(flow).pointerEvents,
           length: path.getTotalLength() };
       });
@@ -99,11 +122,38 @@ def verify_geometry(page, width):
         assert item["inside"], (width, item)
         error = max(abs(item["expected"][k] - item["actual"][k]) for k in ("x", "y"))
         assert error < 1, ("source anchor drift", width, item)
-        assert 0 < item["stroke"] <= 0.65, (width, item)
-        assert item["stopOpacity"] <= 0.2, (width, item)
+        # Revised review request: readable thin water, roughly 1.2 CSS px / .46
+        # peak opacity, rather than the previous almost-invisible .55 px strand.
+        assert 1 <= item["stroke"] <= 1.25, (width, item)
+        assert 0.4 <= item["stopOpacity"] <= 0.5, (width, item)
         assert item["pointerEvents"] == "none", (width, item)
         assert item["length"] > 10, (width, item)
-    geometry.append({"width": width, "paths": measured})
+        edge = item["softEdge"]
+        assert edge["sameCurve"] and 0 < edge["stroke"] <= 2.8, (width, edge)
+        blur = re.fullmatch(r"blur\(([\d.]+)px\)", edge["filter"])
+        assert blur and 0 < float(blur.group(1)) <= 0.45, (width, edge)
+        assert 0 < max(stop["opacity"] for stop in edge["stops"]) <= 0.13, (width, edge)
+        assert any(abs(stop["offset"] - 0.55) < 0.001 and stop["opacity"] == 0
+                   for stop in edge["stops"]), (width, edge)
+        assert all(stop["opacity"] == 0 for stop in edge["stops"] if stop["offset"] >= 0.549), (width, edge)
+    visible_features = page.evaluate("""() => {
+      const art = document.querySelector('.source-card[data-source="tsuchida"] .source-art');
+      const bounds = art.getBoundingClientRect();
+      // Visible feature landmarks in the original 1122 x 1402 supplied artwork.
+      // Inspect the transformed locations, rather than merely checking a viewBox string.
+      const landmarks = {
+        bambooTop: [583, 473], bambooSpout: [528, 686],
+        bowlLeft: [313, 859], bowlRight: [676, 859], bowlBase: [466, 997]
+      };
+      return Object.entries(landmarks).map(([name, xy]) => {
+        const screen = new DOMPoint(...xy).matrixTransform(art.getScreenCTM());
+        return {name, x: screen.x, y: screen.y,
+          inside: screen.x >= bounds.left && screen.x <= bounds.right &&
+                  screen.y >= bounds.top && screen.y <= bounds.bottom};
+      });
+    }""")
+    assert all(item["inside"] for item in visible_features), (width, visible_features)
+    geometry.append({"width": width, "paths": measured, "tsuchidaFeatures": visible_features})
 
 
 def source_still(page):
@@ -190,7 +240,7 @@ def run():
             page.locator("#motion").click()
             source_still(page)
             page.locator("#motion").click()
-            checks.append(f"{width}px: layout, 44px targets, cropped-art anchors, subtle strokes, touch/click/keyboard source sync, no card ripple, water gesture, global stop passed.")
+            checks.append(f"{width}px: layout, 44px targets, cropped-art anchors, readable thin strokes, selected-art brightness, bamboo/basin visibility, touch/click/keyboard source sync, no card ripple, water gesture, global stop passed.")
             context.close()
 
         context = browser.new_context(

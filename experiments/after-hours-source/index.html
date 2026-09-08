@@ -25,18 +25,23 @@
 <div class="source-scene" id="source-scene" data-source="urasato">
 <div class="source-cards" role="group" aria-label="つくり手の水景を選ぶ">
 <button class="source-card" type="button" data-source="urasato" data-mood-choice="light" aria-pressed="true" aria-label="浦里を選ぶ。筑波山と田園の水景">
-<svg class="source-art" viewBox="0 410 1122 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="./assets/urasato-source.png" width="1122" height="1402"/></svg>
+<svg class="source-art" viewBox="0 340 1122 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="./assets/urasato-source.png" width="1122" height="1402"/></svg>
 <span class="source-name">浦里<small>URASATO</small></span><span class="source-selected" aria-hidden="true"></span>
 </button>
 <button class="source-card" type="button" data-source="tsuchida" data-mood-choice="deep" aria-pressed="false" aria-label="土田を選ぶ。庭の石鉢と湧水の水景">
-<svg class="source-art" viewBox="150 720 820 470" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="./assets/tsuchida-source.png" width="1122" height="1402"/></svg>
+<svg class="source-art" viewBox="0 430 1122 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="./assets/tsuchida-source.png" width="1122" height="1402"/></svg>
 <span class="source-name">土田<small>TSUCHIDA</small></span><span class="source-selected" aria-hidden="true"></span>
 </button>
 </div>
 <div class="art-wrap" id="art-zone" role="button" tabindex="0" aria-label="水面に波紋をひろげる" aria-describedby="water-hint"><div class="art-stage" id="art-stage"><div class="static-orb" aria-hidden="true"></div><canvas id="liquid" aria-hidden="true"></canvas></div><div class="art-tip"><span aria-hidden="true">↝</span><span id="water-hint">触れると、ひとつ、波紋。</span></div><div class="art-caption"><p class="mono">AN IMPRESSION, NOT A FORMULA.</p><strong id="side-title">SIDE A / URASATO</strong></div></div>
 <svg class="source-flow" id="source-flow" aria-hidden="true" focusable="false">
-<defs><linearGradient id="flow-fade-urasato" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c6d5cb" stop-opacity="0"/><stop offset=".15" stop-color="#c6d5cb" stop-opacity=".16"/><stop offset=".5" stop-color="#b5c8c9" stop-opacity=".1"/><stop offset="1" stop-color="#a4bbc1" stop-opacity="0"/></linearGradient>
-<linearGradient id="flow-fade-tsuchida" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#bccfca" stop-opacity="0"/><stop offset=".12" stop-color="#bccfca" stop-opacity=".18"/><stop offset=".5" stop-color="#b9c6ce" stop-opacity=".1"/><stop offset="1" stop-color="#adc0ce" stop-opacity="0"/></linearGradient></defs>
+<defs><linearGradient id="flow-fade-urasato" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c6d5cb" stop-opacity="0"/><stop offset=".15" stop-color="#c6d5cb" stop-opacity=".46"/><stop offset=".5" stop-color="#b5c8c9" stop-opacity=".25"/><stop offset="1" stop-color="#a4bbc1" stop-opacity="0"/></linearGradient>
+<linearGradient id="flow-fade-tsuchida" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#bccfca" stop-opacity="0"/><stop offset=".12" stop-color="#bccfca" stop-opacity=".46"/><stop offset=".5" stop-color="#b9c6ce" stop-opacity=".25"/><stop offset="1" stop-color="#adc0ce" stop-opacity="0"/></linearGradient><linearGradient id="flow-edge-urasato" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c6d5d3" stop-opacity="0"/><stop offset=".14" stop-color="#c6d5d3" stop-opacity=".13"/><stop offset=".35" stop-color="#b5c8c9" stop-opacity=".04"/><stop offset=".55" stop-color="#b5c8c9" stop-opacity="0"/><stop offset="1" stop-color="#b5c8c9" stop-opacity="0"/></linearGradient>
+<linearGradient id="flow-edge-tsuchida" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#c6d5d3" stop-opacity="0"/><stop offset=".14" stop-color="#c6d5d3" stop-opacity=".13"/><stop offset=".35" stop-color="#b5c8c9" stop-opacity=".04"/><stop offset=".55" stop-color="#b5c8c9" stop-opacity="0"/><stop offset="1" stop-color="#b5c8c9" stop-opacity="0"/></linearGradient>
+</defs>
+<path class="flow-soft-edge" data-flow-soft="urasato" stroke="url(#flow-edge-urasato)" vector-effect="non-scaling-stroke"/>
+<path class="flow-soft-edge" data-flow-soft="tsuchida" stroke="url(#flow-edge-tsuchida)" vector-effect="non-scaling-stroke"/>
+
 <path data-flow="urasato" stroke="url(#flow-fade-urasato)" vector-effect="non-scaling-stroke"/>
 <path data-flow="tsuchida" stroke="url(#flow-fade-tsuchida)" vector-effect="non-scaling-stroke"/>
 </svg>
