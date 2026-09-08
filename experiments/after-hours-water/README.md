@@ -48,6 +48,10 @@ PC1440px・1024px、390px・375pxの画面レビューでは、カードが選�
 
 残る確認はiPhone Safari実機での表示・タップ・PNG保存です。原画2枚は計4,201,459 bytesのため、公開前にはカード用配信画像の軽量化とモバイル通信での初回表示確認を推奨します。
 
+## 販売リンクの表示
+
+発売前のため、2商品の販売ボタンと外部ショップの案内文は `.record-shop` にまとめて `hidden` で非表示にしています。URL・文言・スタイルは残しています。販売開始時に、対象商品の `.record-shop` の `hidden` 属性を外すと再表示できます。
+
 ## Play
 
 A single PLAY GAME click opens the viewport-sized game dialog. There is no settings page or second Start button. The LP-only game uses the pinned iPhone engine documented in `play/SOURCE.md`, with a 30-second duration and practice CPU. The first card is highlighted, then a visible deployment target appears. The timer and CPU do not advance before a successful user deployment; a direct first board tap can also deploy the starter card.
