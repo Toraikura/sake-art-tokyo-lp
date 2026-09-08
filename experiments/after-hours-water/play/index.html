@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#213a32">
+<title>SAKE CLASH — 30 SECOND PLAY / SAT</title>
+<link rel="stylesheet" href="./game.css">
+</head>
+<body>
+<main class="battle" aria-label="SAKE CLASH、30秒のCPU体験">
+  <header class="battle-top"><span class="side-name"><b>● あなた</b></span><div class="clock"><small>TIME</small><b id="time">30</b></div><span class="side-name opponent"><b>◆ CPU</b></span></header>
+  <div class="territory" role="meter" aria-label="あなたの陣地" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><span id="territory-fill"></span></div>
+  <div class="percentages"><b id="share">50.0%</b><span>多く塗った方が勝ち</span><b id="enemy-share">50.0%</b></div>
+  <div class="arena-slot"><div class="arena-wrap">
+    <canvas id="arena" class="arena" role="application" tabindex="0" aria-label="陣取り盤面。手札を選び、緑の床に置きます。" aria-describedby="keyboard-help">Canvasに対応するブラウザで開いてください。</canvas>
+    <span id="first-target" class="first-target" hidden aria-hidden="true">＋</span>
+  </div></div>
+  <div class="dock">
+    <div class="utility"><div class="supply"><span>補給 <b id="energy">8</b><small>/10</small></span><meter id="supply" aria-label="補給" min="0" max="10" value="8"></meter></div><button id="cancel" aria-label="カードの選択を解除" disabled>×</button><button id="pause" aria-label="一時停止">Ⅱ</button></div>
+    <div class="hand" aria-label="手札"><button class="game-card" data-index="0"></button><button class="game-card" data-index="1"></button><button class="game-card" data-index="2"></button><button class="game-card" data-index="3"></button></div>
+    <output id="feedback" class="feedback" aria-live="polite"></output>
+  </div>
+</main>
+<dialog id="result" aria-labelledby="result-title"><div class="result-paper"><p class="eyebrow" id="result-eyebrow">TIME OUT</p><h1 id="result-title">ひと休み。</h1><p class="result-score" id="result-score"></p><p class="result-caption" id="result-caption"></p><a id="explore" class="primary" href="../../../index.html#sat-001">この日本酒と、つくり手を知る →</a><button class="primary" id="resume">対戦を再開 →</button><button class="text-button" id="replay">もう一回遊ぶ ↻</button><button class="text-button" id="exit">サイトへ戻る</button></div></dialog>
+<p id="keyboard-help" class="sr-only">1から4で手札を選び、矢印キーで置く位置を動かし、Enterで配置。Pで一時停止。Escapeで選択解除または一時停止。</p>
+<noscript>このゲームにはJavaScriptが必要です。<a href="../../../index.html">日本酒の紹介へ戻る</a></noscript>
+<script type="module" src="./game.js"></script>
+</body>
+</html>
