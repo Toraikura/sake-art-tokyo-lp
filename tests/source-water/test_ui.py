@@ -76,6 +76,20 @@ def verify_selection(page, source):
 def verify_geometry(page, width):
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), ("overflow", width)
     assert page.locator(FORBIDDEN_FLOW).count() == 0
+    assert page.locator(".chosen, .theme-strip").count() == 0
+    assert page.get_by_text("FEEL FIRST.", exact=True).count() == 0
+    assert page.get_by_text("KNOW LATER.", exact=True).count() == 0
+    rule = page.locator(".theme-rule")
+    assert rule.count() == 1 and rule.text_content().strip() == "" and rule.locator("*").count() == 0
+    rule_style = rule.evaluate("""element => {
+      const style = getComputedStyle(element);
+      const color = document.createElement('span').style;
+      color.color = style.getPropertyValue('--lime').trim();
+      return {height: element.getBoundingClientRect().height,
+        background: style.backgroundColor, lime: color.color};
+    }""")
+    assert abs(rule_style["height"] - 3) < .05, rule_style
+    assert rule_style["background"] == rule_style["lime"], rule_style
     assert page.locator('.source-scene svg:not(.source-art)').count() == 0
     assert page.locator('script[src*="source-water"]').count() == 0
     assert page.locator('link[rel="stylesheet"][href*="source-cards.css"]').count() == 1
@@ -147,6 +161,25 @@ def verify_brand_and_products(page, width):
     if width > 700:
         mark.evaluate("img => img.decode()")
         assert mark.evaluate("img => img.naturalWidth > 0 && img.naturalHeight > 0")
+        background = intro.evaluate("""element => {
+          const mark = element.querySelector('.brand-mark'), copy = element.querySelector('.brand-copy');
+          const bounds = element.getBoundingClientRect(), image = mark.getBoundingClientRect();
+          const style = getComputedStyle(element), markStyle = getComputedStyle(mark);
+          return {overflowX: style.overflowX, overflowY: style.overflowY,
+            position: markStyle.position, pointerEvents: markStyle.pointerEvents,
+            imageZ: Number(markStyle.zIndex), textZ: Number(getComputedStyle(copy).zIndex),
+            ariaHidden: mark.getAttribute('aria-hidden'),
+            raw: {left: image.left, right: image.right, top: image.top, bottom: image.bottom},
+            clipped: {left: Math.max(bounds.left, image.left), right: Math.min(bounds.right, image.right),
+              top: Math.max(bounds.top, image.top), bottom: Math.min(bounds.bottom, image.bottom)},
+            container: {left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom}};
+        }""")
+        assert background["overflowX"] in ("hidden", "clip") and background["overflowY"] in ("hidden", "clip")
+        assert background["position"] == "absolute" and background["pointerEvents"] == "none"
+        assert background["ariaHidden"] == "true" and background["textZ"] > background["imageZ"]
+        clipped = background["clipped"]
+        assert 0 <= clipped["left"] < clipped["right"] <= width and clipped["bottom"] > clipped["top"], background
+        geometry.append({"width": width, "brandBackground": background})
     intro.screenshot(path=str(OUT / f"brand-intro-{width}.png"))
     for release in ("sat-001", "sat-002"):
         article = page.locator("#" + release)
@@ -160,17 +193,29 @@ def verify_brand_and_products(page, width):
         story.scroll_into_view_if_needed()
         story.screenshot(path=str(OUT / f"record-story-{release}-{width}.png"))
     bounds = page.evaluate("""() => {
-      const elements = document.querySelectorAll('.brand-intro, .brand-copy, .brand-mark, .record, .record-story');
-      return Array.from(elements).filter(element => getComputedStyle(element).display !== 'none').map(element => {
+      const elements = document.querySelectorAll('.brand-intro, .brand-copy, .record, .record-story');
+      const boxes = Array.from(elements).map(element => {
         const rect = element.getBoundingClientRect();
-        const range = document.createRange(); range.selectNodeContents(element);
-        const text = range.getBoundingClientRect();
-        return {selector: element.id || element.className, left: Math.min(rect.left, text.left),
-          right: Math.max(rect.right, text.right), overflow: element.scrollWidth > element.clientWidth + 1};
+        return {selector: element.id || element.className, left: rect.left, right: rect.right,
+          // The decorative logo intentionally extends inside its clipping container.
+          overflow: !element.classList.contains('brand-intro') && element.scrollWidth > element.clientWidth + 1};
       });
+      for (const element of document.querySelectorAll('.brand-copy, .record-story')) {
+        const container = element.closest('.brand-intro, .record').getBoundingClientRect();
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          if (!walker.currentNode.textContent.trim()) continue;
+          const range = document.createRange(); range.selectNodeContents(walker.currentNode);
+          for (const rect of range.getClientRects()) boxes.push({selector: element.className + ' text',
+            left: rect.left, right: rect.right, overflow: rect.left < container.left - .5 ||
+              rect.right > container.right + .5 || rect.top < container.top - .5 || rect.bottom > container.bottom + .5});
+        }
+      }
+      return boxes;
     }""")
     for item in bounds:
         assert item["left"] >= -.5 and item["right"] <= width + .5 and not item["overflow"], (width, item)
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), ("background caused page overflow", width)
     geometry.append({"width": width, "brandAndProductBounds": bounds})
 
 
@@ -275,7 +320,7 @@ def run():
             page.locator("#motion").click()
             verify_brand_and_products(page, width)
             verify_remaining_navigation(page, width)
-            checks.append(f"{width}px: source/copy/record sync, no hero CTA or flow overlay, artwork and layout, source input and motion controls, brand before products, responsive brand mark, always-visible product stories/storage and real navigation/PLAY entries passed.")
+            checks.append(f"{width}px: source/copy/record sync, no hero CTA/flow/badges/banner copy, 3px lime rule, source controls, brand before products, clipped desktop logo behind uncut text/mobile hidden, always-visible product stories/storage and real navigation/PLAY entries passed.")
             context.close()
 
         context = browser.new_context(viewport={"width": 390, "height": 844},

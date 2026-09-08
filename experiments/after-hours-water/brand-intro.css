@@ -1,12 +1,13 @@
 /* A quiet introduction on the existing paper, followed by the two releases. */
+.theme-rule { height: 3px; background: var(--lime); }
 .brand-intro {
-  display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(180px, 1fr);
-  align-items: start;
-  gap: clamp(32px, 6vw, 90px);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--paper);
   padding-block: 10px 90px;
 }
-.brand-copy { max-width: 800px; }
+.brand-copy { position: relative; z-index: 1; max-width: 58%; }
 .brand-copy p {
   margin: 0;
   font-size: 15px;
@@ -27,13 +28,18 @@
 .brand-copy .brand-closing { line-height: 2.15; }
 .brand-copy strong span { display: inline-block; max-width: 100%; }
 .brand-mark {
-  width: 100%;
-  max-width: 280px;
+  position: absolute;
+  z-index: 0;
+  width: 58%;
+  max-width: none;
   height: auto;
-  margin-top: 66px;
-  justify-self: end;
-  opacity: .45;
+  top: 50%;
+  right: -8%;
+  transform: translateY(-50%);
+  opacity: .3;
   mix-blend-mode: multiply;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 24%);
+  mask-image: linear-gradient(90deg, transparent, #000 24%);
   pointer-events: none;
 }
 .record-story {
@@ -50,6 +56,7 @@
     padding-block: 10px 64px;
   }
   .brand-mark { display: none; }
+  .brand-copy { max-width: none; }
   .brand-copy p { font-size: 14px; }
   .brand-copy p + p { margin-top: 34px; }
   .brand-copy strong {

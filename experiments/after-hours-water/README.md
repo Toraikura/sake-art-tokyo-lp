@@ -2,7 +2,7 @@
 
 ## Scope
 
-The working branch is `codex/source-water-20260908`. The reviewed source-card UI lives at `experiments/after-hours-water/`; the older `after-hours-source/` URL redirects here while preserving its query and hash. No new experiment page is added. Main and the currently published Pages deployment stay unchanged until publication is authorized.
+The working branch is `codex/source-water-20260908`. The reviewed source-card UI lives at `experiments/after-hours-water/`; the older `after-hours-source/` URL redirects here while preserving its query and hash. No new experiment page is added. Publication uses the existing GitHub Pages source (`main`, repository root), preserving the current `CNAME` and other main-branch changes.
 
 The main LP, original products, real labels, final comic, original SAKE CLASH repository, 75-second game and existing records are preserved. The existing water renderer and the canonical 30-second game/controller are retained. No new runtime dependency or animation loop is added.
 
@@ -23,17 +23,18 @@ The main LP, original products, real labels, final comic, original SAKE CLASH re
 
 - 「同じ日本酒。まったく違う、入り口。」を削除し、商品前にユーザー指定のブランド文章を一度だけ掲載。二つの指定文を太字とサイズ差で強調します。引用符以外の文章は変更せず、見え方に合わせて折り返します。
 - 新しいボタン・タグ・アイコン・補足見出しは追加しません。既存の紙色とタイポグラフィを使い、三つの段落の間に余白を設けます。
-- 提供された立体ロゴ `1.png` は、画像を加工せず `assets/sat-dimensional-logo.png` に配置。PCのみ右側に最大280px・不透明度45%で表示し、700px以下では非表示にします。
+- 提供された立体ロゴ `1.png` は、画像を加工せず `assets/sat-dimensional-logo.png` に配置。PCでは右側いっぱいの背景として幅58%・不透明度30%で大きく敷き、紙色に重ねて右端を切り取ります。本文を前面に保ち、700px以下ではロゴを非表示にします。
 - ブランド思想 → 浦里 → 土田の順。PCの商品2列、スマホの商品1列は既存の構造を維持しています。
 - 「この一本を、もう少し。」の折りたたみは撤去。商品名の下に、蔵との関係・香味・温度と時間による楽しみ方・常温保存を常時表示します。土田が貴醸酒であることと、両方が常温保存できることはユーザー提供情報です。香味・米由来の甘み・保存時の直射日光と高温の回避は既存root LPの記載に基づきます。製法や開発経緯は創作していません。
 - ヒーロー内の2ボタンと、それらに対するJavaScript参照を撤去。ヘッダー、ゲームセクション、エチケット保存、商品詳細導線は維持します。
+- 「選んだつくり手」のバッジを削除。「FEEL FIRST. / KNOW LATER.」の文字帯とマークも削除し、3pxのライム色の区切り線だけを残します。
 - 追加のスタイルは `brand-intro.css` に限定。水面描画、ゲーム、元の商品・エチケット画像、漫画は変更しません。
 
 ## 比較・推奨
 
-**このUI案は採用可。公開反映はまだ行っていません。**
+**このUI案は採用可。公開は検証済みの作業ブランチをmainへ統合して行います。**
 
-| 観点 | 公開中の完成版 | 今回のカード版 |
+| 観点 | 更新前 | 今回のカード版 |
 | --- | --- | --- |
 | 選び方 | 軽やか／濃密という気分 | 浦里／土田という具体的なつくり手 |
 | 水面 | 抽象水面を表示 | 同じ水面を選択した蔵に連動 |
@@ -85,7 +86,7 @@ python tests/source-water/test_ui.py
 
 Local Chromium over HTTP verifies the canonical page, source selection, no connecting-effect DOM, exact brand copy and emphasis, the brand/product order, visible product descriptions, remaining navigation, label interactions/downloads, real game start and natural match, replay, product navigation and browser back. Node syntax checks and controller unit tests are also run. Source-card and brand evidence includes 1440px, 390px and 375px; supplemental checks include smaller game viewports and real PNG hashes. Reports and final status are recorded in the delivery memo after the run completes.
 
-Physical iPhone Safari, iOS-specific saving and slow-network first-load behavior remain NOT TESTED. A push to the work branch triggers verification only; it is not a Pages publication.
+Physical iPhone Safari, iOS-specific saving and slow-network first-load behavior remain NOT TESTED. A push to the work branch triggers verification only; it is not a Pages publication. After verification, a separately authorized integration into main triggers the existing Pages build. Confirm the deployed commit and actual public content separately from the branch push; custom-domain DNS and HTTPS readiness are separate checks as well.
 
 ## 変更ファイル一覧
 
