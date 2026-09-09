@@ -1,7 +1,7 @@
 name: Production verification
 on:
   push:
-    branches: [main, 'codex/**']
+    branches: [main, 'codex/**', 'seo-**']
   workflow_dispatch:
 permissions:
   contents: read
@@ -45,6 +45,7 @@ jobs:
           EVIDENCE_DIR=evidence/details python tests/intuitive/test_http_details.py
           EVIDENCE_DIR=evidence/source-cards python tests/source-water/test_ui.py
           EVIDENCE_DIR=evidence/english python tests/english/test_ui.py
+          EVIDENCE_DIR=evidence/seo-ia python tests/seo-ia/test_phase1.py
       - name: WebKit touch scrolling and closed overlays
         run: |
           set -euo pipefail

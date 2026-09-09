@@ -1,2 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://sakearttokyo.com/</loc></url><url><loc>https://sakearttokyo.com/en/</loc></url><url><loc>https://sakearttokyo.com/privacy.html</loc></url></urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://sakearttokyo.com/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/sake/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/sake/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/sake/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/sake/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/en/sake/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/sake/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/sake/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/sake/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/breweries/urazato/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/breweries/urazato/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/breweries/urazato/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/breweries/urazato/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/en/breweries/urazato/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/breweries/urazato/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/breweries/urazato/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/breweries/urazato/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/breweries/tsuchida/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/breweries/tsuchida/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/breweries/tsuchida/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/breweries/tsuchida/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/en/breweries/tsuchida/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/breweries/tsuchida/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/breweries/tsuchida/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/breweries/tsuchida/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/about/chill-labo/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/about/chill-labo/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/about/chill-labo/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/about/chill-labo/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/en/about/chill-labo/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/about/chill-labo/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/about/chill-labo/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/about/chill-labo/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/sake/aroma/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/sake/aroma/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/sake/aroma/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/sake/aroma/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/en/sake/aroma/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/sake/aroma/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/sake/aroma/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/sake/aroma/"/>
+  </url>
+  <url><loc>https://sakearttokyo.com/privacy.html</loc></url>
+</urlset>

@@ -37,3 +37,10 @@
 .source-scene .source-copy{font-size:12px;line-height:1.6;color:#ddd9df;margin:0 0 3px}
 .source-scene .source-brewery{font-size:10px;line-height:1.5;letter-spacing:.12em;color:var(--muted);margin:0 0 7px}
 @media(max-width:700px){.hero-brand{font-size:8px;margin-top:23px}.source-scene .source-copy{font-size:11px}.source-scene .source-brewery{font-size:9px;margin-bottom:5px}}
+
+/* Phase 1 IA: crawlable brewery links under the existing source buttons. */
+.source-editorial-links{display:grid;grid-template-columns:174px 174px;gap:13px;justify-content:end;padding-left:18px;position:relative;z-index:3}
+.source-editorial-links .text-link{min-height:44px;padding:4px 0;font:700 9px/1.45 var(--mono);letter-spacing:.02em;color:var(--muted);justify-content:flex-start;border-bottom-color:#f4f0e833}
+.source-editorial-links .text-link:hover{color:var(--accent)}
+@media(max-width:1050px) and (min-width:701px){.source-editorial-links{grid-template-columns:repeat(2,minmax(0,174px));gap:10px;padding-left:12px}}
+@media(max-width:700px){.source-editorial-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0;justify-content:end;width:100%;max-width:330px;margin-left:auto}.source-editorial-links .text-link{font-size:9px;min-height:44px}}
