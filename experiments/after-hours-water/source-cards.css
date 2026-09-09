@@ -19,6 +19,7 @@
 .source-scene .art-stage{inset:0 -7% 0 -7%}
 .source-scene .art-tip{top:37px;font-size:10px;color:#aaa9a1}
 .source-scene .art-tip span:first-child{width:32px;height:32px;min-width:32px;min-height:32px;flex:0 0 32px;aspect-ratio:1;line-height:1}
+.source-scene #water-hint{border:0;border-radius:0;width:auto;height:auto;min-width:0;min-height:0;flex:0 1 auto;aspect-ratio:auto;line-height:inherit;display:inline;font-size:inherit}
 .source-scene .art-caption{right:0;bottom:33px}
 .source-scene .art-caption strong{font-size:clamp(17px,1.7vw,25px)}
 .source-scene .art-caption .mono{font-size:8px}
