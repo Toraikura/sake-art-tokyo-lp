@@ -1,0 +1,53 @@
+name: Build AROMA LAB assets
+
+on:
+  push:
+    branches:
+      - aroma-lab-icons-20260909
+    paths:
+      - scripts/aroma-lab/drive-manifest.tsv
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pillow
+      - run: python scripts/aroma-lab/sync_aroma_assets.py
+      - name: Validate generated PNGs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root = Path('assets/aroma-lab')
+          web = sorted(root.glob('aroma-*.png'))
+          master = sorted((root/'master').glob('aroma-*.png'))
+          assert len(web) == 60, len(web)
+          assert len(master) == 60, len(master)
+          for path in web:
+              with Image.open(path) as im:
+                  assert im.size == (192, 192), (path, im.size)
+                  assert im.mode == 'RGBA', (path, im.mode)
+          print('Validated 60 web PNGs and 60 master PNGs')
+          PY
+      - name: Commit assets to feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/aroma-lab
+          if git diff --cached --quiet; then
+            echo 'No asset changes'
+            exit 0
+          fi
+          git commit -m 'Add AROMA LAB image assets'
+          git push origin HEAD:${GITHUB_REF_NAME}
