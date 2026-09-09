@@ -18,6 +18,7 @@
 .source-scene .art-wrap{flex:1;min-height:400px;width:100%;margin-top:0}
 .source-scene .art-stage{inset:0 -7% 0 -7%}
 .source-scene .art-tip{top:37px;font-size:10px;color:#aaa9a1}
+.source-scene .art-tip span:first-child{width:32px;height:32px;min-width:32px;min-height:32px;flex:0 0 32px;aspect-ratio:1;line-height:1}
 .source-scene .art-caption{right:0;bottom:33px}
 .source-scene .art-caption strong{font-size:clamp(17px,1.7vw,25px)}
 .source-scene .art-caption .mono{font-size:8px}
@@ -29,7 +30,7 @@
 .label-collection .sleeve img{padding:0}
 .source-still .source-card,.source-still .source-art{transition:none}
 @media(max-width:1050px) and (min-width:701px){.source-cards{gap:10px;padding-left:12px}.source-name{left:9px;top:9px}.source-card{min-height:70px}.source-scene .art-wrap{min-height:360px}.source-scene .art-caption strong{font-size:17px}}
-@media(max-width:700px){.source-scene{padding-top:28px}.source-cards{padding:0;justify-content:flex-end;gap:12px}.source-card{flex:1 1 0;max-width:159px;aspect-ratio:1.75;min-height:76px}.source-name{font-size:15px;left:11px;top:10px}.source-scene .art-wrap{height:310px;min-height:310px;flex:none}.source-scene .art-caption{bottom:15px;right:0}.source-scene .art-caption strong{font-size:18px;letter-spacing:-.025em}.source-scene .art-caption .mono{font-size:7px}.source-scene .art-tip{top:25px;font-size:9px;left:0}.source-scene .art-tip span:first-child{width:24px;height:24px;font-size:15px}.source-footer{padding:0 0 15px}.source-footer .text-link{font-size:10px}.hero-desc{max-width:330px}}
+@media(max-width:700px){.source-scene{padding-top:28px}.source-cards{padding:0;justify-content:flex-end;gap:12px}.source-card{flex:1 1 0;max-width:159px;aspect-ratio:1.75;min-height:76px}.source-name{font-size:15px;left:11px;top:10px}.source-scene .art-wrap{height:310px;min-height:310px;flex:none}.source-scene .art-caption{bottom:15px;right:0}.source-scene .art-caption strong{font-size:18px;letter-spacing:-.025em}.source-scene .art-caption .mono{font-size:7px}.source-scene .art-tip{top:25px;font-size:9px;left:0}.source-scene .art-tip span:first-child{width:28px;height:28px;min-width:28px;min-height:28px;flex-basis:28px;font-size:17px}.source-footer{padding:0 0 15px}.source-footer .text-link{font-size:10px}.hero-desc{max-width:330px}}
 @media(max-width:700px){.hero-main{grid-template-columns:minmax(0,1fr)}.hero h1{font-size:clamp(50px,16.4vw,104px)}.hero-meta .edition{max-width:48%;text-align:right}}
 @media(max-width:375px){.source-card{max-width:153px}.source-scene .art-wrap{height:295px;min-height:295px}}
 @media(prefers-reduced-motion:reduce){.source-card,.source-art{transition:none!important}}
