@@ -21,6 +21,36 @@ canonical・OGP・Twitter画像・構造化データのURLは `https://sakeartto
 
 英語版のcanonical / og:urlは `https://sakearttokyo.com/en/`、商品詳細は `/en/#sat-001` / `/en/#sat-002` です。両言語に相互のhreflangを設定しています。ゲームは同じ `/play/` に `lang=en` を渡し、`play/locale.js` で表示だけ翻訳します。元のモデル・原画・記録は変更しません。ラベル、ポスター、漫画に描かれた日本語は原画像のまま維持しています。
 
+## SEO / IA Phase 1
+
+トップの作品性は維持したまま、検索エンジンに酒蔵・商品・香り・ブランド関係を伝える静的ページを追加します。日本語はルート配下、英語は `/en/` 配下の完全ミラーです。
+
+日本語:
+
+- `/sake/`: SAKE ART TOKYOの商品・酒蔵Collection Hub。
+- `/breweries/urazato/`: 浦里酒造 × SAKE ART TOKYO / SAT 001。
+- `/breweries/tsuchida/`: 土田酒造 × SAKE ART TOKYO / SAT 002。
+- `/about/chill-labo/`: Chill LaboからSAKE ART TOKYOへ至るブランド関係。
+- `/sake/aroma/`: 日本酒の香り。官能表現と香気成分の説明を分離。
+
+英語:
+
+- `/en/sake/`
+- `/en/breweries/urazato/`
+- `/en/breweries/tsuchida/`
+- `/en/about/chill-labo/`
+- `/en/sake/aroma/`
+
+新規ページは `editorial.css` を共用し、既存の `site.css` / `language.css` / `english.css` の変数・タイポグラフィを継承します。新しいJavaScript、Web font、frameworkは追加しません。
+
+トップの「お酒を見る / Explore sake」は `/sake/` / `/en/sake/` へ送ります。BOTTLESのページ内アンカーは残しています。水源カードはbuttonのまま維持し、その直下に酒蔵ページへの小さなcrawlable linkを追加しています。STORYは `/about/chill-labo/`、漫画末尾は `/sake/aroma/` へつなぎます。
+
+SAKE ART TOKYOは構造化データ上で `Brand`、Chill Labo・浦里酒造・土田酒造は別entityとして扱います。`from CHILL LABO` はコピーとして残しますが、単一Organization名にはしません。
+
+FERMENTATION PLAYGROUNDの将来公開先は `/playground/` / `/en/playground/` 配下ですが、このリポジトリのPhase 1では移設しません。移設前の404リンクを本番HTMLやsitemapへ出さないでください。
+
+商品固有ページ `/sake/melon-cotton-candy/` と `/sake/chocolate-banana-muffin/`、BASE販売導線、Product / Offer schemaはPhase 1では未実装です。
+
 CSS / JSのURLには版番号を付けています（`site.css` 以外は `?v=20260908-en1`）。共有ファイルの更新時は両HTMLと、該当するゲームのmodule importの版番号を揃え、旧キャッシュとの混在を防ぎます。
 
 タッチ端末ではヘッダーを通常のスクロール配置にしています。iPhone Safariで黒い固定帯が居残る報告への対策で、PCの追従ヘッダーは維持します。この変更の `site.css` は両言語とも `?v=20260909-scroll1` です。実機での解消確認と、WebKitブラウザの検証結果は分けて扱います。
@@ -52,11 +82,16 @@ python3 tests/intuitive/test_ui.py
 python3 tests/intuitive/test_http_details.py
 python3 tests/source-water/test_ui.py
 python3 tests/english/test_ui.py
+python3 tests/seo-ia/test_phase1.py
 ```
+
+`tests/seo-ia/test_phase1.py` は新規10ページのHTTP 200、title/H1/meta、canonical、ja/en/x-default hreflang、OG/Twitter、JSON-LD、内部リンク、sitemap、360/390px横溢れ、ホーム内部リンクと44pxタップ領域を確認します。
 
 HTTPテストの初期URLは `http://127.0.0.1:4190/`。`BASE_URL=https://sakearttokyo.com/` で公開ページも検証できます。375px／390pxのタッチエミュレーションと実機iPhone Safariは別の検証です。
 
 WebKitでは別ポート4213で配信し、`BASE_URL=http://127.0.0.1:4213/ python3 tests/safari/test_overlay.py` を実行します（`python3 -m playwright install webkit` が必要）。スクロール、表示高さの変更、ゲーム・画像保存・ポリシー画面を閉じた後、ブラウザバックを確認します。iOS Safari自体のツールバーや描画の不具合を再現する検証ではありません。
+
+GitHub ActionsのProduction verificationは `main`、`codex/**`、`seo-**` で実行します。SEO/IAブランチでも既存トップのChromium/WebKit回帰とPhase 1テストを同時に通します。
 
 ## 履歴と公開
 
