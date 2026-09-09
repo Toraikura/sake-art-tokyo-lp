@@ -40,8 +40,7 @@
 
 /* Phase 1 IA: crawlable brewery links under the existing source buttons. */
 .source-editorial-links{display:grid;grid-template-columns:174px 174px;gap:13px;justify-content:end;padding-left:18px;position:relative;z-index:3}
-.source-editorial-links .text-link{min-height:34px;padding:4px 0;font:700 9px/1.45 var(--mono);letter-spacing:.02em;color:var(--muted);justify-content:flex-start;border-bottom-color:#f4f0e833}
+.source-editorial-links .text-link{min-height:44px;padding:4px 0;font:700 9px/1.45 var(--mono);letter-spacing:.02em;color:var(--muted);justify-content:flex-start;border-bottom-color:#f4f0e833}
 .source-editorial-links .text-link:hover{color:var(--accent)}
 @media(max-width:1050px) and (min-width:701px){.source-editorial-links{grid-template-columns:repeat(2,minmax(0,174px));gap:10px;padding-left:12px}}
-@media(max-width:700px){.source-editorial-links{grid-template-columns:repeat(2,minmax(0,159px));gap:12px;padding:0;justify-content:end}.source-editorial-links .text-link{font-size:8px;min-height:32px}}
-@media(max-width:375px){.source-editorial-links{grid-template-columns:repeat(2,minmax(0,153px))}}
+@media(max-width:700px){.source-editorial-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0;justify-content:end;width:100%;max-width:330px;margin-left:auto}.source-editorial-links .text-link{font-size:9px;min-height:44px}}
