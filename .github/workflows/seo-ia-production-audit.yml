@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install playwright==1.57.0
-      - run: python -m playwright install --with-deps chromium
+      - run: python -m playwright install chromium
       - name: Verify live production pages
         env:
           BASE_URL: https://sakearttokyo.com/
