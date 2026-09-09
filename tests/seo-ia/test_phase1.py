@@ -49,7 +49,7 @@ PAGES = [
         "public": "en/breweries/urazato/",
         "lang": "en",
         "alternate": "breweries/urazato/",
-        "h1_contains": "URAZATO",
+        "h1": "Urazato Brewery\n× SAKE ART TOKYO",
         "types": {"WebPage", "Organization", "BreadcrumbList"},
     },
     {
@@ -65,7 +65,7 @@ PAGES = [
         "public": "en/breweries/tsuchida/",
         "lang": "en",
         "alternate": "breweries/tsuchida/",
-        "h1_contains": "TSUCHIDA",
+        "h1": "Tsuchida Brewery\n× SAKE ART TOKYO",
         "types": {"WebPage", "Organization", "BreadcrumbList"},
     },
     {
@@ -97,7 +97,7 @@ PAGES = [
         "public": "en/sake/aroma/",
         "lang": "en",
         "alternate": "sake/aroma/",
-        "h1_contains": "JAPANESE",
+        "h1": "Japanese Sake\nAroma",
         "types": {"WebPage", "BreadcrumbList"},
     },
 ]
