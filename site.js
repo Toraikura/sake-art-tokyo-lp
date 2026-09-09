@@ -12,7 +12,7 @@ let mood='light',phase=.7,paused=media.matches,allowed=false,gameActive=false;
 let toastTimer=null,raf=0,last=0,artVisible=true,userMotionChoice=false;
 const stage=$('#art-stage'),zone=$('#art-zone');
 let c=$('#liquid');
-const water=createWaterSurface(c);c=water.canvas;
+let water=null,waterQueued=false;
 const age=$('#age'),policy=$('#policy');
 try{allowed=localStorage.getItem(AGE_KEY)==='yes';}catch(_){}
 function notify(text){$('#toast').textContent=text;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{$('#toast').textContent='';},6000);}
@@ -219,16 +219,24 @@ function createWaterSurface(initialCanvas) {
  };
  return api;
 }
-function paint(){if(!c.width||!c.height)return;if(water.draw(phase,mood==='deep'))stage.classList.add('is-drawn');}
-function resize(){const r=stage.getBoundingClientRect();if(r.width<=0||r.height<=0)return;
+function paint(){if(!water||!c.width||!c.height)return;if(water.draw(phase,mood==='deep'))stage.classList.add('is-drawn');}
+function resize(){if(!water)return;const r=stage.getBoundingClientRect();if(r.width<=0||r.height<=0)return;
  const dpr=Math.min(window.devicePixelRatio||1,1.35,820/r.width,820/r.height);
  const w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));
  if(c.width!==w||c.height!==h){c.width=w;c.height=h;}paint();}
 function loop(now){raf=0;if(paused||!allowed||!artVisible||gameActive||document.hidden)return;if(!last)last=now;const dt=Math.min((now-last)/1000,.08);if(dt>=(c.dataset.renderer==='webgl'?1/30:1/24)){phase+=dt;paint();last=now;}raf=requestAnimationFrame(loop);}
-function loopStart(){if(!raf&&!paused&&allowed&&artVisible&&!gameActive&&!document.hidden){last=0;raf=requestAnimationFrame(loop);}}
+function loopStart(){if(water&&!raf&&!paused&&allowed&&artVisible&&!gameActive&&!document.hidden){last=0;raf=requestAnimationFrame(loop);}}
+function queueWater(){
+ if(water||waterQueued)return;waterQueued=true;
+ // Let the age dialog close and the page paint before compiling the water shader.
+ requestAnimationFrame(()=>setTimeout(()=>{
+  waterQueued=false;if(water||!allowed||document.hidden)return;
+  water=createWaterSurface(c);c=water.canvas;resize();updateMotion();
+ },0));
+}
 let gesture=null,lastTrail=0,lastPoint=null;
 function rippleAt(clientX,clientY,strength){
- if(paused||!allowed)return;const r=stage.getBoundingClientRect();
+ if(!water||paused||!allowed)return;const r=stage.getBoundingClientRect();
  const x=(clientX-r.left)/r.width,y=1-(clientY-r.top)/r.height;
  if(x<0||x>1||y<0||y>1)return;water.ripple(x,y,phase,strength);paint();loopStart();
 }
@@ -254,7 +262,7 @@ window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);raf=0;});
 window.addEventListener('pageshow',loopStart);resize();updateMotion();
 function enter(){
  allowed=true;try{localStorage.setItem(AGE_KEY,'yes');}catch(_){}
- if(age.open){if(typeof age.close==='function')age.close();else age.removeAttribute('open');}loopStart();
+ if(age.open){if(typeof age.close==='function')age.close();else age.removeAttribute('open');}queueWater();
  if(['sat-001','sat-002','sat-003'].includes(bottle)){setTimeout(()=>{document.getElementById(bottle).scrollIntoView({behavior:'auto',block:'start'});},50);}
 }
 $('#age-yes').addEventListener('click',enter);
@@ -264,9 +272,10 @@ if(!allowed){if(typeof age.showModal==='function')age.showModal();else{age.setAt
 $('#privacy-open').addEventListener('click',()=>{if(typeof policy.showModal==='function')policy.showModal();else policy.setAttribute('open','');});
 $('#policy-close').addEventListener('click',()=>{if(typeof policy.close==='function')policy.close();else policy.removeAttribute('open');});
 $$('.record-art img').forEach(img=>{
- const done=()=>{if(img.naturalWidth>0)img.parentElement.classList.add('has-image');};
- img.addEventListener('load',done);img.addEventListener('error',()=>{img.hidden=true;img.parentElement.classList.add('image-failed');});
- if(img.complete){if(img.naturalWidth>0)done();else if(img.getAttribute('src')){img.hidden=true;img.parentElement.classList.add('image-failed');}}
+ const art=img.closest('.record-art');
+ const done=()=>{if(img.naturalWidth>0)art.classList.add('has-image');};
+ img.addEventListener('load',done);img.addEventListener('error',()=>{img.hidden=true;art.classList.add('image-failed');});
+ if(img.complete){if(img.naturalWidth>0)done();else if(img.getAttribute('src')){img.hidden=true;art.classList.add('image-failed');}}
 });
 $('#comic-image').addEventListener('error',()=>{$('#comic-image').hidden=true;$('#comic-error').hidden=false;});
 window.addEventListener('sat:game-active',e=>{gameActive=e.detail===true;if(gameActive){cancelAnimationFrame(raf);raf=0;}else loopStart();});
