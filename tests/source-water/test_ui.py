@@ -183,7 +183,6 @@ def verify_geometry(page, width):
     for card in cards.all():
         box = card.bounding_box()
         assert box["width"] >= 44 and box["height"] >= 44, (width, box)
-    # scrollWidth can miss text hidden by an overflowing hero grid.
     bounds = page.evaluate("""() => {
       const boxes = Array.from(document.querySelectorAll('.source-cards, .art-caption'), element => {
         const b = element.getBoundingClientRect();
@@ -226,8 +225,6 @@ def verify_label_source_sync(page, width, reduced_motion=False):
     stack = page.locator("#label-stack")
     before_ripples = page.locator("#liquid").get_attribute("data-ripples")
     cdp = page.context.new_cdp_session(page) if width < 700 else None
-    # The caller has selected Tsuchida using a source card. Exercise both
-    # directions and every label input without dispatching selection events.
     actions = (
         ("#label-stack", "click", "urasato"),
         ("#label-next", "click", "tsuchida"),
@@ -294,9 +291,6 @@ def verify_label_source_sync(page, width, reduced_motion=False):
         cdp.detach()
 
     if not reduced_motion:
-        # Start a real animated flip, then select the current source before its
-        # 150 ms commit. Focus without scrolling permits real keyboard input to
-        # the distant source card; no timers or application state are changed.
         source = page.locator('.source-card[data-source="tsuchida"]')
         source.evaluate("""element => {
           element.__flipOverride = null;
@@ -327,8 +321,8 @@ def verify_label_source_sync(page, width, reduced_motion=False):
 
 
 def verify_brand_and_products(page, width):
-    page.locator(".nav-shop").click()
-    page.wait_for_url("**/#bottles")
+    shop = page.locator(".nav-shop")
+    assert shop.get_attribute("href") == "/sake/", shop.get_attribute("href")
     intro = page.locator("#bottles .brand-intro")
     assert intro.count() == 1 and intro.is_visible()
     copy = intro.locator(".brand-copy")
@@ -387,7 +381,6 @@ def verify_brand_and_products(page, width):
       const boxes = Array.from(elements).map(element => {
         const rect = element.getBoundingClientRect();
         return {selector: element.id || element.className, left: rect.left, right: rect.right,
-          // The decorative logo intentionally extends inside its clipping container.
           overflow: !element.classList.contains('brand-intro') && element.scrollWidth > element.clientWidth + 1};
       });
       for (const element of document.querySelectorAll('.brand-copy, .record-story')) {
@@ -414,9 +407,6 @@ def verify_play_entry(page, selector):
     trigger.scroll_into_view_if_needed()
     page.wait_for_timeout(700)
     previous_scroll = page.evaluate("scrollY")
-    # Playwright may reposition a sticky navigation button while making it
-    # actionable. Observe the real click position before the application's
-    # click handler saves it, rather than using the pre-action measurement.
     trigger.evaluate("""element => element.addEventListener('click', () => {
       element.__testClickScrollY = window.scrollY;
     }, {once: true, capture: true})""")
@@ -471,7 +461,6 @@ def run():
     ], cwd=ROOT, text=True).strip()
     assert not preserved, "Preserved candidate / original game changed: " + preserved
     candidate = ROOT / "experiments/after-hours-water"
-    # Localization changes renderer text only; simulation, artwork and geometry stay original.
     for name in ("model.js", "art.js", "preview.js", "game.css"):
         assert (ROOT / "play" / name).read_bytes() == (candidate / "play" / name).read_bytes(), name
     checks.append("The after-hours-water candidate and original game have no diff from origin/main.")
