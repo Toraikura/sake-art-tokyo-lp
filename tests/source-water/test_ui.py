@@ -114,7 +114,7 @@ def verify_production_images(page, width):
         image_checks.append({"width": width, "kind": "svg artwork", **info})
     if width > 700:
         logo = page.locator(".brand-mark").evaluate("img => ({src: img.currentSrc || img.src, width: img.naturalWidth, height: img.naturalHeight})")
-        assert urlsplit(logo["src"]).path == "/assets/sat-dimensional-logo.png"
+        assert urlsplit(logo["src"]).path == "/assets/images/optimized/sat-dimensional-logo.webp"
         assert logo["width"] == int(page.locator('meta[property="og:image:width"]').get_attribute("content"))
         assert logo["height"] == int(page.locator('meta[property="og:image:height"]').get_attribute("content"))
     comic = page.locator("#comic-image")
