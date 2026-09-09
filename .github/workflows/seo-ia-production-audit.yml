@@ -26,7 +26,60 @@ jobs:
           BASE_URL: https://sakearttokyo.com/
           EVIDENCE_DIR: evidence/live-production
         run: python tests/seo-ia/test_phase1.py
-      - name: Run PageSpeed Insights audit
+      - name: Run local Lighthouse audit
+        run: |
+          set -euo pipefail
+          mkdir -p evidence/lighthouse
+          npm install --no-save lighthouse@13
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            CHROME_BIN="$(find "$HOME/.cache/ms-playwright" -type f -name chrome -path '*chrome-linux*' | head -1)"
+          fi
+          test -n "$CHROME_BIN"
+          export CHROME_PATH="$CHROME_BIN"
+          npx lighthouse https://sakearttokyo.com/ \
+            --quiet \
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --output=json \
+            --output-path=evidence/lighthouse/mobile.json
+          npx lighthouse https://sakearttokyo.com/ \
+            --quiet \
+            --preset=desktop \
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --output=json \
+            --output-path=evidence/lighthouse/desktop.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          out = Path('evidence/lighthouse')
+          summary = {}
+          for mode in ('mobile', 'desktop'):
+              payload = json.loads((out / f'{mode}.json').read_text())
+              cats = payload['categories']
+              audits = payload['audits']
+              summary[mode] = {
+                  'source': 'Lighthouse CLI 13 on GitHub-hosted runner',
+                  'scores': {
+                      'performance': round(cats['performance']['score'] * 100),
+                      'accessibility': round(cats['accessibility']['score'] * 100),
+                      'best-practices': round(cats['best-practices']['score'] * 100),
+                      'seo': round(cats['seo']['score'] * 100),
+                  },
+                  'metrics': {
+                      'FCP': audits['first-contentful-paint'].get('displayValue'),
+                      'LCP': audits['largest-contentful-paint'].get('displayValue'),
+                      'TBT': audits['total-blocking-time'].get('displayValue'),
+                      'CLS': audits['cumulative-layout-shift'].get('displayValue'),
+                      'Speed Index': audits['speed-index'].get('displayValue'),
+                  },
+              }
+          (out / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2))
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          PY
+      - name: Try PageSpeed Insights API
         continue-on-error: true
         run: |
           mkdir -p evidence/pagespeed
