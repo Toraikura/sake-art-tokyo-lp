@@ -1,0 +1,78 @@
+name: SEO IA production audit
+
+on:
+  push:
+    branches: ['audit/seo-ia-phase1-production']
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.57.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify live production pages
+        env:
+          BASE_URL: https://sakearttokyo.com/
+          EVIDENCE_DIR: evidence/live-production
+        run: python tests/seo-ia/test_phase1.py
+      - name: Run PageSpeed Insights audit
+        continue-on-error: true
+        run: |
+          mkdir -p evidence/pagespeed
+          python - <<'PY'
+          import json
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          target = 'https://sakearttokyo.com/'
+          out = Path('evidence/pagespeed')
+          summary = {}
+          categories = ['performance', 'accessibility', 'best-practices', 'seo']
+
+          for strategy in ('mobile', 'desktop'):
+              params = [('url', target), ('strategy', strategy)]
+              params += [('category', category) for category in categories]
+              url = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?' + urllib.parse.urlencode(params)
+              try:
+                  request = urllib.request.Request(url, headers={'User-Agent': 'SAT-SEO-IA-audit/1.0'})
+                  with urllib.request.urlopen(request, timeout=180) as response:
+                      payload = json.load(response)
+                  (out / f'psi-{strategy}.json').write_text(json.dumps(payload, ensure_ascii=False, indent=2))
+                  lighthouse = payload.get('lighthouseResult', {})
+                  cats = lighthouse.get('categories', {})
+                  audits = lighthouse.get('audits', {})
+                  summary[strategy] = {
+                      'source': 'Google PageSpeed Insights API',
+                      'scores': {name: round((cats.get(name, {}).get('score') or 0) * 100) for name in categories},
+                      'metrics': {
+                          'FCP': audits.get('first-contentful-paint', {}).get('displayValue'),
+                          'LCP': audits.get('largest-contentful-paint', {}).get('displayValue'),
+                          'TBT': audits.get('total-blocking-time', {}).get('displayValue'),
+                          'CLS': audits.get('cumulative-layout-shift', {}).get('displayValue'),
+                          'Speed Index': audits.get('speed-index', {}).get('displayValue'),
+                      },
+                  }
+              except Exception as exc:
+                  summary[strategy] = {'source': 'Google PageSpeed Insights API', 'error': repr(exc)}
+
+          (out / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2))
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: seo-ia-production-audit
+          path: evidence/
+          retention-days: 14
