@@ -6,6 +6,8 @@ on:
       - aroma-lab-icons-20260909
     paths:
       - scripts/aroma-lab/drive-manifest.tsv
+      - scripts/aroma-lab/sync_aroma_assets.py
+      - .github/workflows/aroma-lab-assets.yml
   workflow_dispatch:
 
 permissions:
@@ -22,7 +24,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install --disable-pip-version-check pillow
+      - run: python -m pip install --disable-pip-version-check pillow gdown
       - run: python scripts/aroma-lab/sync_aroma_assets.py
       - name: Validate generated PNGs
         run: |
@@ -38,6 +40,8 @@ jobs:
               with Image.open(path) as im:
                   assert im.size == (192, 192), (path, im.size)
                   assert im.mode == 'RGBA', (path, im.mode)
+                  lo, hi = im.getchannel('A').getextrema()
+                  assert lo == 0 and hi == 255, (path, lo, hi)
           print('Validated 60 web PNGs and 60 master PNGs')
           PY
       - name: Commit assets to feature branch
