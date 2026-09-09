@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#17151c">
+  <meta name="robots" content="index,follow">
+  <title>AROMA LAB — SAKE ART TOKYO</title>
+  <meta name="description" content="香りから分子へ。日本酒・焼酎／泡盛・ワイン・ビールを横断して、同じ香りの分子をたどるインタラクティブ香り図鑑。">
+  <link rel="canonical" href="https://sakearttokyo.com/aroma-lab/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./aroma-lab.css?v=20260909-1">
+</head>
+<body>
+<a class="skip" href="#lab">AROMA LAB本文へ</a>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="logo" href="../" aria-label="SAKE ART TOKYO トップへ">
+      <strong>SAT</strong><span>SAKE ART<br>TOKYO</span>
+    </a>
+    <a class="back" href="../">← BACK TO SAKE ART TOKYO</a>
+  </div>
+</header>
+<main id="lab">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">INTERACTIVE STUDY / AROMA → MOLECULE</p>
+        <h1>AROMA<span>LAB</span></h1>
+        <p class="lead">香りから分子へ。<br>分子から、酒をまたぐ。</p>
+        <p class="sublead">まず名前と絵で香りをつかむ。カードをめくると構造式が現れる。同じ分子が日本酒・焼酎／泡盛・ワイン・ビールのどこにいるか、横断してたどってみる。</p>
+      </div>
+      <div class="hero-cards" aria-label="香りアイコンの例">
+        <article class="hero-scent hero-scent--banana">
+          <span class="hero-scent-num">01</span>
+          <img src="../assets/aroma-lab/aroma-banana.png" width="192" height="192" alt="バナナ" fetchpriority="high">
+          <strong>バナナ</strong><small>BANANA</small>
+        </article>
+        <article class="hero-scent hero-scent--apple">
+          <span class="hero-scent-num">02</span>
+          <img src="../assets/aroma-lab/aroma-apple-green.png" width="192" height="192" alt="青リンゴ" fetchpriority="high">
+          <strong>青リンゴ</strong><small>GREEN APPLE</small>
+        </article>
+        <article class="hero-scent hero-scent--smoke">
+          <span class="hero-scent-num">03</span>
+          <img src="../assets/aroma-lab/aroma-smoke.png" width="192" height="192" alt="煙" fetchpriority="high">
+          <strong>煙</strong><small>SMOKE</small>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="instructions">
+    <div class="wrap instruction-row">
+      <strong>名前と香りを見る → カードをめくる → 構造式と酒の共通性を見る</strong>
+      <span class="desktop-only">HOVER = PEEK / CLICK = PIN</span>
+      <span class="mobile-only">TAP = FLIP</span>
+    </div>
+  </section>
+
+  <nav class="lab-nav" aria-label="酒類を選択">
+    <div class="wrap nav-scroll"><div class="tabs" id="tabs"></div></div>
+  </nav>
+
+  <section class="lab-section">
+    <div class="wrap">
+      <div class="control-row">
+        <div>
+          <p class="section-kicker" id="sectionKicker">SAKE / 19 STANDARDS</p>
+          <h2 class="section-title" id="sectionTitle">日本酒の香り</h2>
+        </div>
+        <div class="controls">
+          <div class="wine-modes" id="wineModes" aria-label="ワイン標準試薬セット">
+            <button class="control wine-mode active" type="button" data-wine="standard">STANDARD 18</button>
+            <button class="control wine-mode" type="button" data-wine="professional">PRO 20</button>
+            <button class="control wine-mode" type="button" data-wine="all">ALL 38</button>
+          </div>
+        </div>
+        <div class="stats" aria-live="polite"><span>VISIBLE <b id="visibleCount">19</b></span><span>DISCOVERED <b id="discoveredMini">0</b></span></div>
+      </div>
+
+      <div class="filter-banner" id="filterBanner" hidden>
+        <span id="filterText"></span>
+        <button id="clearFilter" type="button">CLEAR FILTER ×</button>
+      </div>
+
+      <div class="cards" id="cards" aria-live="polite"></div>
+
+      <section class="progress-panel" aria-labelledby="progressTitle">
+        <div class="progress-copy">
+          <p class="section-kicker">YOUR DISCOVERY TRAIL</p>
+          <h2 id="progressTitle">酒をまたぐ分子を<br>何個見つけた？</h2>
+          <p>同じ分子が別の酒にも現れる。めくったカードはこの端末に記録されます。正解数ではなく、「つながりに気づいた回数」のメモです。</p>
+        </div>
+        <div class="progress-data">
+          <div class="progress-num"><span id="crossFound">0</span><span class="progress-denom"> / <span id="crossTotal">0</span></span></div>
+          <div class="progress-label">CROSS-DRINK MOLECULES DISCOVERED</div>
+          <div class="meter" aria-hidden="true"><i id="meterBar"></i></div>
+          <button class="reset" id="resetProgress" type="button">RESET DISCOVERY LOG</button>
+        </div>
+      </section>
+
+      <section class="aroma-index" aria-labelledby="indexTitle">
+        <div class="index-head">
+          <div>
+            <p class="section-kicker">AROMA VOCABULARY / 60 ICONS</p>
+            <h2 id="indexTitle">香りのことばを、絵で引く。</h2>
+          </div>
+          <p>60種類のアイコンはすべて同じシリーズ。気になる香りを押すと、その香りにつながる分子だけに絞れます。</p>
+        </div>
+        <div id="aromaGroups"></div>
+      </section>
+
+      <section class="source-box">
+        <strong>REFERENCE / DATA POLICY</strong>
+        <div>
+          <p>掲載対象は林純薬工業の官能評価標準試薬ページを基準に整理。清酒19種、焼酎・泡盛20種、ワイン38種（スタンダード18＋プロフェッショナル20）、ビール17種。香りアイコンは学習用の代表表現で、濃度・温度・酒のマトリクスによって感じ方は変わります。分子式は表示せず、構造式を表示します。</p>
+          <div class="source-links">
+            <a href="https://direct.hpc-j.co.jp/shop/pages/seishu.aspx" target="_blank" rel="noreferrer">SAKE SOURCE ↗</a>
+            <a href="https://direct.hpc-j.co.jp/shop/pages/sensory_evalutation-shouchu-awamori.aspx" target="_blank" rel="noreferrer">SHOCHU SOURCE ↗</a>
+            <a href="https://direct.hpc-j.co.jp/shop/pages/sensory_evalutation-wine.aspx" target="_blank" rel="noreferrer">WINE SOURCE ↗</a>
+            <a href="https://direct.hpc-j.co.jp/shop/pages/sensory_evalutation_beer.aspx" target="_blank" rel="noreferrer">BEER SOURCE ↗</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="wrap footer-inner"><div><b>SAKE ART TOKYO</b><small>AROMA LAB</small></div><small>AROMA → MOLECULE → CROSS-DRINK</small></div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script defer src="./aroma-data.js?v=20260909-1"></script>
+<script defer src="./aroma-lab.js?v=20260909-1"></script>
+</body>
+</html>
