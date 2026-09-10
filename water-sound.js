@@ -15,14 +15,14 @@
   const THROTTLE_MS = 125;
   const AUDIO_ROOT = '/assets/audio/water/';
   const tracks = [
-    { file: 'water-drop-pochan.mp3', volume: 0.20 },
-    { file: 'water-drop-01.mp3', volume: 0.40 },
-    { file: 'water-drop-03.mp3', volume: 0.32 },
+    { file: 'water-drop-pochan.mp3', volume: 0.18 },
+    { file: 'water-drop-01.mp3', volume: 0.30 },
+    { file: 'water-drop-03.mp3', volume: 0.38 },
     { file: 'water-drop-05.mp3', volume: 0.40 },
-    { file: 'water-drop-mid-reverb.mp3', volume: 0.30 },
-    { file: 'water-drop-low-reverb.mp3', volume: 0.27 },
-    { file: 'water-drop-high-reverb.mp3', volume: 0.33 },
-    { file: 'water-drop-short.mp3', volume: 0.28 }
+    { file: 'water-drop-mid-reverb.mp3', volume: 0.38 },
+    { file: 'water-drop-low-reverb.mp3', volume: 0.35 },
+    { file: 'water-drop-high-reverb.mp3', volume: 0.40 },
+    { file: 'water-drop-short.mp3', volume: 0.18 }
   ].map(track => ({ ...track, src: `${AUDIO_ROOT}${track.file}` }));
 
   let enabled = true;
@@ -38,6 +38,7 @@
   let voiceCursor = 0;
   let gesture = null;
   let active = true;
+  let keyRippleBefore = 0;
 
   const voices = Array.from({ length: 2 }, () => {
     const audio = document.createElement('audio');
@@ -138,11 +139,12 @@
   }, { passive: true });
 
   zone.addEventListener('keydown', event => {
+    if ((event.key === ' ' || event.key === 'Enter') && !event.repeat) keyRippleBefore = rippleCount();
+  }, { capture: true });
+  zone.addEventListener('keydown', event => {
     if ((event.key === ' ' || event.key === 'Enter') && !event.repeat) {
-      /* site.js is registered first and increments data-ripples in the same key event. */
-      const before = Number(zone.dataset.soundRippleCount || rippleCount());
-      maybePlayAfterRipple(before);
-      zone.dataset.soundRippleCount = String(rippleCount());
+      /* site.js handles the same key event first in its bubble listener. Playback still begins inside the gesture. */
+      maybePlayAfterRipple(keyRippleBefore);
     }
   });
 
@@ -156,6 +158,7 @@
   });
 
   function warmAudio() {
+    if (!enabled) return;
     tracks.forEach(track => {
       fetch(track.src, { cache: 'force-cache', credentials: 'same-origin' }).catch(() => {});
     });
