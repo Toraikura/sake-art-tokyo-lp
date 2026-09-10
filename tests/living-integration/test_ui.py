@@ -96,6 +96,10 @@ def verify_home(page, language: str) -> None:
     assert box and box["width"] >= 44 and box["height"] >= 44, box
     assert sound.get_attribute("aria-pressed") == "true"
 
+    credit = page.locator('[data-sound-credit="copy"]')
+    assert credit.count() == 1 and "OtoLogic" in credit.inner_text() and "CC BY 4.0" in credit.inner_text()
+    assert_external(credit.locator("a"), "https://otologic.jp/")
+
     zone = page.locator("#art-zone")
     before_ripples = int(page.locator("#liquid").get_attribute("data-ripples") or 0)
     zone.click(position={"x": 100, "y": 100})
