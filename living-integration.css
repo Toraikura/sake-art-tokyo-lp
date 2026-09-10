@@ -1,0 +1,68 @@
+/* SAKE ART TOKYO × FERMENTATION PLAYGROUND living integration.
+   Adds only bridge/navigation presentation; existing brand, editorial and water systems remain unchanged. */
+
+.nav-play{min-height:44px;display:inline-flex;align-items:center;border:0;background:none;padding:0;font:inherit;letter-spacing:inherit}
+.nav-play:hover{color:var(--accent)}
+
+.water-sound-control{position:absolute;right:0;top:12%;z-index:4}
+.sound-btn{display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:rgba(23,21,28,.72);color:var(--muted);padding:8px 10px;font:9px/1 var(--mono);letter-spacing:.06em;backdrop-filter:blur(6px)}
+.sound-btn:hover{color:var(--paper);border-color:var(--accent)}
+.sound-btn[aria-pressed="true"]{color:var(--paper)}
+.sound-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px rgba(244,240,232,.15)}
+.sound-btn[aria-pressed="false"] .sound-dot{background:transparent;border:1px solid var(--muted);box-shadow:none}
+html:not(.js) .water-sound-control{display:none}
+
+.playground-entry{background:var(--ink);color:var(--paper);padding-block:clamp(56px,7vw,94px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.playground-entry-grid{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);gap:clamp(38px,8vw,118px);align-items:end}
+.playground-entry .eyebrow{color:var(--accent)}
+.playground-entry h2{font:900 clamp(35px,5vw,72px)/.98 var(--heavy);letter-spacing:-.06em;margin-top:18px;max-width:8em}
+.playground-entry-copy{max-width:38em;justify-self:end}
+.playground-entry-copy p{font-size:14px;line-height:2;color:#d0c9d8}
+.playground-entry-copy .text-link{margin-top:24px;color:var(--paper)}
+.playground-entry-route{display:block;margin-top:22px;color:var(--accent);font:9px/1.6 var(--mono);letter-spacing:.11em}
+
+.play-bridge-links{margin-top:28px;border-top:1px solid rgba(244,240,232,.28)}
+.play-bridge-link{position:relative;display:grid;grid-template-columns:100px minmax(0,1fr) auto;grid-template-areas:"meta title arrow" "meta copy arrow";gap:5px 22px;align-items:center;min-height:104px;padding:20px 0;border-bottom:1px solid rgba(244,240,232,.28);color:var(--paper)}
+.play-bridge-link .mono{grid-area:meta;color:var(--accent)}
+.play-bridge-link strong{grid-area:title;font:900 clamp(22px,2.8vw,36px)/1 var(--heavy);letter-spacing:-.04em}
+.play-bridge-link small{grid-area:copy;color:#c9c2cf;font-size:11px;line-height:1.65}
+.play-bridge-link .play-arrow{grid-area:arrow;font-size:23px;color:var(--accent)}
+.play-bridge-link:hover strong{color:var(--accent)}
+.play-to-glass{margin-top:34px;padding-top:28px;border-top:1px solid rgba(244,240,232,.28)}
+.play-to-glass p{margin-top:10px!important;color:#cbc5cf}
+.play-to-glass .text-link{margin-top:14px;color:var(--paper)}
+.play-inline{margin-top:32px;padding:24px;border:1px solid #c8c1c8;background:#ece7df}
+.play-inline .eyebrow{color:#746d78}
+.play-inline p{font-size:12px;line-height:1.9;margin-top:9px}
+.play-inline .text-link{margin-top:12px}
+.release-route{display:block;margin-top:14px;color:#5f5962;font-size:9px;letter-spacing:.08em}
+
+@media(max-width:900px){
+  .playground-entry-grid{grid-template-columns:1fr;gap:28px}
+  .playground-entry-copy{justify-self:start}
+}
+
+@media(max-width:700px){
+  /* The existing mobile header hides .nav-links. Keep only PLAY visible there. */
+  .nav-links{display:flex;gap:0}
+  .nav-links>a:not(.nav-play){display:none}
+  .nav-links .nav-play{min-width:44px;justify-content:center;padding-inline:6px}
+  .water-sound-control{top:23px;right:0}
+  .sound-btn{padding:7px 8px}
+  .playground-entry{padding-block:52px}
+  .playground-entry h2{font-size:38px;max-width:9em}
+  .playground-entry-copy p{font-size:13px}
+  .play-bridge-link{grid-template-columns:1fr auto;grid-template-areas:"meta arrow" "title arrow" "copy copy";gap:6px 14px;min-height:0;padding:20px 0}
+  .play-bridge-link .mono{font-size:8px}
+  .play-bridge-link strong{font-size:27px}
+  .play-inline{padding:20px}
+}
+
+@media(max-width:360px){
+  .nav-right{gap:7px}
+  .nav-links .nav-play{padding-inline:2px}
+  .motion-btn{min-width:44px;justify-content:center;padding:0}
+  .motion-btn #motion-text{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .nav-shop{gap:5px;font-size:9px}
+  .sound-btn span:last-child{font-size:8px}
+}
