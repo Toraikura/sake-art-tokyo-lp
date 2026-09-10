@@ -16,6 +16,7 @@ from playwright.sync_api import sync_playwright
 BASE = os.environ.get("BASE_URL", "http://127.0.0.1:4190/")
 SITE = urljoin(BASE, "/")
 PUBLIC = "https://sakearttokyo.com/"
+CHILL_LABO = "https://chilllabo.tokyo/"
 OUT = Path(os.environ.get("EVIDENCE_DIR", "/tmp/sat-seo-ia-phase1"))
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -202,7 +203,8 @@ def check_homepage_ia(page, english=False):
     assert links.nth(0).get_attribute("href") == f"{prefix}/breweries/urazato/"
     assert links.nth(1).get_attribute("href") == f"{prefix}/breweries/tsuchida/"
     story = page.locator("#story .story-body .text-link")
-    assert story.get_attribute("href") == f"{prefix}/about/chill-labo/"
+    assert story.get_attribute("href") == CHILL_LABO
+    assert page.locator(f'a[href="{prefix}/about/chill-labo/"]').count() == 0
     aroma = page.locator('#comic figcaption a[href$="/sake/aroma/"]')
     assert aroma.count() == 1
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
