@@ -12,9 +12,11 @@ GitHub Pagesは `main` のリポジトリルートを公開します。`CNAME` �
 - `en/index.html`: 同じレイアウト・原画を使う英語版。HTMLの `lang` で共有JSの案内文を切り替えます。
 - `language.css`, `english.css`: JA / ENナビゲーションと英語の改行・余白。日本語をルート、英語を `/en/` に固定し、自動転送はしません。
 - `site.css`, `intuitive.css`, `source-cards.css`, `brand-intro.css`: レイアウトと浦里／土田のテーマ。
+- `living-integration.css`: SAKE ART TOKYOとFERMENTATION PLAYGROUNDの橋渡し表示、水滴音UI。
 - `site.js`, `intuitive.js`, `label-save.js`: 水面、カード、年齢確認、エチケットとiframe制御。
+- `water-sound.js`: 水面に触れた時の水滴音。8素材のshuffle bag、個別volume、SOUND ON/OFF、2 voice再利用。
 - `play/`: LP用の30秒ゲーム。元のSAKE CLASH・75秒版・既存記録は変更しません。
-- `assets/`: 原画・エチケットPNG・表示画像。実物ラベルと漫画は再生成していません。
+- `assets/`: 原画・エチケットPNG・表示画像・水滴音。実物ラベルと漫画は再生成していません。
 - `privacy.html`, `robots.txt`, `sitemap.xml`, `favicon.svg`: 本番用の案内と検索向けファイル。
 
 canonical・OGP・Twitter画像・構造化データのURLは `https://sakearttokyo.com/` を基準にします。商品詳細はルート内の `#sat-001` / `#sat-002`、ゲームは `/play/` で開きます。
@@ -41,25 +43,66 @@ canonical・OGP・Twitter画像・構造化データのURLは `https://sakeartto
 - `/en/about/chill-labo/`
 - `/en/sake/aroma/`
 
-新規ページは `editorial.css` を共用し、既存の `site.css` / `language.css` / `english.css` の変数・タイポグラフィを継承します。新しいJavaScript、Web font、frameworkは追加しません。
+新規ページは `editorial.css` を共用し、既存の `site.css` / `language.css` / `english.css` の変数・タイポグラフィを継承します。
 
 トップの「お酒を見る / Explore sake」は `/sake/` / `/en/sake/` へ送ります。BOTTLESのページ内アンカーは残しています。水源カードはbuttonのまま維持し、その直下に酒蔵ページへの小さなcrawlable linkを追加しています。STORYは `/about/chill-labo/`、漫画末尾は `/sake/aroma/` へつなぎます。
 
 SAKE ART TOKYOは構造化データ上で `Brand`、Chill Labo・浦里酒造・土田酒造は別entityとして扱います。`from CHILL LABO` はコピーとして残しますが、単一Organization名にはしません。
 
-FERMENTATION PLAYGROUNDの将来公開先は `/playground/` / `/en/playground/` 配下ですが、このリポジトリのPhase 1では移設しません。移設前の404リンクを本番HTMLやsitemapへ出さないでください。
-
 商品固有ページ `/sake/melon-cotton-candy/` と `/sake/chocolate-banana-muffin/`、BASE販売導線、Product / Offer schemaはPhase 1では未実装です。
 
-CSS / JSのURLには版番号を付けています（`site.css` 以外は `?v=20260908-en1`）。共有ファイルの更新時は両HTMLと、該当するゲームのmodule importの版番号を揃え、旧キャッシュとの混在を防ぎます。
+CSS / JSのURLには版番号を付けています。共有ファイルの更新時は両HTMLと、該当するゲームのmodule importの版番号を揃え、旧キャッシュとの混在を防ぎます。
 
-タッチ端末ではヘッダーを通常のスクロール配置にしています。iPhone Safariで黒い固定帯が居残る報告への対策で、PCの追従ヘッダーは維持します。この変更の `site.css` は両言語とも `?v=20260909-scroll1` です。実機での解消確認と、WebKitブラウザの検証結果は分けて扱います。
+タッチ端末ではヘッダーを通常のスクロール配置にしています。iPhone Safariで黒い固定帯が居残る報告への対策で、PCの追従ヘッダーは維持します。
 
 浦里選択時はライム系、土田選択時は紫系。区切り線、PLAYの背景と強調文字、ストーリーの強調、漫画セクションの背景まで連動します。本文・エチケット・漫画の原画は維持しています。
 
 水源カードとエチケットの選択は双方向に連動します。エチケットをめくった時も水面・SIDE・蔵名・ページ全体の色が切り替わり、現在のスクロール位置を保ちます。
 
 iPhone・iPadの保存ボタンは、対応環境では選択中の原寸PNGを共有メニューへ渡します。写真への保存は端末側で行います。共有非対応やエラー時は原寸画像を表示し、長押し保存を案内します。PCのPNGダウンロードは維持します。
+
+## FERMENTATION PLAYGROUND living integration
+
+FERMENTATION PLAYGROUNDは別ブランドではなく、SAKE ART TOKYOから興味を深掘りする外部Interactive Experienceとして接続します。現時点で公開実体を確認しているリンク先だけを使用します。
+
+公開中:
+
+- Hub: https://toraikura.github.io/sat-fermentation-playground/
+- AROMA LABO: https://toraikura.github.io/sat-fermentation-playground/aroma-lab/
+- AROMA MATCH: https://toraikura.github.io/sat-fermentation-playground/aroma-lab/aroma-match/
+
+未公開のRICE LINEAGE、SHUBO、PATHWAY等にはクリック可能なリンクを出しません。
+
+導線:
+
+- Home Global `PLAY` → FERMENTATION PLAYGROUND Hub。
+- Homeの既存SAKE CLASHは維持し、その直後にFPGへのEditorial Entryを1箇所配置。
+- `/sake/aroma/` → AROMA LABO / AROMA MATCHを直接提示。
+- `/breweries/urazato/`、`/breweries/tsuchida/` → 官能・香りの文脈からAROMA LABOへ1本だけ提示。
+- `/about/chill-labo/` → 店で生まれた疑問がFPGへ続き、最後に実際の一杯へ戻る流れ。
+- `/sake/` のSAT 003は `FIELD → RICE → BREWING → GLASS → BOTTLE` を将来のRICE LINEAGE受け皿として表示するが、未公開URLは作らない。
+
+外部FPG URLはSAKE ART TOKYOの `sitemap.xml` には含めません。Analytics SDKは追加せず、将来の計測用に `data-event`, `data-experience`, `data-source-page` 属性だけを静的に持たせます。
+
+## 水滴音
+
+Homeの水面操作には、波紋が実際に発生した時だけ短い水滴音を鳴らします。Autoplayはしません。
+
+- 8素材をshuffle bagで回し、bag境界を含めて同じ音の連続を避けます。
+- 素材ごとにvolumeを補正します。
+- 125ms throttle、最大2つのAudio voiceを再利用します。
+- `SOUND ON / OFF` を用意し、設定は `localStorage` の `sat-water-sound-enabled` に保存します。
+- OFF時は音声のidle preloadもしません。
+- 水面の描画失敗と音声再生失敗は独立させ、音声が失敗しても既存Rippleを壊しません。
+- AudioはCritical Pathへ入れず、load後のidleでwarmします。
+
+音源は `assets/audio/water/`。出所と利用条件は `assets/audio/water/LICENSE-NOTES.md` を参照してください。
+
+OtoLogic素材の必須クレジット:
+
+**Sound effects: OtoLogic (CC BY 4.0) — https://otologic.jp/**
+
+VSQ plus+および効果音ラボの使用素材は商用利用可能で、クレジット表記は不要です。素材単体の再配布を目的としたリポジトリではありません。
 
 ## 販売開始時
 
@@ -76,6 +119,7 @@ python3 -m http.server 4190 --bind 127.0.0.1
 ```sh
 node --check site.js
 node --check intuitive.js
+node --check water-sound.js
 node tests/intuitive/test_controller.cjs
 node tests/intuitive/test_label_save.cjs
 python3 tests/intuitive/test_ui.py
@@ -83,15 +127,18 @@ python3 tests/intuitive/test_http_details.py
 python3 tests/source-water/test_ui.py
 python3 tests/english/test_ui.py
 python3 tests/seo-ia/test_phase1.py
+python3 tests/living-integration/test_ui.py
 ```
 
 `tests/seo-ia/test_phase1.py` は新規10ページのHTTP 200、title/H1/meta、canonical、ja/en/x-default hreflang、OG/Twitter、JSON-LD、内部リンク、sitemap、360/390px横溢れ、ホーム内部リンクと44pxタップ領域を確認します。
 
+`tests/living-integration/test_ui.py` はFPG公開URL、日英導線、未公開Experienceへのリンクが無いこと、水滴音8本のHTTP配信、SOUND ON/OFF、RippleとAudioの連動、320/375/390/430pxの横溢れを確認します。
+
 HTTPテストの初期URLは `http://127.0.0.1:4190/`。`BASE_URL=https://sakearttokyo.com/` で公開ページも検証できます。375px／390pxのタッチエミュレーションと実機iPhone Safariは別の検証です。
 
-WebKitでは別ポート4213で配信し、`BASE_URL=http://127.0.0.1:4213/ python3 tests/safari/test_overlay.py` を実行します（`python3 -m playwright install webkit` が必要）。スクロール、表示高さの変更、ゲーム・画像保存・ポリシー画面を閉じた後、ブラウザバックを確認します。iOS Safari自体のツールバーや描画の不具合を再現する検証ではありません。
+WebKitでは別ポート4213で配信し、`BASE_URL=http://127.0.0.1:4213/ python3 tests/safari/test_overlay.py` を実行します。スクロール、表示高さの変更、ゲーム・画像保存・ポリシー画面を閉じた後、ブラウザバックを確認します。iOS Safari自体のツールバーや描画の不具合を再現する検証ではありません。
 
-GitHub ActionsのProduction verificationは `main`、`codex/**`、`seo-**` で実行します。SEO/IAブランチでも既存トップのChromium/WebKit回帰とPhase 1テストを同時に通します。
+GitHub ActionsのProduction verificationは `main`、`codex/**`、`seo-**` で実行します。
 
 ## 履歴と公開
 
@@ -99,4 +146,4 @@ GitHub ActionsのProduction verificationは `main`、`codex/**`、`seo-**` で�
 
 `experiments/after-hours-water/` は昇格元候補として保持します。本番の更新先はルートです。候補ページのnoindexは維持し、本番ルートにはnoindexを指定しません。`experiments/after-hours-source/` の既存転送も保持しています。
 
-作業ブランチで検証後、mainへ通常pushし、GitHub Pagesのデプロイ完了と独自ドメインのHTTPSを確認します。push成功と公開成功は別々に確認してください。
+作業ブランチで検証後、mainへ反映し、GitHub Pagesのデプロイ完了と独自ドメインのHTTPSを確認します。push成功と公開成功は別々に確認してください。
