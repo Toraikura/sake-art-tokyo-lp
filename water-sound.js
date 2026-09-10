@@ -55,6 +55,24 @@
       : (enabled ? '水滴音をオフにする' : '水滴音をオンにする'));
   }
 
+  function ensureSoundCredit() {
+    const policy = document.querySelector('#policy');
+    if (!policy || policy.querySelector('[data-sound-credit]')) return;
+    const heading = document.createElement('h3');
+    heading.dataset.soundCredit = 'heading';
+    heading.textContent = english ? 'Sound credits' : 'サウンドクレジット';
+    const copy = document.createElement('p');
+    copy.dataset.soundCredit = 'copy';
+    copy.append(document.createTextNode(english ? 'Some water-drop sound effects: ' : '水滴音の一部：'));
+    const creator = document.createElement('a');
+    creator.href = 'https://otologic.jp/';
+    creator.target = '_blank';
+    creator.rel = 'noopener noreferrer';
+    creator.textContent = 'OtoLogic';
+    copy.append(creator, document.createTextNode(' (CC BY 4.0)'));
+    policy.append(heading, copy);
+  }
+
   function shuffledIndexes() {
     const next = tracks.map((_, index) => index);
     for (let i = next.length - 1; i > 0; i -= 1) {
@@ -179,5 +197,6 @@
   });
   window.addEventListener('pageshow', () => { active = true; });
 
+  ensureSoundCredit();
   renderToggle();
 })();
