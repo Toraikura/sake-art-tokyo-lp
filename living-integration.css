@@ -4,8 +4,11 @@
 .nav-play{min-height:44px;display:inline-flex;align-items:center;border:0;background:none;padding:0;font:inherit;letter-spacing:inherit}
 .nav-play:hover{color:var(--accent)}
 
-.water-sound-control{position:absolute;right:0;top:12%;z-index:4}
-.sound-btn{display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:rgba(23,21,28,.72);color:var(--muted);padding:8px 10px;font:9px/1 var(--mono);letter-spacing:.06em;backdrop-filter:blur(6px)}
+/* Keep the sound toggle in document flow after the brewery links, then pull only
+   the following water surface upward. This lets the button sit over the water
+   without ever covering either source card's hit area. */
+.water-sound-control{position:relative;z-index:4;display:flex;justify-content:flex-end;align-items:flex-start;min-height:44px;margin:0 0 -44px;pointer-events:none}
+.sound-btn{pointer-events:auto;display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:rgba(23,21,28,.72);color:var(--muted);padding:8px 10px;font:9px/1 var(--mono);letter-spacing:.06em;backdrop-filter:blur(6px)}
 .sound-btn:hover{color:var(--paper);border-color:var(--accent)}
 .sound-btn[aria-pressed="true"]{color:var(--paper)}
 .sound-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px rgba(244,240,232,.15)}
@@ -47,7 +50,6 @@ html:not(.js) .water-sound-control{display:none}
   body:not(.editorial-page) .nav-links{display:flex;gap:0}
   body:not(.editorial-page) .nav-links>a:not(.nav-play){display:none}
   body:not(.editorial-page) .nav-links .nav-play{min-width:44px;justify-content:center;padding-inline:6px}
-  .water-sound-control{top:23px;right:0}
   .sound-btn{padding:7px 8px}
   .playground-entry{padding-block:52px}
   .playground-entry h2{font-size:38px;max-width:9em}
