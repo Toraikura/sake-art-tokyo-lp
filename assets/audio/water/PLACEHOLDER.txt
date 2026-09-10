@@ -1,1 +1,0 @@
-Audio binaries are added in the following commit via Git data blobs.
