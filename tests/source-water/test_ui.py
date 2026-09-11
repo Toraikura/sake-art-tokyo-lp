@@ -200,6 +200,12 @@ def run() -> None:
         try:
             for width, height in ((320, 640), (360, 640), (390, 844), (430, 932), (1440, 1000)):
                 page.set_viewport_size({"width": width, "height": height})
+                # Resizing the previous page can start responsive/lazy image loads.
+                # Let them finish before navigation, retaining strict failure checks.
+                page.evaluate("""() => new Promise(resolve => {
+                  requestAnimationFrame(() => requestAnimationFrame(resolve));
+                })""")
+                page.wait_for_load_state("networkidle")
                 page.goto(BASE, wait_until="networkidle")
                 page.wait_for_timeout(350)
                 assert not page.locator("#age").is_visible()
