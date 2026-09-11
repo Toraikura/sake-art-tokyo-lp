@@ -4,7 +4,7 @@
   'use strict';
 
   const GAME_URL = 'https://toraikura.github.io/sat-fermentation-playground/rice-lineage/';
-  const PREVIEW_URL = '/assets/images/optimized/rice-lineage-card-preview.webp';
+  const PREVIEW_URL = '/assets/images/optimized/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88%202026-09-11%2021.25.22.png';
   const english = document.documentElement.lang === 'en';
   const copy = english ? {
     label: 'Play RICE LINEAGE — connect the lines and drive the roots through 14 stages and 4 worlds',
@@ -59,8 +59,8 @@
       image.alt = copy.previewAlt;
       image.loading = 'lazy';
       image.decoding = 'async';
-      image.width = 520;
-      image.height = 305;
+      image.width = 751;
+      image.height = 670;
       preview.appendChild(image);
 
       const meta = document.createElement('span');
@@ -151,8 +151,6 @@
 
   function closeGame() {
     if (modal?.open) modal.close();
-    // Native dialog fires `close` asynchronously. Remove the remote document now so
-    // closing/reopening cannot leave a stale iframe alive for even one event turn.
     cleanupFrame();
   }
 
@@ -172,7 +170,6 @@
 
   launcher = enhanceCard();
 
-  // Defensive: if the arcade is rendered later for any reason, enhance only the RICE LINEAGE slot.
   if (!launcher) {
     const observer = new MutationObserver(() => {
       launcher = enhanceCard();
