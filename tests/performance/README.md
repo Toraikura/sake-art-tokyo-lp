@@ -56,6 +56,8 @@ the live independent domain before editing.
 The confirmed resource sample decreased 36.8%; the gate sample decreased 46.5%.
 These are one resource capture per state under identical conditions, not PSI
 scores or guaranteed transfer sizes for every device/session.
+The table records candidate `1fbf8f2`; later commits harden fallback loading and
+test navigation. Use a fresh run to compare the final published revision.
 
 - Source cards: derive only the original SVG viewBox crop from the two original
   1122 × 1402 PNGs (Urazato: y=340; Tsuchida: y=430; crop 1122 × 640), resize to
@@ -66,6 +68,8 @@ scores or guaranteed transfer sizes for every device/session.
   original audio, synchronous gesture playback, two voices, and credits.
 - Arcade: keep layout/CSS and links ready immediately; load the three original
   preview images within 600px of the section. Actual games remain click-to-load.
+  The static pre-enhancement thumbnail is `noscript` only, with its original
+  sizing rules, so the HTML preload scanner cannot race the enhanced arcade.
 - Home page scripts and preview CSS get matching JA/EN cache-version updates.
 
 The pre-change live domain already scored 98–100 in all six Lighthouse runs.

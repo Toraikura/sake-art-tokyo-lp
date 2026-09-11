@@ -49,5 +49,17 @@ with sync_playwright() as p:
         layout = page.evaluate("({width:innerWidth,scrollWidth:document.documentElement.scrollWidth})")
         assert layout['scrollWidth'] <= layout['width'], layout
         context.close()
+    # Without JS, retain the original static thumbnail and its sizing rules.
+    for path in ('', 'en/'):
+        context = browser.new_context(java_script_enabled=False, viewport={'width': 390, 'height': 844})
+        page = context.new_page()
+        page.goto(urljoin(BASE, path), wait_until='networkidle')
+        page.locator('#play').scroll_into_view_if_needed()
+        img = page.locator('.play-launch > noscript > img')
+        img.wait_for(state='visible')
+        page.wait_for_function("document.querySelector('.play-launch > noscript > img').naturalWidth > 0")
+        style = img.evaluate("img => ({fit:getComputedStyle(img).objectFit,position:getComputedStyle(img).objectPosition,width:img.width})")
+        assert style['fit'] == 'cover' and style['position'] == '50% 32%' and style['width'] > 200, style
+        context.close()
     browser.close()
 print('PASS: JA/EN age gate has no audio/arcade requests; at most two sounds warm after entry; three real previews load near the arcade; no eager game iframe or overflow.')
