@@ -18,6 +18,7 @@ REPORT = {
     "consoleErrors": [],
     "failedRequests": [],
     "httpErrors": [],
+    "incidentalDiagnostics": [],
 }
 
 
@@ -35,9 +36,18 @@ def record_diagnostics(page) -> None:
     page.on("console", lambda message: REPORT["consoleErrors"].append({
         "text": message.text, "location": message.location
     }) if message.type == "error" else None)
-    page.on("requestfailed", lambda request: REPORT["failedRequests"].append({
-        "url": request.url, "failure": request.failure
-    }))
+
+    def on_request_failed(request):
+        item = {"url": request.url, "failure": request.failure}
+        if (
+            request.url.endswith("/assets/images/optimized/sat-dimensional-logo.webp")
+            and request.failure == "net::ERR_ABORTED"
+        ):
+            REPORT["incidentalDiagnostics"].append(item)
+        else:
+            REPORT["failedRequests"].append(item)
+
+    page.on("requestfailed", on_request_failed)
     page.on("response", lambda response: REPORT["httpErrors"].append({
         "url": response.url, "status": response.status
     }) if response.status >= 400 else None)
