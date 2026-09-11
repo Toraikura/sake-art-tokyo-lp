@@ -1,4 +1,4 @@
-/* Protocol/lifecycle unit tests for the unmodified production controller.
+/* Protocol/lifecycle unit tests for the production controller.
  * DOM and transport are mocks. This does NOT replace real iframe HTTP E2E tests.
  */
 const assert = require('node:assert/strict');
@@ -34,7 +34,11 @@ const releases = [1, 2].map(n => ({id: `sat-00${n}`, name: `Sake ${n}`, brewery:
 el('#label-releases').textContent = JSON.stringify(releases);
 const body = new Element(); body.dataset.mood = 'deep'; body.style.cssText = 'color: black';
 const doc = {body, documentElement: new Element(), querySelector: el,
-  querySelectorAll: () => [el('#launcher')], createElement: () => {
+  querySelectorAll: () => [el('#launcher')],
+  // The production controller lazily injects the FPG preview stylesheet. Treat it
+  // as already present here because this unit test focuses on game lifecycle/protocol.
+  getElementById: id => id === 'fpg-preview-styles' ? el('#fpg-preview-styles') : null,
+  createElement: () => {
     const frame = new Element(); frame.contentWindow = {}; return frame;
   }};
 const win = new Element(); win.scrollY = 420;
