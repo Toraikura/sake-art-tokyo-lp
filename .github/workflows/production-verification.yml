@@ -49,6 +49,7 @@ jobs:
           EVIDENCE_DIR=evidence/seo-ia python tests/seo-ia/test_phase1.py
           EVIDENCE_DIR=evidence/living-integration python tests/living-integration/test_ui.py
           python tests/performance/test_loading.py
+          EVIDENCE_DIR=evidence/rice-lineage python tests/rice-lineage/test_embed.py
       - name: WebKit touch scrolling and closed overlays
         run: |
           set -euo pipefail
