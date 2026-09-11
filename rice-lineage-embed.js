@@ -136,9 +136,15 @@
 
   function closeGame() {
     if (modal?.open) modal.close();
+    // Native dialog fires `close` asynchronously. Remove the remote document now so
+    // closing/reopening cannot leave a stale iframe alive for even one event turn.
+    cleanupFrame();
   }
 
   function cleanupFrame() {
+    const hasOpenState = Boolean(frame) || document.documentElement.classList.contains('sat-rice-lineage-open');
+    if (!hasOpenState) return;
+
     clearTimeout(loadTimer);
     loadTimer = 0;
     frame?.remove();
