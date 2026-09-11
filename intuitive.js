@@ -146,32 +146,48 @@
         <div class="fpg-game-grid" aria-label="${english ? 'Fermentation Playground games' : 'FERMENTATION PLAYGROUNDのゲーム'}">
           <button class="fpg-game fpg-game--live fpg-game--clash" type="button" data-play data-event="sat_to_fpg" data-experience="sake-clash" data-source-page="${sourcePage}" aria-label="${english ? 'Play SAKE CLASH' : 'SAKE CLASHを遊ぶ'}">
             <span class="fpg-game-index">01</span>
-            <strong>SAKE<br>CLASH.</strong>
+            <strong class="fpg-game-title"><span>SAKE</span><span>CLASH</span></strong>
+            <span class="fpg-preview fpg-preview--clash" aria-hidden="true">
+              <span class="fpg-preview-meta">30 SEC / CPU</span>
+              <span class="fpg-clash-stage"><i class="fpg-clash-player is-left"></i><i class="fpg-clash-floor floor-a"></i><i class="fpg-clash-floor floor-b"></i><i class="fpg-clash-player is-right"></i></span>
+            </span>
             <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
           </button>
           <a class="fpg-game fpg-game--live fpg-game--aroma" href="https://toraikura.github.io/sat-fermentation-playground/aroma-lab/" data-event="sat_to_fpg" data-experience="aroma-labo" data-source-page="${sourcePage}" aria-label="${english ? 'Open AROMA LABO' : 'AROMA LABOを開く'}">
             <span class="fpg-game-index">02</span>
-            <strong>AROMA<br>LABO</strong>
+            <strong class="fpg-game-title"><span>AROMA</span><span>LABO</span></strong>
+            <span class="fpg-preview fpg-preview--labo" aria-hidden="true">
+              <span class="fpg-labo-card"><small>ISOAMYL</small><i class="fpg-molecule"><b></b><b></b><b></b></i></span>
+              <span class="fpg-labo-arrow">→</span>
+              <span class="fpg-labo-scent"><i class="fpg-banana"></i><small>BANANA</small></span>
+            </span>
             <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
           </a>
           <a class="fpg-game fpg-game--live fpg-game--match" href="https://toraikura.github.io/sat-fermentation-playground/aroma-lab/aroma-match/" data-event="sat_to_fpg" data-experience="aroma-match" data-source-page="${sourcePage}" aria-label="${english ? 'Open AROMA MATCH' : 'AROMA MATCHを開く'}">
             <span class="fpg-game-index">03</span>
-            <strong>AROMA<br>MATCH</strong>
+            <strong class="fpg-game-title"><span>AROMA</span><span>MATCH</span></strong>
+            <span class="fpg-preview fpg-preview--match" aria-hidden="true">
+              <span class="fpg-match-row"><small>ISOAMYL</small><i></i><small>BANANA</small></span>
+              <span class="fpg-match-row is-dim"><small>4VG</small><i></i><small>CLOVE</small></span>
+            </span>
             <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
           </a>
-          <div class="fpg-game fpg-game--soon" aria-disabled="true">
+          <div class="fpg-game fpg-game--soon fpg-game--rice" aria-disabled="true">
             <span class="fpg-game-index">04</span>
-            <strong>RICE<br>LINEAGE</strong>
+            <strong class="fpg-game-title"><span>RICE</span><span>LINEAGE</span></strong>
+            <span class="fpg-preview fpg-preview--rice" aria-hidden="true"><i class="rice-line line-a"></i><i class="rice-line line-b"></i><b class="rice-node n1"></b><b class="rice-node n2"></b><b class="rice-node n3"></b><b class="rice-node n4"></b><b class="rice-node n5"></b></span>
             <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>
           </div>
-          <div class="fpg-game fpg-game--soon" aria-disabled="true">
+          <div class="fpg-game fpg-game--soon fpg-game--shubo" aria-disabled="true">
             <span class="fpg-game-index">05</span>
-            <strong>SHUBO</strong>
+            <strong class="fpg-game-title"><span>SHUBO</span></strong>
+            <span class="fpg-preview fpg-preview--shubo" aria-hidden="true"><span class="shubo-tank"><i class="bubble b1"></i><i class="bubble b2"></i><i class="bubble b3"></i><i class="bubble b4"></i><i class="shubo-liquid"></i></span></span>
             <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>
           </div>
-          <div class="fpg-game fpg-game--soon" aria-disabled="true">
+          <div class="fpg-game fpg-game--soon fpg-game--pathway" aria-disabled="true">
             <span class="fpg-game-index">06</span>
-            <strong>PATHWAY</strong>
+            <strong class="fpg-game-title"><span>PATHWAY</span></strong>
+            <span class="fpg-preview fpg-preview--pathway" aria-hidden="true"><b class="path-node p1"></b><i class="path-arrow a1"></i><b class="path-node p2"></b><i class="path-arrow a2"></i><b class="path-node p3"></b><i class="path-arrow a3"></i><b class="path-node p4"></b></span>
             <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>
           </div>
         </div>
