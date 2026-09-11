@@ -5,6 +5,9 @@ body[data-mood="deep"] .fpg-game--live{background:#17151c}
 body[data-mood="deep"] .fpg-game--soon{background:#211c2a}
 
 .fpg-game{gap:8px}
+/* .play-launch is retained on the clash card only as a regression-test compatibility hook. */
+.fpg-game--clash.play-launch{width:100%!important;aspect-ratio:1!important;justify-self:stretch!important;padding:17px!important;border-radius:0!important;box-shadow:none!important;background:var(--fpg-panel)!important;color:var(--paper)!important}
+body[data-mood="deep"] .fpg-game--clash.play-launch{background:#17151c!important}
 .fpg-game-title{display:block!important;font:900 clamp(19px,2vw,31px)/.9 var(--heavy)!important;letter-spacing:-.055em!important;color:var(--paper)!important}
 .fpg-game-title span{display:block}
 .fpg-game--live .fpg-game-title span:first-child{color:var(--paper)!important}
@@ -71,6 +74,7 @@ body[data-mood="deep"] .fpg-game--soon{background:#211c2a}
 .path-arrow.a1{left:17%;top:49%;width:24%;transform:rotate(-20deg)}.path-arrow.a2{left:47%;top:33%;width:23%;transform:rotate(19deg)}.path-arrow.a3{left:63%;top:55%;width:23%;transform:rotate(132deg)}
 
 @media(max-width:700px){
+  .fpg-game--clash.play-launch{padding:14px!important}
   .fpg-game-title,.fpg-game--clash .fpg-game-title{font-size:clamp(18px,6.1vw,25px)!important}
   .fpg-preview{height:64px;min-height:64px}
   .fpg-preview-meta{font-size:5.5px;padding:3px 4px}
@@ -83,6 +87,7 @@ body[data-mood="deep"] .fpg-game--soon{background:#211c2a}
   .fpg-match-row small{height:20px;font-size:5px;padding:0 2px}
 }
 @media(max-width:360px){
+  .fpg-game--clash.play-launch{padding:12px!important}
   .fpg-game-title,.fpg-game--clash .fpg-game-title{font-size:17px!important}
   .fpg-preview{height:58px;min-height:58px}
 }
