@@ -113,6 +113,13 @@
   function renderPlaygroundArcade() {
     const arcade = $('.arcade');
     if (!arcade) return;
+    if (!document.getElementById('fpg-preview-styles')) {
+      const previewStyles = document.createElement('link');
+      previewStyles.id = 'fpg-preview-styles';
+      previewStyles.rel = 'stylesheet';
+      previewStyles.href = '/fpg-preview.css?v=20260911-mini1';
+      document.head.appendChild(previewStyles);
+    }
     const sourcePage = english ? '/en/' : '/';
     const copy = english ? {
       kicker: 'FERMENTATION PLAYGROUND / ARCADE',
