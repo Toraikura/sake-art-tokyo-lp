@@ -6,18 +6,18 @@
   const GAME_URL = 'https://toraikura.github.io/sat-fermentation-playground/rice-lineage/';
   const english = document.documentElement.lang === 'en';
   const copy = english ? {
-    label: 'Play RICE LINEAGE — trace sake-rice roots through 14 stages and 4 worlds',
+    label: 'Play RICE LINEAGE — connect the lines and drive the roots through 14 stages and 4 worlds',
     play: 'PLAY RICE LINEAGE',
-    meta: '14 STAGES / 4 WORLDS',
+    meta: 'SAKE RICE LINEAGE / 14 STAGES / 4 WORLDS',
     modalTitle: 'RICE LINEAGE | Sake Rice Lineage',
     close: 'BACK TO SAKE ART TOKYO',
     loading: 'LOADING RICE LINEAGE…',
     error: 'RICE LINEAGE could not load. Open the game directly.',
     direct: 'OPEN RICE LINEAGE ↗'
   } : {
-    label: 'RICE LINEAGE｜酒米の系譜を遊ぶ。14 STAGES / 4 WORLDS',
+    label: 'RICE LINEAGE｜酒米の系譜。線をつなげ。ルーツを走れ。14 STAGES / 4 WORLDS',
     play: 'PLAY RICE LINEAGE',
-    meta: '14 STAGES / 4 WORLDS',
+    meta: '酒米の系譜 / 14 STAGES / 4 WORLDS',
     modalTitle: 'RICE LINEAGE｜酒米の系譜',
     close: 'SAKE ART TOKYOへ戻る',
     loading: 'RICE LINEAGEを読み込み中…',
