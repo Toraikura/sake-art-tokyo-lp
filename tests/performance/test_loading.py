@@ -31,7 +31,19 @@ with sync_playwright() as p:
         page.locator('#play').scroll_into_view_if_needed()
         page.wait_for_function("document.querySelector('#play').classList.contains('fpg-previews-ready')")
         page.wait_for_function("getComputedStyle(document.querySelector('.fpg-preview--clash')).backgroundImage.includes('game-preview.webp')")
-        page.wait_for_timeout(1200)
+        # CSS can contain a valid URL even when its image is a 404 or corrupt.
+        # Decode the same cached resources to verify the artwork is usable.
+        page.evaluate("""async () => {
+          const selectors = '.fpg-preview--clash,.fpg-labo-scent,.fpg-match-row small:last-child';
+          const urls = new Set([...document.querySelectorAll(selectors)].map(element =>
+            getComputedStyle(element).backgroundImage.match(/url\\([\"']?([^\"')]+)[\"']?\\)/)?.[1]
+          ));
+          if (urls.size !== 3 || urls.has(undefined)) throw new Error('Missing preview artwork');
+          await Promise.all([...urls].map(async url => {
+            const img = new Image(); img.src = url; await img.decode();
+            if (!img.naturalWidth) throw new Error('Empty preview artwork');
+          }));
+        }""")
         assert len({url for url in requests if preview_request(url)}) == 3, requests
         assert page.locator('iframe').count() == 0  # Actual game remains click-to-load.
         layout = page.evaluate("({width:innerWidth,scrollWidth:document.documentElement.scrollWidth})")

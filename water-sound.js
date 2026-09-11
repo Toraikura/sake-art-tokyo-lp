@@ -184,7 +184,8 @@
   });
 
   function canWarmAudio() {
-    return pageLoaded && active && enabled && zoneVisible && !document.hidden && !age?.open;
+    return pageLoaded && active && enabled && zoneVisible && !document.hidden &&
+      !age?.open && !age?.hasAttribute('open');
   }
 
   function warmAudio() {

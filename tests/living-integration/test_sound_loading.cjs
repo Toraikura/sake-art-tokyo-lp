@@ -10,6 +10,7 @@ class Element {
   emit(type, event = {}) { for (const fn of this.listeners[type] || []) fn(event); }
   setAttribute(key, value) { this.attrs[key] = value; }
   getAttribute(key) { return this.attrs[key]; }
+  hasAttribute(key) { return Object.hasOwn(this.attrs, key); }
   removeAttribute(key) { delete this.attrs[key]; if (key === 'src') this.src = ''; }
   getBoundingClientRect() { return { width: 300, height: 300, top: 100, bottom: 400, left: 0, right: 300 }; }
 }
@@ -94,6 +95,15 @@ function harness({ ageOpen = true, savedSound = null } = {}) {
   assert.equal(h.fetches.length, 8, 'Never warm the same clip twice after a successful fetch');
   h.toggle(); const playCount = h.plays.length; await h.tap();
   assert.equal(h.plays.length, playCount, 'OFF must suppress gesture playback');
+
+  const fallback = harness({ ageOpen: false });
+  delete fallback.get('#age').open;
+  fallback.get('#age').setAttribute('open', '');
+  fallback.visible(true); fallback.load(); await fallback.flush();
+  assert.equal(fallback.fetches.length, 0, 'An attribute-only age fallback must also block warming');
+  fallback.get('#age').removeAttribute('open');
+  fallback.get('#age-yes').emit('click'); await fallback.flush();
+  assert.equal(fallback.fetches.length, 2, 'Fallback confirmation resumes warming without a dialog close event');
 
   const offscreen = harness({ ageOpen: false });
   offscreen.load(); offscreen.visible(false); await offscreen.flush();
