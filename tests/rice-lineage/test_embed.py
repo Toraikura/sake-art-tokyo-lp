@@ -15,9 +15,6 @@ REPORT = {"status": "running", "checks": [], "failures": []}
 
 
 def assert_static_source():
-    # The current SAT arcade is enhanced by intuitive.js, which replaces the arcade's
-    # runtime DOM. SEO/discovery copy therefore belongs in the source HTML and must be
-    # checked before that runtime enhancement rather than in the post-JS DOM.
     with urlopen(BASE, timeout=10) as response:
         source = response.read().decode("utf-8")
     for token in ("RICE LINEAGE", "酒米の系譜", "山田錦", "五百万石", "越淡麗"):
@@ -35,10 +32,6 @@ def no_horizontal_overflow(page_or_frame):
 
 
 def no_visible_game_overflow(frame, selector=None):
-    # RICE LINEAGE intentionally clips x-overflow on its body. Its compact site bar has
-    # intrinsic content wider than 390px, so document.scrollWidth can report 420px even
-    # though users cannot horizontally scroll and the game stage itself fits the viewport.
-    # Do not shrink/transform the upstream game just to make scrollWidth equal innerWidth.
     state = frame.evaluate("""selector => {
       const bodyStyle = getComputedStyle(document.body);
       const node = selector ? document.querySelector(selector) : null;
@@ -72,9 +65,11 @@ def find_game_frame(page):
 def exercise_game(page, width, height, touch):
     rice_requests = []
     failures = []
+    http_errors = []
     console_errors = []
     page.on("request", lambda req: rice_requests.append(req.url) if req.url.startswith(GAME_PREFIX) else None)
     page.on("requestfailed", lambda req: failures.append({"url": req.url, "failure": req.failure}))
+    page.on("response", lambda res: http_errors.append({"url": res.url, "status": res.status}) if res.url.startswith(GAME_PREFIX) and res.status >= 400 else None)
     page.on("console", lambda msg: console_errors.append(msg.text) if msg.type == "error" else None)
 
     page.goto(BASE, wait_until="networkidle")
@@ -90,9 +85,11 @@ def exercise_game(page, width, height, touch):
     assert "14 STAGES / 4 WORLDS" in card.inner_text()
     no_horizontal_overflow(page)
 
-    card.click()
+    # Rapid PLAY activation must not create duplicate dialogs/iframes.
+    card.evaluate("el => { el.click(); el.click(); }")
     modal = page.locator(".sat-rice-lineage-modal")
     assert modal.get_attribute("open") is not None
+    assert page.locator(".sat-rice-lineage-modal").count() == 1
     assert page.locator(".sat-rice-lineage-frame").count() == 1
     frame = find_game_frame(page)
     assert any(url.startswith(GAME_PREFIX) for url in rice_requests), rice_requests
@@ -122,7 +119,6 @@ def exercise_game(page, width, height, touch):
     no_visible_game_overflow(frame, ".arcade-stage")
 
     if touch:
-        # Exercise the game's own touchstart/touchend swipe handler.
         frame.locator("#arcadeStage").evaluate("""stage => {
           const y = 320;
           const start = new Touch({identifier: 41, target: stage, clientX: 250, clientY: y});
@@ -135,6 +131,12 @@ def exercise_game(page, width, height, touch):
     else:
         frame.locator("#rightControl").click()
         frame.wait_for_function("() => document.querySelector('#feedback').textContent.trim().length > 0")
+        # Resize with the game open; the SAT shell and actual arcade stage must still fit.
+        page.set_viewport_size({"width": 1100, "height": 800})
+        page.wait_for_timeout(250)
+        no_horizontal_overflow(page)
+        no_visible_game_overflow(frame, ".arcade-stage")
+        page.set_viewport_size({"width": width, "height": height})
 
     # Explicit close restores SAT and removes the iframe completely.
     page.locator(".sat-rice-lineage-close").click()
@@ -155,9 +157,9 @@ def exercise_game(page, width, height, touch):
     assert card.evaluate("el => el === document.activeElement")
     no_horizontal_overflow(page)
 
-    # Ignore only navigation/close aborts from the remote iframe itself; no 404/real failures allowed.
     real_failures = [f for f in failures if "ERR_ABORTED" not in str(f.get("failure"))]
     assert not real_failures, real_failures
+    assert not http_errors, http_errors
     assert not console_errors, console_errors
 
     page.screenshot(path=str(OUT / f"rice-lineage-{width}x{height}.png"), full_page=True)
@@ -167,6 +169,7 @@ def exercise_game(page, width, height, touch):
         "preClickRiceRequests": 0,
         "postClickRiceRequests": len(rice_requests),
         "duplicateIframe": False,
+        "httpErrors": 0,
         "horizontalOverflow": False,
     }
 
