@@ -40,9 +40,45 @@ html:not(.js) .water-sound-control{display:none}
 .play-inline .text-link{margin-top:12px}
 .release-route{display:block;margin-top:14px;color:#5f5962;font:9px/1.6 var(--mono);letter-spacing:.08em}
 
+/* FPG ARCADE
+   Replaces the former single SAKE CLASH promo after JS initializes. The old
+   markup remains a functional fallback when scripts are unavailable. */
+.fpg-arcade{--fpg-bg:#202719;--fpg-panel:#151a11;--fpg-line:rgba(213,239,131,.28);--fpg-muted:#aab19c;background:var(--fpg-bg);color:var(--paper);padding-block:clamp(58px,7vw,92px);border-top:1px solid rgba(213,239,131,.14);border-bottom:1px solid rgba(213,239,131,.14)}
+.fpg-arcade-shell{display:grid;grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr);gap:clamp(34px,6vw,92px);align-items:start}
+.fpg-arcade-brand{min-width:0;padding-top:4px}
+.fpg-arcade .eyebrow{color:var(--accent)}
+.fpg-title-link{display:block;margin-top:18px;width:max-content;max-width:100%;color:var(--paper)}
+.fpg-title-link strong{display:block;font:900 clamp(34px,4.7vw,67px)/.9 var(--heavy);letter-spacing:-.065em}
+.fpg-title-link>span{display:inline-flex;align-items:center;gap:10px;margin-top:17px;min-height:44px;border-bottom:1px solid currentColor;font-size:11px;font-weight:800}
+.fpg-title-link:hover strong,.fpg-title-link:hover>span{color:var(--accent)}
+.fpg-arcade-intro{max-width:26em;margin-top:28px;color:#d0d5c7;font-size:13px;line-height:1.95}
+.fpg-select{margin-top:24px;color:var(--fpg-muted);letter-spacing:.12em}
+.fpg-game-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;min-width:0}
+.fpg-game{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;min-width:0;aspect-ratio:1;padding:17px;border:1px solid var(--fpg-line);background:var(--fpg-panel);color:var(--paper);text-align:left;overflow:hidden}
+button.fpg-game{width:100%;font:inherit;border-radius:0}
+.fpg-game::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(213,239,131,.025),transparent 38%,rgba(213,239,131,.035));pointer-events:none}
+.fpg-game-index{font:9px/1 var(--mono);letter-spacing:.12em;color:var(--fpg-muted)}
+.fpg-game strong{font:900 clamp(19px,2vw,31px)/.9 var(--heavy);letter-spacing:-.055em;overflow-wrap:anywhere}
+.fpg-game-status{display:flex;align-items:center;gap:7px;min-height:24px;font:8px/1.4 var(--mono);letter-spacing:.09em;color:var(--accent)}
+.fpg-game--live{cursor:pointer;transition:transform .16s ease,border-color .16s ease,background .16s ease}
+.fpg-game--live::after{content:"";position:absolute;right:12px;top:12px;width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px rgba(213,239,131,.16)}
+.fpg-game--soon{cursor:default;background:#171b14;border-color:rgba(244,240,232,.14);color:#c4c8bd}
+.fpg-game--soon::before{background:repeating-linear-gradient(0deg,transparent 0,transparent 17px,rgba(244,240,232,.018) 18px)}
+.fpg-game--soon .fpg-game-index{color:#777d70}
+.fpg-game--soon .fpg-game-status{color:#8d9485}
+.fpg-game--soon .fpg-game-status i{display:block;width:6px;height:6px;border-radius:50%;background:#747b6e;animation:fpg-standby 2.6s steps(1,end) infinite}
+@keyframes fpg-standby{0%,46%,100%{opacity:.35}47%,73%{opacity:1}}
+@media(hover:hover) and (pointer:fine){.fpg-game--live:hover{transform:translateY(-3px);border-color:var(--accent);background:#1a2114}.fpg-game--live:hover strong{color:var(--accent)}}
+
 @media(max-width:900px){
   .playground-entry-grid{grid-template-columns:1fr;gap:28px}
   .playground-entry-copy{justify-self:start}
+  .fpg-arcade-shell{grid-template-columns:1fr;gap:30px}
+  .fpg-arcade-brand{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"eyebrow select" "title title" "intro intro";column-gap:18px}
+  .fpg-arcade-brand>.eyebrow{grid-area:eyebrow}
+  .fpg-title-link{grid-area:title}
+  .fpg-arcade-intro{grid-area:intro}
+  .fpg-select{grid-area:select;margin-top:0;align-self:start;text-align:right}
 }
 
 @media(max-width:700px){
@@ -58,6 +94,19 @@ html:not(.js) .water-sound-control{display:none}
   .play-bridge-link .mono{font-size:8px}
   .play-bridge-link strong{font-size:27px}
   .play-inline{padding:20px}
+  .fpg-arcade{padding-block:52px 58px}
+  .fpg-arcade-shell{gap:24px}
+  .fpg-arcade-brand{display:block}
+  .fpg-title-link{margin-top:14px}
+  .fpg-title-link strong{font-size:36px;line-height:.91}
+  .fpg-title-link>span{margin-top:13px;font-size:10px}
+  .fpg-arcade-intro{font-size:12px;margin-top:19px;line-height:1.8}
+  .fpg-select{margin-top:16px;text-align:left;font-size:8px}
+  .fpg-game-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .fpg-game{padding:14px;min-height:0;aspect-ratio:1}
+  .fpg-game strong{font-size:clamp(18px,6.1vw,25px)}
+  .fpg-game-status{font-size:7px;letter-spacing:.06em}
+  .fpg-game--live::after{right:10px;top:10px}
 }
 
 @media(max-width:360px){
@@ -67,4 +116,14 @@ html:not(.js) .water-sound-control{display:none}
   body:not(.editorial-page) .motion-btn #motion-text{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   body:not(.editorial-page) .nav-shop{gap:5px;font-size:9px}
   .sound-btn span:last-child{font-size:8px}
+  .fpg-title-link strong{font-size:31px}
+  .fpg-game{padding:12px}
+  .fpg-game strong{font-size:17px}
+  .fpg-game-status{font-size:6.5px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fpg-game--live{transition:none}
+  .fpg-game--live:hover{transform:none}
+  .fpg-game--soon .fpg-game-status i{animation:none;opacity:.6}
 }
