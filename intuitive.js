@@ -151,7 +151,7 @@
           <p class="mono fpg-select">${copy.select}</p>
         </div>
         <div class="fpg-game-grid" aria-label="${english ? 'Fermentation Playground games' : 'FERMENTATION PLAYGROUNDのゲーム'}">
-          <button class="fpg-game fpg-game--live fpg-game--clash" type="button" data-play data-event="sat_to_fpg" data-experience="sake-clash" data-source-page="${sourcePage}" aria-label="${english ? 'Play SAKE CLASH' : 'SAKE CLASHを遊ぶ'}">
+          <button class="fpg-game fpg-game--live fpg-game--clash play-launch" type="button" data-play data-event="sat_to_fpg" data-experience="sake-clash" data-source-page="${sourcePage}" aria-label="${english ? 'Play SAKE CLASH' : 'SAKE CLASHを遊ぶ'}">
             <span class="fpg-game-index">01</span>
             <strong class="fpg-game-title"><span>SAKE</span><span>CLASH</span></strong>
             <span class="fpg-preview fpg-preview--clash" aria-hidden="true">
@@ -201,7 +201,7 @@
       </div>`;
 
     const oldEntry = $('.playground-entry');
-    oldEntry?.remove();
+    if (oldEntry) oldEntry.hidden = true;
   }
 
   renderPlaygroundArcade();
