@@ -1,4 +1,9 @@
 /* FPG ARCADE previews: live games look like the actual experiences; coming-soon games stay schematic. */
+/* Keep the whole arcade in the active maker mood, not only its accent text. */
+body[data-mood="deep"] .fpg-arcade{--fpg-bg:#252032!important;--fpg-panel:#17151c!important;--fpg-line:rgba(197,172,243,.28)!important;--fpg-muted:#b7acc4!important;background:var(--fpg-bg)!important;border-top-color:rgba(197,172,243,.16)!important;border-bottom-color:rgba(197,172,243,.16)!important}
+body[data-mood="deep"] .fpg-game--live{background:#17151c}
+body[data-mood="deep"] .fpg-game--soon{background:#211c2a}
+
 .fpg-game{gap:8px}
 .fpg-game-title{display:block!important;font:900 clamp(19px,2vw,31px)/.9 var(--heavy)!important;letter-spacing:-.055em!important;color:var(--paper)!important}
 .fpg-game-title span{display:block}
