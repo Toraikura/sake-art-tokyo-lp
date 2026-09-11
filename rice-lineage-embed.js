@@ -4,6 +4,7 @@
   'use strict';
 
   const GAME_URL = 'https://toraikura.github.io/sat-fermentation-playground/rice-lineage/';
+  const PREVIEW_URL = '/assets/images/optimized/rice-lineage-card-preview.webp';
   const english = document.documentElement.lang === 'en';
   const copy = english ? {
     label: 'Play RICE LINEAGE — connect the lines and drive the roots through 14 stages and 4 worlds',
@@ -13,7 +14,8 @@
     close: 'BACK TO SAKE ART TOKYO',
     loading: 'LOADING RICE LINEAGE…',
     error: 'RICE LINEAGE could not load. Open the game directly.',
-    direct: 'OPEN RICE LINEAGE ↗'
+    direct: 'OPEN RICE LINEAGE ↗',
+    previewAlt: 'RICE LINEAGE gameplay preview: choose a sake rice parent while driving through neon rice fields'
   } : {
     label: 'RICE LINEAGE｜酒米の系譜。線をつなげ。ルーツを走れ。14 STAGES / 4 WORLDS',
     play: 'PLAY RICE LINEAGE',
@@ -22,7 +24,8 @@
     close: 'SAKE ART TOKYOへ戻る',
     loading: 'RICE LINEAGEを読み込み中…',
     error: 'RICE LINEAGEを読み込めませんでした。ゲームを直接開いてください。',
-    direct: 'RICE LINEAGEを開く ↗'
+    direct: 'RICE LINEAGEを開く ↗',
+    previewAlt: 'RICE LINEAGEのゲーム画面。夜の田んぼを走りながら酒米の親を左右から選ぶ'
   };
 
   let launcher = null;
@@ -47,7 +50,19 @@
     if (status) status.innerHTML = `${copy.play} <span aria-hidden="true">↗</span>`;
 
     const preview = button.querySelector('.fpg-preview--rice');
-    if (preview && !preview.querySelector('.sat-rice-lineage-card-meta')) {
+    if (preview && !preview.querySelector('.sat-rice-lineage-card-preview')) {
+      preview.replaceChildren();
+
+      const image = document.createElement('img');
+      image.className = 'sat-rice-lineage-card-preview';
+      image.src = PREVIEW_URL;
+      image.alt = copy.previewAlt;
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      image.width = 520;
+      image.height = 305;
+      preview.appendChild(image);
+
       const meta = document.createElement('span');
       meta.className = 'sat-rice-lineage-card-meta';
       meta.textContent = copy.meta;
