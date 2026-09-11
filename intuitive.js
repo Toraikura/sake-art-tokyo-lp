@@ -110,6 +110,79 @@
   });
   renderLabel();
 
+  function renderPlaygroundArcade() {
+    const arcade = $('.arcade');
+    if (!arcade) return;
+    const sourcePage = english ? '/en/' : '/';
+    const copy = english ? {
+      kicker: 'FERMENTATION PLAYGROUND / ARCADE',
+      intro: 'Choose a game. Follow whatever makes you curious.',
+      select: 'SELECT A GAME',
+      hub: 'OPEN THE PLAYGROUND',
+      play: 'PLAY NOW',
+      soon: 'COMING SOON...'
+    } : {
+      kicker: 'FERMENTATION PLAYGROUND / ARCADE',
+      intro: '気になったところから、好きなゲームを選ぶ。',
+      select: 'SELECT A GAME',
+      hub: 'PLAYGROUNDを見る',
+      play: 'PLAY NOW',
+      soon: 'COMING SOON...'
+    };
+
+    arcade.classList.add('fpg-arcade');
+    arcade.setAttribute('aria-labelledby', 'fpg-arcade-title');
+    arcade.innerHTML = `
+      <div class="wrap fpg-arcade-shell">
+        <div class="fpg-arcade-brand">
+          <p class="eyebrow">${copy.kicker}</p>
+          <a class="fpg-title-link" id="fpg-arcade-title" href="https://toraikura.github.io/sat-fermentation-playground/" data-event="sat_playground_hub_click" data-experience="hub" data-source-page="${sourcePage}">
+            <strong>FERMENTATION<br>PLAYGROUND</strong>
+            <span>${copy.hub} <span aria-hidden="true">↗</span></span>
+          </a>
+          <p class="fpg-arcade-intro">${copy.intro}</p>
+          <p class="mono fpg-select">${copy.select}</p>
+        </div>
+        <div class="fpg-game-grid" aria-label="${english ? 'Fermentation Playground games' : 'FERMENTATION PLAYGROUNDのゲーム'}">
+          <button class="fpg-game fpg-game--live fpg-game--clash" type="button" data-play data-event="sat_to_fpg" data-experience="sake-clash" data-source-page="${sourcePage}" aria-label="${english ? 'Play SAKE CLASH' : 'SAKE CLASHを遊ぶ'}">
+            <span class="fpg-game-index">01</span>
+            <strong>SAKE<br>CLASH.</strong>
+            <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
+          </button>
+          <a class="fpg-game fpg-game--live fpg-game--aroma" href="https://toraikura.github.io/sat-fermentation-playground/aroma-lab/" data-event="sat_to_fpg" data-experience="aroma-labo" data-source-page="${sourcePage}" aria-label="${english ? 'Open AROMA LABO' : 'AROMA LABOを開く'}">
+            <span class="fpg-game-index">02</span>
+            <strong>AROMA<br>LABO</strong>
+            <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="fpg-game fpg-game--live fpg-game--match" href="https://toraikura.github.io/sat-fermentation-playground/aroma-lab/aroma-match/" data-event="sat_to_fpg" data-experience="aroma-match" data-source-page="${sourcePage}" aria-label="${english ? 'Open AROMA MATCH' : 'AROMA MATCHを開く'}">
+            <span class="fpg-game-index">03</span>
+            <strong>AROMA<br>MATCH</strong>
+            <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
+          </a>
+          <div class="fpg-game fpg-game--soon" aria-disabled="true">
+            <span class="fpg-game-index">04</span>
+            <strong>RICE<br>LINEAGE</strong>
+            <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>
+          </div>
+          <div class="fpg-game fpg-game--soon" aria-disabled="true">
+            <span class="fpg-game-index">05</span>
+            <strong>SHUBO</strong>
+            <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>
+          </div>
+          <div class="fpg-game fpg-game--soon" aria-disabled="true">
+            <span class="fpg-game-index">06</span>
+            <strong>PATHWAY</strong>
+            <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>
+          </div>
+        </div>
+      </div>`;
+
+    const oldEntry = $('.playground-entry');
+    oldEntry?.remove();
+  }
+
+  renderPlaygroundArcade();
+
   const modal = $('#play-modal'), slot = $('#play-frame-slot'), loading = $('#play-loading');
   let frame = null, session = '', loadTimer = 0, returnFocus = null;
   let savedY = 0, bodyStyle = '', launchRelease = null, hasFinished = false;
