@@ -101,6 +101,22 @@ PAGES = [
         "h1": "Japanese Sake\nAroma",
         "types": {"WebPage", "BreadcrumbList"},
     },
+    {
+        "path": "sake/oem/",
+        "public": "sake/oem/",
+        "lang": "ja",
+        "alternate": "en/sake/oem/",
+        "h1": "オリジナルの\n日本酒をつくる。",
+        "types": {"WebPage", "BreadcrumbList"},
+    },
+    {
+        "path": "en/sake/oem/",
+        "public": "en/sake/oem/",
+        "lang": "en",
+        "alternate": "sake/oem/",
+        "h1": "Create an\nOriginal Sake.",
+        "types": {"WebPage", "BreadcrumbList"},
+    },
 ]
 
 FORBIDDEN_SCHEMA = {"Product", "Offer", "FAQPage"}
@@ -205,10 +221,20 @@ def check_homepage_ia(page, english=False):
     story = page.locator("#story .story-body .text-link")
     assert story.get_attribute("href") == CHILL_LABO
     assert page.locator(f'a[href="{prefix}/about/chill-labo/"]').count() == 0
+    assert page.locator(f'a[href="{prefix}/sake/oem/"]').count() == 0
     aroma = page.locator('#comic figcaption a[href$="/sake/aroma/"]')
     assert aroma.count() == 1
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     return links
+
+
+def check_oem_guide_discovery(page, english=False):
+    path = "en/sake/" if english else "sake/"
+    target = "/en/sake/oem/" if english else "/sake/oem/"
+    page.goto(urljoin(SITE, path), wait_until="networkidle")
+    link = page.locator(f'.editorial-footer-links a[href="{target}"]')
+    assert link.count() == 1
+    assert link.inner_text().strip() == "ORIGINAL SAKE"
 
 
 def run():
@@ -229,10 +255,14 @@ def run():
             check_sitemap(page)
             check_homepage_ia(page, False)
             check_homepage_ia(page, True)
+            check_oem_guide_discovery(page, False)
+            check_oem_guide_discovery(page, True)
             page.goto(urljoin(SITE, "sake/"), wait_until="networkidle")
             page.screenshot(path=str(OUT / "sake-desktop-1440.png"), full_page=True)
             page.goto(urljoin(SITE, "sake/aroma/"), wait_until="networkidle")
             page.screenshot(path=str(OUT / "aroma-desktop-1440.png"), full_page=True)
+            page.goto(urljoin(SITE, "sake/oem/"), wait_until="networkidle")
+            page.screenshot(path=str(OUT / "oem-desktop-1440.png"), full_page=True)
             context.close()
 
             # iPhone-class touch widths, including the narrow 360 px regression edge.
@@ -260,6 +290,8 @@ def run():
                 page.screenshot(path=str(OUT / f"sake-{width}.png"), full_page=True)
                 page.goto(urljoin(SITE, "sake/aroma/"), wait_until="networkidle")
                 page.screenshot(path=str(OUT / f"aroma-{width}.png"), full_page=True)
+                page.goto(urljoin(SITE, "sake/oem/"), wait_until="networkidle")
+                page.screenshot(path=str(OUT / f"oem-{width}.png"), full_page=True)
                 page.goto(urljoin(SITE, "about/chill-labo/"), wait_until="networkidle")
                 page.screenshot(path=str(OUT / f"chill-origin-{width}.png"), full_page=True)
                 context.close()
