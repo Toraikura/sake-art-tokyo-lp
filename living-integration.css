@@ -140,3 +140,28 @@ button.fpg-game{width:100%;font:inherit;border-radius:0}
 .fpg-game--soon strong{color:#08080a!important}
 .fpg-game--soon .fpg-game-status{color:#8d9485!important}
 @media(hover:hover) and (pointer:fine){.fpg-title-link:hover strong{color:var(--accent)}.fpg-title-link:hover strong::first-line{color:var(--paper)}.fpg-game--live:hover strong{color:var(--accent)!important}}
+
+/* Opposite-color game labels.
+   Urazato: PLAYGROUND = lime, second game line = lilac.
+   Tsuchida: PLAYGROUND = lilac, second game line = lime. */
+.fpg-arcade{--fpg-opposite:var(--lilac)}
+body[data-mood="deep"] .fpg-arcade{--fpg-opposite:var(--lime)}
+.fpg-game--live strong{display:block;color:var(--fpg-opposite)!important}
+.fpg-game--live strong::first-line{color:var(--paper)!important}
+@media(hover:hover) and (pointer:fine){
+  .fpg-game--live:hover strong{color:var(--fpg-opposite)!important}
+  .fpg-game--live:hover strong::first-line{color:var(--paper)!important}
+}
+
+/* SAKE CLASH: no decorative live dot, and no trailing punctuation in the visible lockup. */
+.fpg-game--clash::after{display:none}
+.fpg-game--clash strong{font-size:0!important;line-height:0;color:transparent!important}
+.fpg-game--clash strong::before,.fpg-game--clash strong::after{display:block;font:900 clamp(19px,2vw,31px)/.9 var(--heavy);letter-spacing:-.055em}
+.fpg-game--clash strong::before{content:"SAKE";color:var(--paper)}
+.fpg-game--clash strong::after{content:"CLASH";color:var(--fpg-opposite)}
+@media(max-width:700px){
+  .fpg-game--clash strong::before,.fpg-game--clash strong::after{font-size:clamp(18px,6.1vw,25px)}
+}
+@media(max-width:360px){
+  .fpg-game--clash strong::before,.fpg-game--clash strong::after{font-size:17px}
+}
