@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import os
 import traceback
+from urllib.request import urlopen
 
 from playwright.sync_api import sync_playwright
 
@@ -11,6 +12,16 @@ GAME_PREFIX = "https://toraikura.github.io/sat-fermentation-playground/rice-line
 OUT = Path(os.environ.get("EVIDENCE_DIR", "evidence/rice-lineage"))
 OUT.mkdir(parents=True, exist_ok=True)
 REPORT = {"status": "running", "checks": [], "failures": []}
+
+
+def assert_static_source():
+    # The current SAT arcade is enhanced by intuitive.js, which replaces the arcade's
+    # runtime DOM. SEO/discovery copy therefore belongs in the source HTML and must be
+    # checked before that runtime enhancement rather than in the post-JS DOM.
+    with urlopen(BASE, timeout=10) as response:
+        source = response.read().decode("utf-8")
+    for token in ("RICE LINEAGE", "酒米の系譜", "山田錦", "五百万石", "越淡麗"):
+        assert token in source, (token, "missing from source HTML")
 
 
 def no_horizontal_overflow(page_or_frame):
@@ -45,10 +56,6 @@ def exercise_game(page, width, height, touch):
 
     page.goto(BASE, wait_until="networkidle")
     page.wait_for_timeout(300)
-    assert page.locator(".sat-rice-lineage-static").count() == 1
-    static_text = page.locator(".sat-rice-lineage-static").inner_text()
-    for token in ("RICE LINEAGE", "山田錦", "五百万石", "越淡麗"):
-        assert token in static_text, (token, static_text)
 
     card = page.locator("[data-rice-lineage-launch]")
     card.wait_for(state="visible")
@@ -64,7 +71,6 @@ def exercise_game(page, width, height, touch):
     modal = page.locator(".sat-rice-lineage-modal")
     assert modal.get_attribute("open") is not None
     assert page.locator(".sat-rice-lineage-frame").count() == 1
-    page.wait_for_function("urls => urls.some(u => u.startsWith(arguments[1]))", arg=[rice_requests, GAME_PREFIX]) if False else None
     frame = find_game_frame(page)
     assert any(url.startswith(GAME_PREFIX) for url in rice_requests), rice_requests
     assert page.locator(".sat-rice-lineage-frame").get_attribute("title") in (
@@ -142,6 +148,7 @@ def exercise_game(page, width, height, touch):
 
 
 def run():
+    assert_static_source()
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
         try:
