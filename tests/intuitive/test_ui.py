@@ -68,6 +68,9 @@ with sync_playwright() as p:
  results.append('Hero SAKE text and aria-label have no English trailing period. Label tap and horizontal swipe synchronize the source card, water caption, body theme, selected product and section colors; vertical scroll preserves selection; original PNG download passed.')
  page.locator('#play').scroll_into_view_if_needed();page.wait_for_timeout(500)
  page.locator('#play').screenshot(path=str(OUT/'play-entry-390.png'))
+ # The new arcade is taller than the old single-game launcher. Put the actual
+ # SAKE CLASH card in view before recording the position we expect to restore.
+ page.locator('.fpg-game--clash').scroll_into_view_if_needed();page.wait_for_timeout(100)
  previous_scroll=page.evaluate('scrollY')
  page.locator('.fpg-game--clash').tap()
  page.wait_for_function("document.querySelector('#play-loading').hidden")
