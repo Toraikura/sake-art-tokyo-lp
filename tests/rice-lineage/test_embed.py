@@ -34,6 +34,29 @@ def no_horizontal_overflow(page_or_frame):
     assert dims["body"] <= dims["inner"] + 1, dims
 
 
+def no_visible_game_overflow(frame, selector=None):
+    # RICE LINEAGE intentionally clips x-overflow on its body. Its compact site bar has
+    # intrinsic content wider than 390px, so document.scrollWidth can report 420px even
+    # though users cannot horizontally scroll and the game stage itself fits the viewport.
+    # Do not shrink/transform the upstream game just to make scrollWidth equal innerWidth.
+    state = frame.evaluate("""selector => {
+      const bodyStyle = getComputedStyle(document.body);
+      const node = selector ? document.querySelector(selector) : null;
+      const rect = node ? node.getBoundingClientRect() : null;
+      return {
+        inner: innerWidth,
+        overflowX: bodyStyle.overflowX,
+        node: rect ? {left: rect.left, right: rect.right, width: rect.width} : null
+      };
+    }""", selector)
+    assert state["overflowX"] in ("hidden", "clip"), state
+    if selector:
+        assert state["node"], (selector, state)
+        assert state["node"]["left"] >= -1, state
+        assert state["node"]["right"] <= state["inner"] + 1, state
+        assert state["node"]["width"] <= state["inner"] + 1, state
+
+
 def find_game_frame(page):
     page.wait_for_function("""() => {
       const f = document.querySelector('.sat-rice-lineage-frame');
@@ -77,7 +100,7 @@ def exercise_game(page, width, height, touch):
         "RICE LINEAGE｜酒米の系譜", "RICE LINEAGE | Sake Rice Lineage"
     )
     no_horizontal_overflow(page)
-    no_horizontal_overflow(frame)
+    no_visible_game_overflow(frame, ".board-wrap")
 
     # SOUND and DATA remain interactive inside the cross-origin game.
     sound = frame.locator("#soundToggle")
@@ -96,6 +119,7 @@ def exercise_game(page, width, height, touch):
     assert frame.locator("#rightControl").is_visible()
     assert frame.locator("#scoreValue").is_visible()
     assert frame.locator("#comboValue").is_visible()
+    no_visible_game_overflow(frame, ".arcade-stage")
 
     if touch:
         # Exercise the game's own touchstart/touchend swipe handler.
