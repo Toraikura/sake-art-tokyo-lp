@@ -92,7 +92,7 @@ def verify_theme(page, source: str, width: int) -> None:
             "copy": "霧の向こう、澄んだ余韻。",
             "release": "sat-001",
             "accent": "rgb(213, 239, 131)",
-            "arcade": "rgb(37, 42, 30)",
+            "arcade": "rgb(32, 39, 25)",
         },
         "tsuchida": {
             "mood": "deep",
