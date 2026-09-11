@@ -127,3 +127,16 @@ button.fpg-game{width:100%;font:inherit;border-radius:0}
   .fpg-game--live:hover{transform:none}
   .fpg-game--soon .fpg-game-status i{animation:none;opacity:.6}
 }
+
+/* FPG ARCADE readability + source-responsive accent fix.
+   PLAYGROUND follows SAT's active maker accent: Urazato = lime, Tsuchida = lilac. */
+.fpg-title-link strong{color:var(--accent)}
+.fpg-title-link strong::first-line{color:var(--paper)}
+.fpg-title-link>span,.fpg-arcade .eyebrow,.fpg-select{color:var(--accent)}
+.fpg-arcade-intro{color:var(--paper)}
+.fpg-game--live,.fpg-game--live strong{color:var(--paper)!important}
+.fpg-game--live .fpg-game-index{color:#d9d4df!important}
+.fpg-game--live .fpg-game-status{color:var(--accent)!important}
+.fpg-game--soon strong{color:#08080a!important}
+.fpg-game--soon .fpg-game-status{color:#8d9485!important}
+@media(hover:hover) and (pointer:fine){.fpg-title-link:hover strong{color:var(--accent)}.fpg-title-link:hover strong::first-line{color:var(--paper)}.fpg-game--live:hover strong{color:var(--accent)!important}}
