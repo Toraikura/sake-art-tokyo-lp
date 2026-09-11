@@ -25,6 +25,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/sake/"/>
   </url>
   <url>
+    <loc>https://sakearttokyo.com/sake/oem/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/sake/oem/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/sake/oem/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/sake/oem/"/>
+  </url>
+  <url>
+    <loc>https://sakearttokyo.com/en/sake/oem/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/sake/oem/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/sake/oem/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sakearttokyo.com/sake/oem/"/>
+  </url>
+  <url>
     <loc>https://sakearttokyo.com/breweries/urazato/</loc>
     <xhtml:link rel="alternate" hreflang="ja" href="https://sakearttokyo.com/breweries/urazato/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://sakearttokyo.com/en/breweries/urazato/"/>
