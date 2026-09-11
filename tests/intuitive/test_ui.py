@@ -69,7 +69,7 @@ with sync_playwright() as p:
  page.locator('#play').scroll_into_view_if_needed();page.wait_for_timeout(500)
  page.locator('#play').screenshot(path=str(OUT/'play-entry-390.png'))
  previous_scroll=page.evaluate('scrollY')
- page.locator('.play-launch').tap()
+ page.locator('.fpg-game--clash').tap()
  page.wait_for_function("document.querySelector('#play-loading').hidden")
  frame=page.frames[-1]
  frame.wait_for_selector('#arena[data-status="playing"]');page.wait_for_timeout(3200)
@@ -113,7 +113,7 @@ with sync_playwright() as p:
  assert not errors,errors
  results.append('One tap opens the board; timer and CPU stay frozen until the first real touch deployment; real match, pause/resume, replay, result protocol, no auto redirect, scroll restoration and original-record isolation passed.')
  # Verify a real end-of-match cross-page navigation, then browser-back cleanup.
- page.locator('.play-launch').tap();page.wait_for_function("document.querySelector('#play-loading').hidden")
+ page.locator('.fpg-game--clash').tap();page.wait_for_function("document.querySelector('#play-loading').hidden")
  frame=page.frames[-1];r=frame.locator('#arena').bounding_box()
  page.touchscreen.tap(r['x']+r['width']*.5,r['y']+r['height']*.58)
  frame.wait_for_selector('#arena[data-played="1"]')
@@ -129,7 +129,7 @@ with sync_playwright() as p:
  for width,height in [(360,640),(375,550),(430,932),(1440,1000)]:
   page.set_viewport_size({'width':width,'height':height});page.goto(BASE,wait_until='networkidle')
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),f'overflow {width}'
-  page.locator('.play-launch').click();page.wait_for_function("document.querySelector('#play-loading').hidden")
+  page.locator('.fpg-game--clash').click();page.wait_for_function("document.querySelector('#play-loading').hidden")
   f=page.frames[-1]
   viewport=page.locator('#play-frame-slot').bounding_box()
   for selector in ['#arena','.game-card[data-index="0"]','.game-card[data-index="3"]','#pause']:
