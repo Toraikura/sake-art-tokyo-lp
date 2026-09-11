@@ -34,6 +34,7 @@ canonical・OGP・Twitter画像・構造化データのURLは `https://sakeartto
 - `/breweries/tsuchida/`: 土田酒造 × SAKE ART TOKYO / SAT 002。
 - `/about/chill-labo/`: Chill LaboからSAKE ART TOKYOへ至るブランド関係。
 - `/sake/aroma/`: 日本酒の香り。官能表現と香気成分の説明を分離。
+- `/sake/oem/`: 日本酒OEM・オリジナル日本酒・PB・委託醸造・小ロット・桶買いを、受託サービスではなく企画者向けガイドとして整理。
 
 英語:
 
@@ -42,8 +43,13 @@ canonical・OGP・Twitter画像・構造化データのURLは `https://sakeartto
 - `/en/breweries/tsuchida/`
 - `/en/about/chill-labo/`
 - `/en/sake/aroma/`
+- `/en/sake/oem/`
 
 新規ページは `editorial.css` を共用し、既存の `site.css` / `language.css` / `english.css` の変数・タイポグラフィを継承します。
+
+`/sake/oem/` は「日本酒OEMを受託する会社」として見せません。SAKE ART TOKYOは製造主体ではなく、実際の製造は酒蔵が行うことを明記します。企画内容・数量・予算・時期・酒質の方向性が整理され、蔵との相性が合う場合に限り、YOSHI / SAKE ART TOKYO経由で関係のある蔵元を紹介できる場合がある、という立場です。紹介や製造は保証しません。
+
+このOEMガイドは検索流入用のEditorial pageとして公開・index可能にし、トップページやGlobal Navigationには出しません。crawlableな内部リンクは `/sake/` / `/en/sake/` のEditorial Footerにだけ置き、`sitemap.xml` には日英両URLを追加します。SAT本来のブランド体験を前面に保ちながら、`日本酒 OEM`、`オリジナル 日本酒`、`PB 日本酒`、`委託醸造`、`小ロット`、`桶買い` 等の検索意図を受けます。
 
 トップの「お酒を見る / Explore sake」は `/sake/` / `/en/sake/` へ送ります。BOTTLESのページ内アンカーは残しています。水源カードはbuttonのまま維持し、その直下に酒蔵ページへの小さなcrawlable linkを追加しています。STORYは `/about/chill-labo/`、漫画末尾は `/sake/aroma/` へつなぎます。
 
@@ -130,7 +136,7 @@ python3 tests/seo-ia/test_phase1.py
 python3 tests/living-integration/test_ui.py
 ```
 
-`tests/seo-ia/test_phase1.py` は新規10ページのHTTP 200、title/H1/meta、canonical、ja/en/x-default hreflang、OG/Twitter、JSON-LD、内部リンク、sitemap、360/390px横溢れ、ホーム内部リンクと44pxタップ領域を確認します。
+`tests/seo-ia/test_phase1.py` は新規12ページのHTTP 200、title/H1/meta、canonical、ja/en/x-default hreflang、OG/Twitter、JSON-LD、内部リンク、sitemap、360/390px横溢れ、ホーム内部リンクと44pxタップ領域を確認します。OEMガイドについてはトップに露出せず、`/sake/` のfooterからのみcrawlable linkがあることも確認します。
 
 `tests/living-integration/test_ui.py` はFPG公開URL、日英導線、未公開Experienceへのリンクが無いこと、水滴音8本のHTTP配信、SOUND ON/OFF、RippleとAudioの連動、320/375/390/430pxの横溢れを確認します。
 
