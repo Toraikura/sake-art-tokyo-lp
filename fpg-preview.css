@@ -1,4 +1,4 @@
-/* Lightweight mini previews for the SAT FERMENTATION PLAYGROUND arcade. */
+/* FPG ARCADE previews: live games look like the actual experiences; coming-soon games stay schematic. */
 .fpg-game{gap:8px}
 .fpg-game-title{display:block!important;font:900 clamp(19px,2vw,31px)/.9 var(--heavy)!important;letter-spacing:-.055em!important;color:var(--paper)!important}
 .fpg-game-title span{display:block}
@@ -6,44 +6,44 @@
 .fpg-game--live .fpg-game-title span:last-child{color:var(--fpg-opposite)!important}
 .fpg-game--soon .fpg-game-title,.fpg-game--soon .fpg-game-title span{color:#08080a!important}
 
-/* Remove the legacy SAKE CLASH replacement lockup; the markup now carries the two lines directly. */
+/* SAKE CLASH keeps the requested clean title: no period, no decorative live dot. */
 .fpg-game--clash .fpg-game-title{font:900 clamp(19px,2vw,31px)/.9 var(--heavy)!important;line-height:.9!important;color:var(--paper)!important}
 .fpg-game--clash .fpg-game-title::before,.fpg-game--clash .fpg-game-title::after{content:none!important;display:none!important}
 .fpg-game--clash::after{display:none!important}
 
-.fpg-preview{position:relative;display:block;width:100%;height:clamp(48px,5.2vw,68px);min-height:48px;border-top:1px solid rgba(244,240,232,.11);border-bottom:1px solid rgba(244,240,232,.08);overflow:hidden;flex:0 0 auto}
-.fpg-game--live .fpg-preview{background:rgba(244,240,232,.025)}
+.fpg-preview{position:relative;display:block;width:100%;height:clamp(78px,8.2vw,116px);min-height:78px;border:1px solid rgba(244,240,232,.14);overflow:hidden;flex:0 0 auto}
+.fpg-game--live .fpg-preview{background:#17151c}
 .fpg-game--soon .fpg-preview{opacity:.72;border-color:rgba(8,8,10,.18);background:rgba(8,8,10,.035)}
-.fpg-preview-meta{position:absolute;left:7px;top:6px;font:7px/1 var(--mono);letter-spacing:.08em;color:var(--fpg-opposite)}
+.fpg-preview-meta{position:absolute;left:7px;top:6px;z-index:3;padding:4px 5px;background:rgba(13,9,20,.72);font:7px/1 var(--mono);letter-spacing:.08em;color:var(--paper)}
 
-/* SAKE CLASH — a tiny arena silhouette. */
-.fpg-clash-stage{position:absolute;left:7px;right:7px;bottom:8px;height:30px}
-.fpg-clash-floor{position:absolute;bottom:0;height:6px;background:var(--fpg-opposite);opacity:.8}
-.fpg-clash-floor.floor-a{left:0;width:44%;clip-path:polygon(0 0,100% 0,86% 100%,0 100%)}
-.fpg-clash-floor.floor-b{right:0;width:43%;clip-path:polygon(14% 0,100% 0,100% 100%,0 100%)}
-.fpg-clash-player{position:absolute;bottom:10px;width:8px;height:12px;border:2px solid var(--paper);border-radius:5px 5px 2px 2px}
-.fpg-clash-player::before{content:"";position:absolute;left:1px;top:-7px;width:3px;height:3px;border:2px solid var(--paper);border-radius:50%}
-.fpg-clash-player.is-left{left:15%}
-.fpg-clash-player.is-right{right:15%;transform:scaleX(-1)}
+/* SAKE CLASH — use the real existing game preview instead of redrawing it. */
+.fpg-preview--clash{background:#111 url('/assets/game-preview.webp') center 32%/cover no-repeat!important}
+.fpg-preview--clash::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,8,17,.08),rgba(12,8,17,.02) 45%,rgba(12,8,17,.34));pointer-events:none}
+.fpg-clash-stage{display:none!important}
 
-/* AROMA LABO — molecule card meets scent motif. */
-.fpg-preview--labo{display:grid;grid-template-columns:1fr auto .78fr;align-items:center;gap:7px;padding:6px}
-.fpg-labo-card,.fpg-labo-scent{height:100%;min-width:0;border:1px solid rgba(244,240,232,.2);display:flex;flex-direction:column;justify-content:space-between;padding:5px}
-.fpg-labo-card small,.fpg-labo-scent small{font:6.5px/1 var(--mono);letter-spacing:.05em;color:var(--paper);white-space:nowrap}
-.fpg-labo-arrow{font:13px/1 var(--mono);color:var(--fpg-opposite)}
-.fpg-molecule{position:relative;display:block;width:31px;height:18px;margin:auto}
-.fpg-molecule::before{content:"";position:absolute;left:4px;right:4px;top:8px;height:1px;background:var(--fpg-opposite);transform:rotate(-12deg)}
-.fpg-molecule b{position:absolute;width:6px;height:6px;border:1px solid var(--fpg-opposite);border-radius:50%;background:#151a11}
-.fpg-molecule b:nth-child(1){left:0;top:8px}.fpg-molecule b:nth-child(2){left:12px;top:3px}.fpg-molecule b:nth-child(3){right:0;top:8px}
-.fpg-banana{display:block;width:24px;height:14px;border-bottom:5px solid var(--fpg-opposite);border-radius:0 0 80% 80%;transform:rotate(-18deg);margin:auto}
+/* AROMA LABO — mirror the NAME FIRST specimen/card feeling and use the actual banana artwork. */
+.fpg-preview--labo{display:grid;grid-template-columns:1.12fr .88fr;gap:0;padding:0;background:#f3efe3!important;border-color:#d1c9ba!important}
+.fpg-labo-arrow{display:none!important}
+.fpg-labo-card,.fpg-labo-scent{position:relative;height:100%;min-width:0;border:0;display:block;padding:0}
+.fpg-labo-card{background:#f3efe3;border-right:1px solid #d1c9ba}
+.fpg-labo-card>small,.fpg-molecule{display:none!important}
+.fpg-labo-card::before{content:"AROMA MOLECULE / EXAMPLE";position:absolute;left:8px;top:8px;color:#766d80;font:6px/1.2 var(--mono);letter-spacing:.06em}
+.fpg-labo-card::after{content:"酢酸イソアミル\AISOAMYL ACETATE";white-space:pre;position:absolute;left:8px;right:6px;bottom:9px;color:#252032;font:800 clamp(8px,1vw,12px)/1.15 var(--sans);letter-spacing:-.02em}
+.fpg-labo-scent{background:#efe9dc url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-banana.webp') center/cover no-repeat}
+.fpg-labo-scent::after{content:"AROMA / BANANA";position:absolute;left:6px;bottom:6px;padding:3px 4px;background:rgba(243,239,227,.9);color:#252032;font:6px/1 var(--mono);letter-spacing:.04em}
+.fpg-labo-scent>small,.fpg-banana{display:none!important}
 
-/* AROMA MATCH — two visible rows, one matched and one waiting. */
-.fpg-preview--match{display:flex;flex-direction:column;justify-content:center;gap:7px;padding:7px}
-.fpg-match-row{display:grid;grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr);align-items:center;gap:4px}
-.fpg-match-row small{border:1px solid rgba(244,240,232,.18);padding:4px 3px;text-align:center;font:6px/1 var(--mono);letter-spacing:.03em;color:var(--paper);overflow:hidden;white-space:nowrap}
-.fpg-match-row i{height:1px;background:var(--fpg-opposite);position:relative}
-.fpg-match-row i::after{content:"";position:absolute;right:-1px;top:-2px;width:4px;height:4px;border-top:1px solid var(--fpg-opposite);border-right:1px solid var(--fpg-opposite);transform:rotate(45deg)}
-.fpg-match-row.is-dim{opacity:.45}.fpg-match-row.is-dim i{background:transparent;border-top:1px dashed var(--paper)}.fpg-match-row.is-dim i::after{display:none}
+/* AROMA MATCH — mimic the real MOLECULE ↔ AROMA board, with the real aroma thumbnails. */
+.fpg-preview--match{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:17px 7px 7px;background:#f3efe3!important;border-color:#d1c9ba!important}
+.fpg-preview--match::before{content:"MOLECULE                                  AROMA";position:absolute;left:7px;right:7px;top:5px;color:#6c6477;font:6px/1 var(--mono);letter-spacing:.06em;white-space:pre;overflow:hidden}
+.fpg-match-row{display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,.82fr);align-items:center;gap:5px;min-height:27px}
+.fpg-match-row small{height:27px;border:1px solid #bcb3c5;padding:0 4px;display:flex;align-items:center;justify-content:center;text-align:center;font:6px/1.1 var(--mono);letter-spacing:.02em;color:#252032;background:#faf6ed;overflow:hidden;white-space:nowrap}
+.fpg-match-row small:last-child{font-size:0;color:transparent;background-position:center;background-size:cover;background-repeat:no-repeat}
+.fpg-match-row:first-child small:last-child{background-image:url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-banana.webp')}
+.fpg-match-row:nth-child(2) small:last-child{background-image:url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-clove.webp')}
+.fpg-match-row i{height:2px;background:#6b4fa0;position:relative}
+.fpg-match-row i::after{content:"";position:absolute;right:-1px;top:-3px;width:5px;height:5px;border-top:2px solid #6b4fa0;border-right:2px solid #6b4fa0;transform:rotate(45deg)}
+.fpg-match-row.is-dim{opacity:.72}.fpg-match-row.is-dim i{background:transparent;border-top:1px dashed #6b4fa0}.fpg-match-row.is-dim i::after{display:none}
 
 /* RICE LINEAGE — a small family/route map. */
 .fpg-preview--rice{position:relative}
@@ -67,11 +67,17 @@
 
 @media(max-width:700px){
   .fpg-game-title,.fpg-game--clash .fpg-game-title{font-size:clamp(18px,6.1vw,25px)!important}
-  .fpg-preview{height:52px;min-height:52px}
-  .fpg-preview-meta{font-size:6px}
-  .fpg-labo-card small,.fpg-labo-scent small,.fpg-match-row small{font-size:5.5px}
+  .fpg-preview{height:64px;min-height:64px}
+  .fpg-preview-meta{font-size:5.5px;padding:3px 4px}
+  .fpg-labo-card::before{font-size:5px;left:6px;top:6px}
+  .fpg-labo-card::after{font-size:7px;left:6px;bottom:6px}
+  .fpg-labo-scent::after{font-size:5px;left:4px;bottom:4px}
+  .fpg-preview--match{gap:4px;padding:14px 5px 5px}
+  .fpg-preview--match::before{font-size:5px;left:5px;top:4px}
+  .fpg-match-row{grid-template-columns:minmax(0,1fr) 14px minmax(0,.8fr);gap:3px;min-height:20px}
+  .fpg-match-row small{height:20px;font-size:5px;padding:0 2px}
 }
 @media(max-width:360px){
   .fpg-game-title,.fpg-game--clash .fpg-game-title{font-size:17px!important}
-  .fpg-preview{height:46px;min-height:46px}
+  .fpg-preview{height:58px;min-height:58px}
 }
