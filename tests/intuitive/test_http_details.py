@@ -137,7 +137,7 @@ def selected_label(page, releases, expected_id):
 
 
 def open_game(page):
-    page.locator(".play-launch").tap()
+    page.locator(".fpg-game--clash").tap()
     page.wait_for_function("document.querySelector('#play-loading').hidden")
     frame = page.locator("#play-frame-slot iframe").element_handle().content_frame()
     assert frame is not None
