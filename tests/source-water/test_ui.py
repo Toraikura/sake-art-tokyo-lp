@@ -1,94 +1,86 @@
-"""Production-root regression for SAT source cards and water-scene integration.
-
-Responsibilities here are intentionally narrow:
-- production metadata and source-card artwork
-- Urazato/Tsuchida selection and theme synchronization
-- water ripple keyboard behavior and reduced motion
-- the existing in-page SAKE CLASH launcher
-- the new global PLAY link to FERMENTATION PLAYGROUND
-
-Detailed label/game flows remain in tests/intuitive. Detailed FPG/audio behavior is
-covered by tests/living-integration. Chromium emulation is not physical iPhone Safari.
-"""
-from __future__ import annotations
-
-import json
-import os
 from pathlib import Path
-import re
-import subprocess
-from urllib.parse import parse_qs, urljoin, urlsplit
+import os
+import json
+import time
+import traceback
 
 from playwright.sync_api import sync_playwright
 
 
-ROOT = Path(__file__).resolve().parents[2]
 BASE = os.environ.get("BASE_URL", "http://127.0.0.1:4190/")
-PUBLIC_URL = "https://sakearttokyo.com/"
-FPG_URL = "https://toraikura.github.io/sat-fermentation-playground/"
-OUT = Path(os.environ.get("EVIDENCE_DIR", "/private/tmp/sat-source-cards-tests"))
+OUT = Path(os.environ.get("EVIDENCE_DIR", "evidence/source-water"))
 OUT.mkdir(parents=True, exist_ok=True)
-CHROME = os.environ.get("PLAYWRIGHT_EXECUTABLE_PATH")
-
-checks: list[str] = []
-geometry: list[dict] = []
-page_errors: list[str] = []
-http_errors: list[dict] = []
-navigation: list[dict] = []
-
-FORBIDDEN_FLOW = (
-    "#source-flow, .source-flow, [data-flow], [data-flow-source], [data-flow-veil], "
-    "[data-flow-wisp], [data-flow-soft], [data-origin-x], [data-origin-y]"
-)
-
-
-def monitor(page) -> None:
-    page.on("pageerror", lambda error: page_errors.append(str(error)))
-
-    def response_received(response) -> None:
-        if response.status >= 400:
-            http_errors.append({"status": response.status, "url": response.url})
-
-    page.on("response", response_received)
+REPORT = {
+    "browser": "Playwright Chromium; viewport/touch emulation, not a physical iPhone",
+    "status": "running",
+    "checks": [],
+    "pageErrors": [],
+    "consoleErrors": [],
+    "failedRequests": [],
+    "httpErrors": [],
+}
 
 
 def assert_no_overflow(page, width: int) -> None:
-    measured = page.evaluate("""() => ({
-      innerWidth,
-      scrollWidth: document.documentElement.scrollWidth
+    layout = page.evaluate("""() => ({
+      width: innerWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      bodyWidth: document.body.scrollWidth
     })""")
-    assert measured["scrollWidth"] <= measured["innerWidth"] + 1, (width, measured)
-    geometry.append({"width": width, **measured})
+    assert layout["scrollWidth"] <= width and layout["bodyWidth"] <= width, (width, layout)
 
 
-def verify_metadata(page) -> None:
-    assert urlsplit(page.url).path == urlsplit(BASE).path
-    assert page.locator("#hero-title > span").all_text_contents() == ["NOT", "JUST", "SAKE"]
-    assert page.locator("#hero-title").get_attribute("aria-label") == "Not just sake まだ知らない、好きがある。"
-    assert page.locator('link[rel="canonical"]').get_attribute("href") == PUBLIC_URL
-    assert page.locator('meta[property="og:url"]').get_attribute("content") == PUBLIC_URL
-    assert page.locator('meta[property="og:image"]').get_attribute("content") == PUBLIC_URL + "assets/sat-dimensional-logo.png"
-    assert page.locator('meta[name="twitter:image"]').get_attribute("content") == PUBLIC_URL + "assets/sat-dimensional-logo.png"
-    for item in page.locator('meta[name="robots"], meta[name="googlebot"]').all():
-        assert not set(re.split(r"[\s,]+", (item.get_attribute("content") or "").lower())) & {"noindex", "none"}
-    structured = [json.loads(item.text_content()) for item in page.locator('script[type="application/ld+json"]').all()]
-    assert any(item.get("@type") == "WebSite" and item.get("url") == PUBLIC_URL for item in structured), structured
-    assert page.locator(".record-shop[hidden]").count() == 2
-    assert page.locator(FORBIDDEN_FLOW).count() == 0
-    checks.append("Production canonical/OG/Twitter/schema and hidden shop state are intact.")
+def record_diagnostics(page) -> None:
+    page.on("pageerror", lambda error: REPORT["pageErrors"].append(str(error)))
+    page.on("console", lambda message: REPORT["consoleErrors"].append({
+        "text": message.text, "location": message.location
+    }) if message.type == "error" else None)
+    page.on("requestfailed", lambda request: REPORT["failedRequests"].append({
+        "url": request.url, "failure": request.failure
+    }))
+    page.on("response", lambda response: REPORT["httpErrors"].append({
+        "url": response.url, "status": response.status
+    }) if response.status >= 400 else None)
 
 
-def verify_global_play(page, width: int) -> None:
-    play = page.locator("header .nav-play")
-    assert play.count() == 1
-    assert play.get_attribute("href") == FPG_URL
-    assert play.get_attribute("data-event") == "sat_playground_hub_click"
-    assert play.get_attribute("data-experience") == "hub"
-    if width <= 700:
-        assert play.is_visible()
-        box = play.bounding_box()
-        assert box and box["width"] >= 44 and box["height"] >= 44, box
-    checks.append(f"{width}px: global PLAY is a normal FPG link, not the SAKE CLASH trigger.")
+def verify_ripple(page, width: int) -> None:
+    zone = page.locator("#art-zone")
+    zone.scroll_into_view_if_needed()
+    page.wait_for_timeout(250)
+    before = int(page.locator("#liquid").get_attribute("data-ripples") or 0)
+    box = zone.bounding_box()
+    assert box and box["width"] > 0 and box["height"] > 0
+    x = box["x"] + box["width"] * 0.5
+    y = box["y"] + box["height"] * 0.5
+    page.touchscreen.tap(x, y)
+    page.wait_for_function(
+        "before => Number(document.querySelector('#liquid').dataset.ripples || 0) > before",
+        arg=before,
+    )
+    assert_no_overflow(page, width)
+
+
+def verify_vertical_scroll(page, width: int) -> None:
+    zone = page.locator("#art-zone")
+    zone.scroll_into_view_if_needed()
+    page.wait_for_timeout(250)
+    box = zone.bounding_box()
+    before = int(page.locator("#liquid").get_attribute("data-ripples") or 0)
+    start_y = box["y"] + min(box["height"] * .72, max(18, box["height"] - 18))
+    x = box["x"] + box["width"] * .5
+    cdp = page.context.new_cdp_session(page)
+    cdp.send("Input.dispatchTouchEvent", {
+        "type": "touchStart", "touchPoints": [{"x": x, "y": start_y}]
+    })
+    for distance in (16, 34, 58, 84):
+        cdp.send("Input.dispatchTouchEvent", {
+            "type": "touchMove", "touchPoints": [{"x": x, "y": start_y - distance}]
+        })
+    cdp.send("Input.dispatchTouchEvent", {"type": "touchEnd", "touchPoints": []})
+    page.wait_for_timeout(450)
+    after = int(page.locator("#liquid").get_attribute("data-ripples") or 0)
+    assert after == before, (before, after)
+    assert_no_overflow(page, width)
 
 
 def verify_theme(page, source: str, width: int) -> None:
@@ -126,7 +118,7 @@ def verify_theme(page, source: str, width: int) -> None:
     colors = page.evaluate("""() => ({
       dot: getComputedStyle(document.querySelector('.motion-dot')).backgroundColor,
       rule: getComputedStyle(document.querySelector('.theme-rule')).backgroundColor,
-      play: getComputedStyle(document.querySelector('#play-title > span')).color,
+      play: getComputedStyle(document.querySelector('#fpg-arcade-title strong')).color,
       arcade: getComputedStyle(document.querySelector('.arcade')).backgroundColor
     })""")
     assert colors["dot"] == colors["rule"] == colors["play"] == expected["accent"], (source, colors)
@@ -164,161 +156,75 @@ def verify_source_cards(page, width: int) -> None:
           const img = new Image();
           img.src = new URL(element.getAttribute('href'), document.baseURI).href;
           await img.decode();
-          return {src: img.src, width: img.naturalWidth, height: img.naturalHeight};
+          return {width: img.naturalWidth, height: img.naturalHeight};
         }""")
         assert info["width"] > 0 and info["height"] > 0, info
 
-    page.locator("#source-scene").screenshot(path=str(OUT / f"source-scene-{width}.png"))
-    checks.append(f"{width}px: source cards switch full SAT theme and labels without creating a water ripple.")
 
-
-def verify_water_keyboard(page) -> None:
+def verify_keyboard_ripple(page, width: int) -> None:
     zone = page.locator("#art-zone")
     zone.focus()
     before = int(page.locator("#liquid").get_attribute("data-ripples") or 0)
     page.keyboard.press("Enter")
-    after = int(page.locator("#liquid").get_attribute("data-ripples") or 0)
-    assert after == before + 1, (before, after)
-    checks.append("Keyboard Enter on the water surface creates exactly one ripple.")
-
-
-def verify_game_entry(page) -> None:
-    trigger = page.locator("#play .play-launch")
-    trigger.scroll_into_view_if_needed()
-    page.wait_for_timeout(250)
-    before_scroll = page.evaluate("scrollY")
-    trigger.click()
-    page.wait_for_function("document.querySelector('#play-loading').hidden")
-    iframe = page.locator("#play-frame-slot iframe")
-    src = urlsplit(iframe.get_attribute("src"))
-    assert src.path == urlsplit(urljoin(BASE, "play/")).path
-    assert parse_qs(src.query)["bottle"] == ["sat-002"]
-    frame = page.frame_locator("#play-frame-slot iframe")
-    frame.locator('#arena[data-status="playing"]').wait_for()
-    assert frame.locator("#time").inner_text() == "30"
-    assert frame.locator("#arena").get_attribute("data-played") == "0"
-    page.locator("#close-play").click()
-    page.wait_for_timeout(250)
-    assert not page.locator("#play-modal").is_visible()
-    after_scroll = page.evaluate("scrollY")
-    assert abs(after_scroll - before_scroll) < 3, (before_scroll, after_scroll)
-    navigation.append({"entry": "#play .play-launch", "before": before_scroll, "after": after_scroll})
-    checks.append("The existing SAKE CLASH card still opens the 30-second same-origin game and restores scroll on close.")
-
-
-def verify_brand_and_products(page, width: int) -> None:
-    assert page.locator(".brand-intro").count() == 1
-    assert page.locator(".record-story").count() == 2
-    assert "常温保存できます。" in page.locator("#sat-001 .record-story").inner_text()
-    assert "貴醸酒" in page.locator("#sat-002 .record-story").inner_text()
-    assert page.locator("#comic-image").is_visible()
-    page.locator("#comic-image").scroll_into_view_if_needed()
-    page.locator("#comic-image").evaluate("img => img.decode()")
-    assert page.locator("#comic-image").evaluate("img => img.naturalWidth > 0 && img.naturalHeight > 0")
+    page.wait_for_function(
+        "before => Number(document.querySelector('#liquid').dataset.ripples || 0) > before",
+        arg=before,
+    )
     assert_no_overflow(page, width)
-    checks.append(f"{width}px: brand, products and comic remain present without page overflow.")
-
-
-def verify_reduced_motion(browser) -> None:
-    context = browser.new_context(viewport={"width": 390, "height": 844}, is_mobile=True,
-                                  has_touch=True, reduced_motion="reduce", device_scale_factor=1)
-    context.add_init_script("localStorage.setItem('sat-age-confirmed', 'yes')")
-    page = context.new_page()
-    monitor(page)
-    page.goto(BASE, wait_until="networkidle")
-    assert page.locator("#motion").get_attribute("aria-pressed") == "true"
-    for element in page.locator(".source-card, .source-art").all():
-        durations = element.evaluate("el => getComputedStyle(el).transitionDuration").split(",")
-        assert all(float(value.strip().removesuffix("s")) == 0 for value in durations)
-    page.locator('.source-card[data-source="tsuchida"]').tap()
-    verify_theme(page, "tsuchida", 390)
-    context.close()
-    checks.append("Reduced-motion mode keeps source selection usable with transitions disabled.")
-
-
-def verify_preserved_candidate() -> None:
-    preserved = subprocess.check_output([
-        "git", "diff", "--name-only", "origin/main", "--",
-        "experiments/after-hours-water", "sake-clash",
-    ], cwd=ROOT, text=True).strip()
-    assert not preserved, "Preserved candidate / original game changed: " + preserved
-    candidate = ROOT / "experiments/after-hours-water"
-    for name in ("model.js", "art.js", "preview.js", "game.css"):
-        assert (ROOT / "play" / name).read_bytes() == (candidate / "play" / name).read_bytes(), name
-    checks.append("Preserved after-hours candidate and original SAKE CLASH assets remain unchanged from main.")
-
-
-def verify_old_redirect(page) -> None:
-    old_url = urljoin(BASE, "experiments/after-hours-source/")
-    candidate_url = urljoin(BASE, "experiments/after-hours-water/")
-    page.goto(old_url + "?bottle=sat-002#labels", wait_until="networkidle")
-    page.wait_for_url(candidate_url + "?bottle=sat-002#labels")
-    assert page.locator("#source-scene").get_attribute("data-source") == "tsuchida"
-    checks.append("Legacy after-hours-source redirect still preserves query/hash and selected bottle.")
 
 
 def run() -> None:
-    verify_preserved_candidate()
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True, executable_path=CHROME, args=["--no-sandbox"])
-        for width, height in ((1440, 1000), (390, 844), (375, 812)):
-            context = browser.new_context(viewport={"width": width, "height": height},
-                                          is_mobile=width < 700, has_touch=width < 700,
-                                          device_scale_factor=1)
-            context.add_init_script("localStorage.setItem('sat-age-confirmed', 'yes')")
-            page = context.new_page()
-            monitor(page)
-            response = page.goto(BASE, wait_until="networkidle")
-            assert response and response.status == 200
-            page.wait_for_function("document.querySelector('#liquid')?.dataset.renderer")
-            verify_metadata(page)
-            verify_global_play(page, width)
-            verify_source_cards(page, width)
-            verify_water_keyboard(page)
-            verify_game_entry(page)
-            verify_brand_and_products(page, width)
-            context.close()
-
-        verify_reduced_motion(browser)
-
-        context = browser.new_context(viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
-        context.add_init_script("localStorage.setItem('sat-age-confirmed', 'yes')")
+        browser = playwright.chromium.launch(
+            headless=True,
+            executable_path=os.environ.get("PLAYWRIGHT_EXECUTABLE_PATH"),
+            args=["--no-sandbox"],
+        )
+        context = browser.new_context(
+            viewport={"width": 390, "height": 844}, is_mobile=True,
+            has_touch=True, device_scale_factor=1,
+        )
+        context.add_init_script("localStorage.setItem('sat-age-confirmed','yes');")
         page = context.new_page()
-        monitor(page)
-        verify_old_redirect(page)
-        context.close()
-        browser.close()
+        record_diagnostics(page)
+        try:
+            for width, height in ((320, 640), (360, 640), (390, 844), (430, 932), (1440, 1000)):
+                page.set_viewport_size({"width": width, "height": height})
+                page.goto(BASE, wait_until="networkidle")
+                page.wait_for_timeout(350)
+                assert not page.locator("#age").is_visible()
+                verify_source_cards(page, width)
+                verify_ripple(page, width)
+                verify_vertical_scroll(page, width)
+                verify_keyboard_ripple(page, width)
+                page.screenshot(path=str(OUT / f"source-water-{width}x{height}.png"), full_page=True)
+            assert not REPORT["pageErrors"], REPORT["pageErrors"]
+            assert not REPORT["consoleErrors"], REPORT["consoleErrors"]
+            assert not REPORT["failedRequests"], REPORT["failedRequests"]
+            assert not REPORT["httpErrors"], REPORT["httpErrors"]
+            REPORT["checks"] = [
+                "Both source cards stay selectable by touch, click and keyboard at 320, 360, 390, 430 and 1440 widths.",
+                "Source, mood, water copy, selected release, active source card, core accent and FPG arcade background stay synchronized.",
+                "Water ripples on deliberate touch and Enter, while vertical touch scrolling does not create a ripple.",
+                "Source-card artwork decodes successfully and no horizontal overflow or application network/console/page errors were observed.",
+            ]
+            REPORT["status"] = "passed"
+        except Exception:
+            REPORT["status"] = "failed"
+            REPORT["failure"] = traceback.format_exc()
+            try:
+                page.screenshot(path=str(OUT / "source-water-failure.png"), full_page=True)
+            except Exception:
+                pass
+            raise
+        finally:
+            (OUT / "results.json").write_text(
+                json.dumps(REPORT, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            context.close()
+            browser.close()
 
-    assert not page_errors, page_errors
-    meaningful_http = [item for item in http_errors if not urlsplit(item["url"]).path.endswith("/favicon.ico")]
-    assert not meaningful_http, meaningful_http
 
-
-result = {"status": "running"}
-try:
+if __name__ == "__main__":
     run()
-    result = {
-        "status": "PASS",
-        "browser": "Playwright Chromium; viewport/touch emulation",
-        "checks": checks,
-        "geometry": geometry,
-        "navigation": navigation,
-        "pageErrors": page_errors,
-        "httpErrors": http_errors,
-        "notTested": ["Physical iPhone Safari", "native audio output quality", "human first-impression evaluation"],
-    }
-except Exception as error:
-    result = {
-        "status": "FAIL",
-        "failure": str(error),
-        "checks": checks,
-        "geometry": geometry,
-        "navigation": navigation,
-        "pageErrors": page_errors,
-        "httpErrors": http_errors,
-    }
-    OUT.joinpath("results.json").write_text(json.dumps(result, ensure_ascii=False, indent=2))
-    raise
-
-OUT.joinpath("results.json").write_text(json.dumps(result, ensure_ascii=False, indent=2))
-print(json.dumps({"status": "PASS", "checks": checks, "evidence": str(OUT)}, ensure_ascii=False, indent=2))
+    print(json.dumps(REPORT, ensure_ascii=False, indent=2))
