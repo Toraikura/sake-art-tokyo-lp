@@ -117,7 +117,7 @@
       const previewStyles = document.createElement('link');
       previewStyles.id = 'fpg-preview-styles';
       previewStyles.rel = 'stylesheet';
-      previewStyles.href = '/fpg-preview.css?v=20260911-mini1';
+      previewStyles.href = '/fpg-preview.css?v=20260911-perf1';
       document.head.appendChild(previewStyles);
     }
     const sourcePage = english ? '/en/' : '/';
@@ -202,6 +202,19 @@
 
     const oldEntry = $('.playground-entry');
     if (oldEntry) oldEntry.hidden = true;
+
+    // Keep card layout available immediately; fetch its artwork near the arcade.
+    // This also covers direct #play visits without delaying any game links.
+    if ('IntersectionObserver' in window) {
+      const previews = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        arcade.classList.add('fpg-previews-ready');
+        previews.disconnect();
+      }, { rootMargin: '600px 0px' });
+      previews.observe(arcade);
+    } else {
+      arcade.classList.add('fpg-previews-ready');
+    }
   }
 
   renderPlaygroundArcade();

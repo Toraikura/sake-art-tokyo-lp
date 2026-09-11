@@ -25,7 +25,8 @@ body[data-mood="deep"] .fpg-game--clash.play-launch{background:#17151c!important
 .fpg-preview-meta{position:absolute;left:7px;top:6px;z-index:3;padding:4px 5px;background:rgba(13,9,20,.72);font:7px/1 var(--mono);letter-spacing:.08em;color:var(--paper)}
 
 /* SAKE CLASH — use the real existing game preview instead of redrawing it. */
-.fpg-preview--clash{background:#111 url('/assets/game-preview.webp') center 32%/cover no-repeat!important}
+.fpg-preview--clash{background:#111!important}
+.fpg-previews-ready .fpg-preview--clash{background:#111 url('/assets/game-preview.webp') center 32%/cover no-repeat!important}
 .fpg-preview--clash::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,8,17,.08),rgba(12,8,17,.02) 45%,rgba(12,8,17,.34));pointer-events:none}
 .fpg-clash-stage{display:none!important}
 
@@ -37,7 +38,8 @@ body[data-mood="deep"] .fpg-game--clash.play-launch{background:#17151c!important
 .fpg-labo-card>small,.fpg-molecule{display:none!important}
 .fpg-labo-card::before{content:"AROMA MOLECULE / EXAMPLE";position:absolute;left:8px;top:8px;color:#766d80;font:6px/1.2 var(--mono);letter-spacing:.06em}
 .fpg-labo-card::after{content:"酢酸イソアミル\AISOAMYL ACETATE";white-space:pre;position:absolute;left:8px;right:6px;bottom:9px;color:#252032;font:800 clamp(8px,1vw,12px)/1.15 var(--sans);letter-spacing:-.02em}
-.fpg-labo-scent{background:#efe9dc url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-banana.webp') center/cover no-repeat}
+.fpg-labo-scent{background:#efe9dc center/cover no-repeat}
+.fpg-previews-ready .fpg-labo-scent{background-image:url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-banana.webp')}
 .fpg-labo-scent::after{content:"AROMA / BANANA";position:absolute;left:6px;bottom:6px;padding:3px 4px;background:rgba(243,239,227,.9);color:#252032;font:6px/1 var(--mono);letter-spacing:.04em}
 .fpg-labo-scent>small,.fpg-banana{display:none!important}
 
@@ -47,8 +49,8 @@ body[data-mood="deep"] .fpg-game--clash.play-launch{background:#17151c!important
 .fpg-match-row{display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,.82fr);align-items:center;gap:5px;min-height:27px}
 .fpg-match-row small{height:27px;border:1px solid #bcb3c5;padding:0 4px;display:flex;align-items:center;justify-content:center;text-align:center;font:6px/1.1 var(--mono);letter-spacing:.02em;color:#252032;background:#faf6ed;overflow:hidden;white-space:nowrap}
 .fpg-match-row small:last-child{font-size:0;color:transparent;background-position:center;background-size:cover;background-repeat:no-repeat}
-.fpg-match-row:first-child small:last-child{background-image:url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-banana.webp')}
-.fpg-match-row:nth-child(2) small:last-child{background-image:url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-clove.webp')}
+.fpg-previews-ready .fpg-match-row:first-child small:last-child{background-image:url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-banana.webp')}
+.fpg-previews-ready .fpg-match-row:nth-child(2) small:last-child{background-image:url('https://toraikura.github.io/sat-fermentation-playground/aroma-lab/assets/aroma-lab/thumbs/aroma-clove.webp')}
 .fpg-match-row i{height:2px;background:#6b4fa0;position:relative}
 .fpg-match-row i::after{content:"";position:absolute;right:-1px;top:-3px;width:5px;height:5px;border-top:2px solid #6b4fa0;border-right:2px solid #6b4fa0;transform:rotate(45deg)}
 .fpg-match-row.is-dim{opacity:.72}.fpg-match-row.is-dim i{background:transparent;border-top:1px dashed #6b4fa0}.fpg-match-row.is-dim i::after{display:none}

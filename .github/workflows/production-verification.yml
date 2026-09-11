@@ -30,6 +30,7 @@ jobs:
           while IFS= read -r -d '' file; do node --check "$file"; done < <(find . -path './.git' -prune -o -path './experiments' -prune -o -name '*.js' -print0)
           node tests/intuitive/test_controller.cjs
           node tests/intuitive/test_label_save.cjs
+          node tests/living-integration/test_sound_loading.cjs
       - name: Real HTTP touch and responsive browser checks
         run: |
           set -euo pipefail
@@ -47,6 +48,7 @@ jobs:
           EVIDENCE_DIR=evidence/english python tests/english/test_ui.py
           EVIDENCE_DIR=evidence/seo-ia python tests/seo-ia/test_phase1.py
           EVIDENCE_DIR=evidence/living-integration python tests/living-integration/test_ui.py
+          python tests/performance/test_loading.py
       - name: WebKit touch scrolling and closed overlays
         run: |
           set -euo pipefail

@@ -94,7 +94,7 @@ Homeの水面操作には、波紋が実際に発生した時だけ短い水滴�
 - `SOUND ON / OFF` を用意し、設定は `localStorage` の `sat-water-sound-enabled` に保存します。
 - OFF時は音声のidle preloadもしません。
 - 水面の描画失敗と音声再生失敗は独立させ、音声が失敗しても既存Rippleを壊しません。
-- AudioはCritical Pathへ入れず、load後のidleでwarmします。
+- Audioはload後、年齢確認済み・水面が画面内・タブが前面・SOUND ONの時だけ、次の2音をidleでwarmします。鳴らすたびに次の音を補い、初回から8音すべては取得しません。
 
 音源は `assets/audio/water/`。出所と利用条件は `assets/audio/water/LICENSE-NOTES.md` を参照してください。
 
@@ -120,6 +120,7 @@ python3 -m http.server 4190 --bind 127.0.0.1
 node --check site.js
 node --check intuitive.js
 node --check water-sound.js
+node tests/living-integration/test_sound_loading.cjs
 node tests/intuitive/test_controller.cjs
 node tests/intuitive/test_label_save.cjs
 python3 tests/intuitive/test_ui.py
@@ -128,6 +129,7 @@ python3 tests/source-water/test_ui.py
 python3 tests/english/test_ui.py
 python3 tests/seo-ia/test_phase1.py
 python3 tests/living-integration/test_ui.py
+python3 tests/performance/test_loading.py
 ```
 
 `tests/seo-ia/test_phase1.py` は新規10ページのHTTP 200、title/H1/meta、canonical、ja/en/x-default hreflang、OG/Twitter、JSON-LD、内部リンク、sitemap、360/390px横溢れ、ホーム内部リンクと44pxタップ領域を確認します。
