@@ -16,6 +16,7 @@ BASE = os.environ.get("BASE_URL", "http://127.0.0.1:4190/")
 FPG = "https://toraikura.github.io/sat-fermentation-playground/"
 AROMA = FPG + "aroma-lab/"
 MATCH = AROMA + "aroma-match/"
+SHUBO = "https://toraikura.github.io/shubo-dive/"
 AUDIO = (
     "water-drop-pochan.mp3",
     "water-drop-01.mp3",
@@ -88,6 +89,12 @@ def verify_home(page, language: str) -> None:
     assert nav.count() == 1 and nav.get_attribute("href") == FPG
     assert nav.get_attribute("data-event") == "sat_playground_hub_click"
     assert page.locator("#play [data-play]").count() == 1  # existing SAKE CLASH remains
+    shubo = page.locator('#play a[data-experience="shubo-dive"]')
+    assert_external(shubo, SHUBO)
+    assert shubo.get_attribute("data-event") == "sat_to_fpg"
+    assert shubo.get_attribute("data-source-page") == path
+    assert shubo.get_attribute("aria-disabled") is None
+    assert shubo.get_attribute("data-play") is None
     assert_external(page.locator('.playground-entry a[data-experience="hub"]'), FPG)
 
     sound = page.locator("#water-sound")

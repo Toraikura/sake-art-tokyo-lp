@@ -70,8 +70,12 @@ FERMENTATION PLAYGROUNDは別ブランドではなく、SAKE ART TOKYOから興�
 - Hub: https://toraikura.github.io/sat-fermentation-playground/
 - AROMA LABO: https://toraikura.github.io/sat-fermentation-playground/aroma-lab/
 - AROMA MATCH: https://toraikura.github.io/sat-fermentation-playground/aroma-lab/aroma-match/
+- RICE LINEAGE: https://toraikura.github.io/sat-fermentation-playground/rice-lineage/
+- SHUBO DIVE: https://toraikura.github.io/shubo-dive/
 
-未公開のRICE LINEAGE、SHUBO、PATHWAY等にはクリック可能なリンクを出しません。
+未公開のPATHWAYにはクリック可能なリンクを出しません。
+
+Homeの05カードはSHUBO DIVEへ直接遷移します。提供されたタイトル画面を600×596pxのWebP（19,430 B）に圧縮し、ARCADEの近くでのみ読み込みます。ゲーム本体の先読みや埋め込みは追加していません。
 
 導線:
 

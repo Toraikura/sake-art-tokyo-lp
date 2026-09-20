@@ -117,7 +117,7 @@
       const previewStyles = document.createElement('link');
       previewStyles.id = 'fpg-preview-styles';
       previewStyles.rel = 'stylesheet';
-      previewStyles.href = '/fpg-preview.css?v=20260911-perf1';
+      previewStyles.href = '/fpg-preview.css?v=20260920-shubo1';
       document.head.appendChild(previewStyles);
     }
     const sourcePage = english ? '/en/' : '/';
@@ -185,12 +185,12 @@
             <span class="fpg-preview fpg-preview--rice" aria-hidden="true"><i class="rice-line line-a"></i><i class="rice-line line-b"></i><b class="rice-node n1"></b><b class="rice-node n2"></b><b class="rice-node n3"></b><b class="rice-node n4"></b><b class="rice-node n5"></b></span>
             <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>
           </div>
-          <div class="fpg-game fpg-game--soon fpg-game--shubo" aria-disabled="true">
+          <a class="fpg-game fpg-game--live fpg-game--shubo" href="https://toraikura.github.io/shubo-dive/" data-event="sat_to_fpg" data-experience="shubo-dive" data-source-page="${sourcePage}" aria-label="${english ? 'Play SHUBO DIVE' : 'SHUBO DIVEを遊ぶ'}">
             <span class="fpg-game-index">05</span>
-            <strong class="fpg-game-title"><span>SHUBO</span></strong>
-            <span class="fpg-preview fpg-preview--shubo" aria-hidden="true"><span class="shubo-tank"><i class="bubble b1"></i><i class="bubble b2"></i><i class="bubble b3"></i><i class="bubble b4"></i><i class="shubo-liquid"></i></span></span>
-            <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>
-          </div>
+            <strong class="fpg-game-title"><span>SHUBO</span><span>DIVE</span></strong>
+            <span class="fpg-preview fpg-preview--shubo" aria-hidden="true"></span>
+            <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
+          </a>
           <div class="fpg-game fpg-game--soon fpg-game--pathway" aria-disabled="true">
             <span class="fpg-game-index">06</span>
             <strong class="fpg-game-title"><span>PATHWAY</span></strong>
