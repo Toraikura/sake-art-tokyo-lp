@@ -117,7 +117,7 @@
       const previewStyles = document.createElement('link');
       previewStyles.id = 'fpg-preview-styles';
       previewStyles.rel = 'stylesheet';
-      previewStyles.href = '/fpg-preview.css?v=20260920-shubo1';
+      previewStyles.href = '/fpg-preview.css?v=20260920-shubo2';
       document.head.appendChild(previewStyles);
     }
     const sourcePage = english ? '/en/' : '/';
@@ -191,8 +191,14 @@
             <span class="fpg-preview fpg-preview--shubo" aria-hidden="true"></span>
             <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
           </a>
-          <div class="fpg-game fpg-game--soon fpg-game--pathway" aria-disabled="true">
+          <a class="fpg-game fpg-game--live fpg-game--shubo-world" href="https://toraikura.github.io/shubo-world/" data-event="sat_to_fpg" data-experience="shubo-world" data-source-page="${sourcePage}" aria-label="${english ? 'Play SHUBO' : 'SHUBOを遊ぶ'}">
             <span class="fpg-game-index">06</span>
+            <strong class="fpg-game-title"><span>SHUBO</span></strong>
+            <span class="fpg-preview fpg-preview--shubo-world" aria-hidden="true"></span>
+            <span class="fpg-game-status">${copy.play} <span aria-hidden="true">↗</span></span>
+          </a>
+          <div class="fpg-game fpg-game--soon fpg-game--pathway" aria-disabled="true">
+            <span class="fpg-game-index">07</span>
             <strong class="fpg-game-title"><span>PATHWAY</span></strong>
             <span class="fpg-preview fpg-preview--pathway" aria-hidden="true"><b class="path-node p1"></b><i class="path-arrow a1"></i><b class="path-node p2"></b><i class="path-arrow a2"></i><b class="path-node p3"></b><i class="path-arrow a3"></i><b class="path-node p4"></b></span>
             <span class="fpg-game-status"><i aria-hidden="true"></i>${copy.soon}</span>

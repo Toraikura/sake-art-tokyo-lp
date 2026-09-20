@@ -67,6 +67,10 @@ body[data-mood="deep"] .fpg-game--clash.play-launch{background:#17151c!important
 .fpg-preview--shubo{background:#061821!important}
 .fpg-previews-ready .fpg-preview--shubo{background:#061821 url('/assets/shubo-dive-preview.webp') center 18%/cover no-repeat!important}
 
+/* SHUBO — keep the supplied brewery and wooden tank at the center of the preview. */
+.fpg-preview--shubo-world{background:#101711!important}
+.fpg-previews-ready .fpg-preview--shubo-world{background:#101711 url('/assets/shubo-world-preview.webp') center 42%/cover no-repeat!important}
+
 /* PATHWAY — nodes and reaction direction. */
 .fpg-preview--pathway{position:relative}
 .path-node{position:absolute;width:10px;height:10px;border:2px solid #08080a;border-radius:50%}.path-node.p1{left:10%;top:48%}.path-node.p2{left:39%;top:28%}.path-node.p3{left:68%;top:48%}.path-node.p4{left:48%;top:72%}
@@ -75,8 +79,8 @@ body[data-mood="deep"] .fpg-game--clash.play-launch{background:#17151c!important
 
 @media(max-width:700px){
   .fpg-game--clash.play-launch{padding:14px!important}
-  .fpg-game--shubo{gap:4px;padding:12px}
-  .fpg-game--shubo .fpg-game-status{min-height:12px}
+  .fpg-game--shubo,.fpg-game--shubo-world{gap:4px;padding:12px}
+  .fpg-game--shubo .fpg-game-status,.fpg-game--shubo-world .fpg-game-status{min-height:12px}
   .fpg-game-title,.fpg-game--clash .fpg-game-title{font-size:clamp(18px,6.1vw,25px)!important}
   .fpg-preview{height:64px;min-height:64px}
   .fpg-preview-meta{font-size:5.5px;padding:3px 4px}
@@ -90,8 +94,8 @@ body[data-mood="deep"] .fpg-game--clash.play-launch{background:#17151c!important
 }
 @media(max-width:360px){
   .fpg-game--clash.play-launch{padding:12px!important}
-  .fpg-game--shubo{gap:2px;padding:10px}
-  .fpg-game--shubo .fpg-preview{height:50px;min-height:50px}
+  .fpg-game--shubo,.fpg-game--shubo-world{gap:2px;padding:10px}
+  .fpg-game--shubo .fpg-preview,.fpg-game--shubo-world .fpg-preview{height:50px;min-height:50px}
   .fpg-game-title,.fpg-game--clash .fpg-game-title{font-size:17px!important}
   .fpg-preview{height:58px;min-height:58px}
 }

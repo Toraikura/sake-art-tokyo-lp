@@ -72,10 +72,12 @@ FERMENTATION PLAYGROUNDは別ブランドではなく、SAKE ART TOKYOから興�
 - AROMA MATCH: https://toraikura.github.io/sat-fermentation-playground/aroma-lab/aroma-match/
 - RICE LINEAGE: https://toraikura.github.io/sat-fermentation-playground/rice-lineage/
 - SHUBO DIVE: https://toraikura.github.io/shubo-dive/
+- SHUBO: https://toraikura.github.io/shubo-world/
 
 未公開のPATHWAYにはクリック可能なリンクを出しません。
 
 Homeの05カードはSHUBO DIVEへ直接遷移します。提供されたタイトル画面を600×596pxのWebP（19,430 B）に圧縮し、ARCADEの近くでのみ読み込みます。ゲーム本体の先読みや埋め込みは追加していません。
+Homeの06カードはSHUBOへ直接遷移します。提供された蔵の画面を550×674pxのWebP（36,564 B）に圧縮し、同じ遅延読み込みを使います。PATHWAYは07の準備中カードです。
 
 導線:
 

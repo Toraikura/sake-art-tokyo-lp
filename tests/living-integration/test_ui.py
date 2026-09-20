@@ -17,6 +17,7 @@ FPG = "https://toraikura.github.io/sat-fermentation-playground/"
 AROMA = FPG + "aroma-lab/"
 MATCH = AROMA + "aroma-match/"
 SHUBO = "https://toraikura.github.io/shubo-dive/"
+SHUBO_WORLD = "https://toraikura.github.io/shubo-world/"
 AUDIO = (
     "water-drop-pochan.mp3",
     "water-drop-01.mp3",
@@ -95,6 +96,7 @@ def verify_home(page, language: str) -> None:
     assert shubo.get_attribute("data-source-page") == path
     assert shubo.get_attribute("aria-disabled") is None
     assert shubo.get_attribute("data-play") is None
+    assert_external(page.locator('#play a[data-experience="shubo-world"]'), SHUBO_WORLD)
     assert_external(page.locator('.playground-entry a[data-experience="hub"]'), FPG)
 
     sound = page.locator("#water-sound")
