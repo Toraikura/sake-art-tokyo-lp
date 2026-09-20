@@ -155,3 +155,9 @@ GitHub ActionsのProduction verificationは `main`、`codex/**`、`seo-**` で�
 `experiments/after-hours-water/` は昇格元候補として保持します。本番の更新先はルートです。候補ページのnoindexは維持し、本番ルートにはnoindexを指定しません。`experiments/after-hours-source/` の既存転送も保持しています。
 
 作業ブランチで検証後、mainへ反映し、GitHub Pagesのデプロイ完了と独自ドメインのHTTPSを確認します。push成功と公開成功は別々に確認してください。
+
+## 共通ゲーム一覧
+
+SHUBO DIVE / SHUBOと今後追加する共通カードは、PLAYGROUNDの公開ブランチ `gh-pages` にある `shared-experiences.json` が正本です。SATの日英ページとPLAYGROUNDが同じデータ・スクリプトを読みます。名前・画像・リンク・説明をそこで更新してPLAYGROUNDを公開すれば、SAT側の再公開は不要です。キャッシュにより反映に時間差が出る場合があります。
+
+現時点では既存のSAKE CLASH / RICE LINEAGE等の専用表示・起動処理は各サイトに残しています。JSON取得失敗時は同梱カードを維持します。詳細な更新手順はPLAYGROUNDリポジトリの `SHARED_EXPERIENCES.md` を参照してください。

@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 BASE = os.environ.get('BASE_URL', 'http://127.0.0.1:4190/')
 
 def preview_request(url):
-    return '/aroma-lab/thumbs/' in url or '/assets/game-preview.webp' in url or '/assets/shubo-dive-preview.webp' in url or '/assets/shubo-world-preview.webp' in url
+    return '/aroma-lab/thumbs/' in url or '/assets/game-preview.webp' in url or '/assets/shubo-dive-preview.webp' in url or '/assets/shubo-world-preview.webp' in url or '/assets/shared-experiences/' in url
 
 with sync_playwright() as p:
     browser = p.chromium.launch(executable_path=os.environ.get('PLAYWRIGHT_EXECUTABLE_PATH'))
@@ -33,18 +33,19 @@ with sync_playwright() as p:
         page.wait_for_function("getComputedStyle(document.querySelector('.fpg-preview--clash')).backgroundImage.includes('game-preview.webp')")
         # CSS can contain a valid URL even when its image is a 404 or corrupt.
         # Decode the same cached resources to verify the artwork is usable.
-        page.evaluate("""async () => {
-          const selectors = '.fpg-preview--clash,.fpg-labo-scent,.fpg-match-row small:last-child,.fpg-preview--shubo,.fpg-preview--shubo-world';
+        preview_urls = page.evaluate("""async () => {
+          const selectors = '.fpg-preview--clash,.fpg-labo-scent,.fpg-match-row small:last-child,.fpg-preview--catalog';
           const urls = new Set([...document.querySelectorAll(selectors)].map(element =>
             getComputedStyle(element).backgroundImage.match(/url\\([\"']?([^\"')]+)[\"']?\\)/)?.[1]
           ));
-          if (urls.size !== 5 || urls.has(undefined)) throw new Error('Missing preview artwork');
+          if (urls.size !== 3 + document.querySelectorAll('.fpg-preview--catalog').length || urls.has(undefined)) throw new Error('Missing preview artwork');
           await Promise.all([...urls].map(async url => {
             const img = new Image(); img.src = url; await img.decode();
             if (!img.naturalWidth) throw new Error('Empty preview artwork');
           }));
+          return [...urls];
         }""")
-        assert len({url for url in requests if preview_request(url)}) == 5, requests
+        assert set(preview_urls) == {url for url in requests if preview_request(url)}, requests
         assert page.locator('iframe').count() == 0  # Actual game remains click-to-load.
         layout = page.evaluate("({width:innerWidth,scrollWidth:document.documentElement.scrollWidth})")
         assert layout['scrollWidth'] <= layout['width'], layout
@@ -62,4 +63,4 @@ with sync_playwright() as p:
         assert style['fit'] == 'cover' and style['position'] == '50% 32%' and style['width'] > 200, style
         context.close()
     browser.close()
-print('PASS: JA/EN age gate has no audio/arcade requests; at most two sounds warm after entry; five real previews load near the arcade; no eager game iframe or overflow.')
+print('PASS: JA/EN age gate has no audio/arcade requests; at most two sounds warm after entry; shared and existing previews load near the arcade; no eager game iframe or overflow.')
